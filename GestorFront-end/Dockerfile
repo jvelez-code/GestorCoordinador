@@ -1,8 +1,8 @@
 # Stage 0, based on Node.js, to build and compile Angular
-FROM node:lts as node
+FROM node:17.3.0 as node
 WORKDIR /app
 COPY ./ /app/
-RUN npm install -g npm@8.5.3
+RUN npm install -g npm
 RUN npm link @angular/cli
 ARG configuration=production
 RUN npm run build

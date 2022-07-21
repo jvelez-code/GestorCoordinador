@@ -12,7 +12,7 @@ import { checkRole } from '../middewares/rol';
 const router = Router();
 
 router.get('/', [checkJwt], selectAuthUsuario );
-router.post('/', [checkJwt], checkRole([1]), insertAuthUsuario );
+router.post('/', [checkJwt], checkRole([2]), insertAuthUsuario );
 router.put('/:id', updateAuthUsuario );
 router.delete('/:id',deleteAuthUsuario);
 export default router;
