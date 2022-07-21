@@ -9,7 +9,7 @@ return res.json(usuario);
 }
 
 export const insertUsuario = async (req: Request , res: Response )=>{
-    console.log("Hola TestSS", req.body);
+    console.log("Hola TestSSHU", req.body);
     const { firsname , lastname} = req.body
 
     const usuario = new Usuario();
