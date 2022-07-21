@@ -1,0 +1,52 @@
+<router-outlet></router-outlet>
+
+
+
+
+
+<div [hidden]="route.children.length !== 0">
+  
+  <mat-toolbar > <p class="center"> Reportes Gestor Clientes</p> </mat-toolbar>
+  
+
+<mat-form-field appearance="standard">
+  <mat-label >Buscar</mat-label>
+  <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+</mat-form-field>
+
+
+<table mat-table [dataSource]="dataSource"  matSort class="mat-elevation-z8">
+
+  <ng-container matColumnDef="serial">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+    <td mat-cell *matCellDef="let i = index"  scope="row">{{i+1}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+    <td mat-cell *matCellDef="let element"  class="center"> {{element.nombre_reporte |  uppercase }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+        <button mat-button color="primary" [routerLink]="[element.nombre_descarga]">
+            <mat-icon>ballot</mat-icon>
+        </button>
+    </mat-cell>
+</ng-container>
+
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+</div>
+
+
+
+
+

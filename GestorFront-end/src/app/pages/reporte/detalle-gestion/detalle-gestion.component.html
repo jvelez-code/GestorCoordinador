@@ -1,0 +1,64 @@
+<mat-toolbar>Consulta Reporte {{reported}}</mat-toolbar>
+  <router-outlet></router-outlet>
+  
+ <div class="example-containe mat-elevation-z8">
+   <form method="POST">
+     
+<div>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>First campaign</mat-label>
+      <mat-date-range-input
+        [formGroup]="campaignOne"
+        [rangePicker]="campaignOnePicker"
+        [comparisonStart]="campaignTwo.value.start"
+        [comparisonEnd]="campaignTwo.value.end">
+        <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+        <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <button mat-raised-button color="primary" (click)="aceptar()">Aceptar</button>
+  </div>
+  </form>
+</div>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
+
+    <ng-container matColumnDef="campana">
+      <th mat-header-cell *matHeaderCellDef> CAMPAÑA </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombrecampana}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="tipo">
+      <th mat-header-cell *matHeaderCellDef> TIPO DOC </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipodocaportante}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="documento">
+      <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
+      <td mat-cell *matCellDef="let element"> {{element.numdocaporta}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="razonSocial">
+      <th mat-header-cell *matHeaderCellDef> RAZÓN SOCIAL </th>
+      <td mat-cell *matCellDef="let element"> {{element.razonsocial}} </td>
+    </ng-container>
+    
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
+  </table>
+
+
+
+
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+

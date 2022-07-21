@@ -1,0 +1,30 @@
+<mat-toolbar>Consulta Reporte </mat-toolbar>
+ 
+ <div class="example-containe mat-elevation-z8">
+   <form method="POST">
+     
+<div>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>First campaign</mat-label>
+      <mat-date-range-input
+        [formGroup]="campaignOne"
+        [rangePicker]="campaignOnePicker"
+        [comparisonStart]="campaignTwo.value.start"
+        [comparisonEnd]="campaignTwo.value.end">
+        <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+        <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <mat-list role="list">
+    <mat-list-item role="listitem">Item 1</mat-list-item>
+    <mat-list-item role="listitem">Item 2</mat-list-item>
+    <mat-list-item role="listitem">Item 3</mat-list-item>
+  </mat-list>
+  
+</form>
+</div>
+

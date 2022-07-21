@@ -1,0 +1,110 @@
+<mat-toolbar>Reporte {{reporteName}}</mat-toolbar>  
+ <div class="example-containe mat-elevation-z8">
+   <form method="POST">
+     
+<div>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Selecccione las fechas</mat-label>
+      <mat-date-range-input
+        [formGroup]="campaignOne"
+        [rangePicker]="campaignOnePicker"
+        [comparisonStart]="campaignTwo.value.start"
+        [comparisonEnd]="campaignTwo.value.end">
+        <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+        <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <button mat-raised-button color="primary" (click)="aceptar()">Aceptar
+      <mat-icon>trending_up</mat-icon>
+    </button>
+  </div>
+  </form>
+</div>
+
+<mat-form-field appearance="standard">
+  <mat-label >Buscar</mat-label>
+  <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+</mat-form-field>
+
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
+
+    <ng-container matColumnDef="documento">
+      <th mat-header-cell *matHeaderCellDef> FECHA </th>
+      <td mat-cell *matCellDef="let element"> {{element.documento }} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="agente">
+      <th mat-header-cell *matHeaderCellDef> NRO DOCUMENTO </th>
+      <td mat-cell *matCellDef="let element"> {{element.agente}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombrea">
+      <th mat-header-cell *matHeaderCellDef> nombrea </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombrea}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="entrante">
+      <th mat-header-cell *matHeaderCellDef> entrante </th>
+      <td mat-cell *matCellDef="let element"> {{element.entrante}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duracione">
+      <th mat-header-cell *matHeaderCellDef> duracione </th>
+      <td mat-cell *matCellDef="let element"> {{element.duracione.hours}}:{{element.duracione.minutes}}:{{element.duracione.seconds}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cantidade">
+      <th mat-header-cell *matHeaderCellDef> cantidade </th>
+      <td mat-cell *matCellDef="let element"> {{element.cantidade}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="documentos">
+      <th mat-header-cell *matHeaderCellDef> documentos </th>
+      <td mat-cell *matCellDef="let element"> {{element.documentos}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="agentes">
+      <th mat-header-cell *matHeaderCellDef> agentes </th>
+      <td mat-cell *matCellDef="let element"> {{element.agentes}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="saliente">
+      <th mat-header-cell *matHeaderCellDef> saliente </th>
+      <td mat-cell *matCellDef="let element"> {{element.saliente}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duracions">
+      <th mat-header-cell *matHeaderCellDef> duracions </th>
+      <td mat-cell *matCellDef="let element"> {{element.duracions.hours}}:{{element.duracions.minutes}}:{{element.duracions.seconds}}  </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cantidads">
+      <th mat-header-cell *matHeaderCellDef> cantidads </th>
+      <td mat-cell *matCellDef="let element"> {{element.cantidads}} </td>
+    </ng-container>
+ 
+   
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
+  </table>
+
+  <div>
+    <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+      <mat-icon>laptop</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+      <mat-icon>phone_android</mat-icon>
+    </button>
+  
+  </div>
+
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>

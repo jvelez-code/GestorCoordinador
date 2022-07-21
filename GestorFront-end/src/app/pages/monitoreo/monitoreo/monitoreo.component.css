@@ -1,0 +1,77 @@
+table {
+    width: 100%;
+  }
+  
+  .make-gold {
+    background-color: gold
+  }
+  
+  .Desconectado {
+    background-color:#B0B0B0
+  }
+  
+  .Disponible_Entrante {
+    background-color:#9ED5A0
+  }
+  
+  .En_Llamada {
+    background-color:#F7F8A1
+  }
+  
+  .Salida_Baño {
+    background-color:#00FFFF
+  }
+  
+  .Salida_Almuerzo {
+    background-color:#95839E
+  }
+
+  .Pausas_Activas {
+    background-color:#FCBB00
+  }
+  
+  .Break_AM {
+    background-color:#95839E
+  }
+
+  .Break_PM {
+    background-color:#95839E
+  }
+  
+  .Soporte {
+    background-color:#C85353
+  }
+
+  .Capacitacion {
+    background-color:#CCEEFF
+  }
+
+
+  .Disponible_Saliente {
+    background-color:#a3c1ff
+  }
+  
+  .Desconectado_Cierre_Asterisk {
+    background-color:#8080ff
+  }
+
+  .Pruebas {
+    background-color:#ffb233
+  }
+  
+  .Coaching {
+    background-color:#006699
+  }
+
+  .Correo {
+    background-color:#FF99FF
+  }
+
+  .Chat {
+    background-color:#CCCC00
+  }
+
+
+
+
+  
