@@ -89,7 +89,7 @@ class CascadesSubjectBuilder {
     // ---------------------------------------------------------------------
     /**
      * Finds subject where entity like given subject's entity.
-     * Comparision made by entity id.
+     * Comparison made by entity id.
      */
     findByPersistEntityLike(entityTarget, entity) {
         return this.allSubjects.find((subject) => {

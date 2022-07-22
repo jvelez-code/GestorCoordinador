@@ -39,9 +39,9 @@ class SchemaDropCommand {
             console.log(chalk_1.default.green("Database schema has been successfully dropped."));
         }
         catch (err) {
-            if (dataSource)
-                await dataSource.destroy();
             PlatformTools_1.PlatformTools.logCmdErr("Error during schema drop:", err);
+            if (dataSource && dataSource.isInitialized)
+                await dataSource.destroy();
             process_1.default.exit(1);
         }
     }

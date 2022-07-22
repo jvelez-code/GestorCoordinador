@@ -56,11 +56,11 @@ class QueryCommand {
             await dataSource.destroy();
         }
         catch (err) {
+            PlatformTools_1.PlatformTools.logCmdErr("Error during query execution:", err);
             if (queryRunner)
                 await queryRunner.release();
-            if (dataSource)
+            if (dataSource && dataSource.isInitialized)
                 await dataSource.destroy();
-            PlatformTools_1.PlatformTools.logCmdErr("Error during query execution:", err);
             process_1.default.exit(1);
         }
     }

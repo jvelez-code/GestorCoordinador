@@ -63,9 +63,9 @@ class MigrationRunCommand {
             process.exit(0);
         }
         catch (err) {
-            if (dataSource)
-                await dataSource.destroy();
             PlatformTools_1.PlatformTools.logCmdErr("Error during migration run:", err);
+            if (dataSource && dataSource.isInitialized)
+                await dataSource.destroy();
             process.exit(1);
         }
     }

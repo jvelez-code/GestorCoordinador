@@ -13,10 +13,10 @@ class OrmUtils {
             return array.slice(i * size, i * size + size);
         });
     }
-    static splitClassesAndStrings(clsesAndStrings) {
+    static splitClassesAndStrings(classesAndStrings) {
         return [
-            clsesAndStrings.filter((cls) => typeof cls !== "string"),
-            clsesAndStrings.filter((str) => typeof str === "string"),
+            classesAndStrings.filter((cls) => typeof cls !== "string"),
+            classesAndStrings.filter((str) => typeof str === "string"),
         ];
     }
     static groupBy(array, propertyCallback) {
@@ -272,7 +272,7 @@ class OrmUtils {
         // Especially useful on the step where we compare prototypes
         if (x === y)
             return true;
-        // Unequal, but either is null or undefined (use case: jsonb comparasion)
+        // Unequal, but either is null or undefined (use case: jsonb comparison)
         // PR #3776, todo: add tests
         if (x === null || y === null || x === undefined || y === undefined)
             return false;

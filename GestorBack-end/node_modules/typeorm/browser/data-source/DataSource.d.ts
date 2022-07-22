@@ -21,6 +21,7 @@ import { RelationLoader } from "../query-builder/RelationLoader";
 import { IsolationLevel } from "../driver/types/IsolationLevel";
 import { ReplicationMode } from "../driver/types/ReplicationMode";
 import { RelationIdLoader } from "../query-builder/RelationIdLoader";
+import { ObjectLiteral } from "../common/ObjectLiteral";
 /**
  * DataSource is a pre-defined connection configuration to a specific database.
  * You can have multiple data sources connected (with multiple connections in it),
@@ -181,17 +182,17 @@ export declare class DataSource {
     /**
      * Gets repository for the given entity.
      */
-    getRepository<Entity>(target: EntityTarget<Entity>): Repository<Entity>;
+    getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Repository<Entity>;
     /**
      * Gets tree repository for the given entity class or name.
      * Only tree-type entities can have a TreeRepository, like ones decorated with @Tree decorator.
      */
-    getTreeRepository<Entity>(target: EntityTarget<Entity>): TreeRepository<Entity>;
+    getTreeRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): TreeRepository<Entity>;
     /**
      * Gets mongodb-specific repository for the given entity class or name.
      * Works only if connection is mongodb-specific.
      */
-    getMongoRepository<Entity>(target: EntityTarget<Entity>): MongoRepository<Entity>;
+    getMongoRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): MongoRepository<Entity>;
     /**
      * Gets custom entity repository marked with @EntityRepository decorator.
      *

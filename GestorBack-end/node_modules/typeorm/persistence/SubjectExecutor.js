@@ -418,7 +418,7 @@ class SubjectExecutor {
             }
             ok();
         });
-        // Run all remaning subjects in parallel
+        // Run all remaining subjects in parallel
         await Promise.all([
             ...remainingSubjects.map(updateSubject),
             nestedSetPromise,

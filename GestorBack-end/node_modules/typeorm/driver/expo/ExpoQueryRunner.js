@@ -40,9 +40,6 @@ class ExpoQueryRunner extends AbstractSqliteQueryRunner_1.AbstractSqliteQueryRun
             this.isTransactionActive = false;
             throw err;
         }
-        if (this.transactionDepth > 0) {
-            await this.query(`SAVEPOINT typeorm_${this.transactionDepth}`);
-        }
         this.transactionDepth += 1;
         await this.broadcaster.broadcast("AfterTransactionStart");
     }
@@ -59,13 +56,8 @@ class ExpoQueryRunner extends AbstractSqliteQueryRunner_1.AbstractSqliteQueryRun
             typeof this.transaction === "undefined")
             throw new TransactionNotStartedError_1.TransactionNotStartedError();
         await this.broadcaster.broadcast("BeforeTransactionCommit");
-        if (this.transactionDepth > 1) {
-            await this.query(`RELEASE SAVEPOINT typeorm_${this.transactionDepth - 1}`);
-        }
-        else {
-            this.transaction = undefined;
-            this.isTransactionActive = false;
-        }
+        this.transaction = undefined;
+        this.isTransactionActive = false;
         this.transactionDepth -= 1;
         await this.broadcaster.broadcast("AfterTransactionCommit");
     }
@@ -81,13 +73,8 @@ class ExpoQueryRunner extends AbstractSqliteQueryRunner_1.AbstractSqliteQueryRun
             typeof this.transaction === "undefined")
             throw new TransactionNotStartedError_1.TransactionNotStartedError();
         await this.broadcaster.broadcast("BeforeTransactionRollback");
-        if (this.transactionDepth > 1) {
-            await this.query(`ROLLBACK TO SAVEPOINT typeorm_${this.transactionDepth - 1}`);
-        }
-        else {
-            this.transaction = undefined;
-            this.isTransactionActive = false;
-        }
+        this.transaction = undefined;
+        this.isTransactionActive = false;
         this.transactionDepth -= 1;
         await this.broadcaster.broadcast("AfterTransactionRollback");
     }
@@ -135,10 +122,6 @@ class ExpoQueryRunner extends AbstractSqliteQueryRunner_1.AbstractSqliteQueryRun
                         this.driver.connection.logger.logQuerySlow(queryExecutionTime, query, parameters, this);
                     }
                     const result = new QueryResult_1.QueryResult();
-                    // return id of inserted row, if query was insert statement.
-                    if (query.substr(0, 11) === "INSERT INTO") {
-                        result.raw = raw.insertId;
-                    }
                     if (raw === null || raw === void 0 ? void 0 : raw.hasOwnProperty("rowsAffected")) {
                         result.affected = raw.rowsAffected;
                     }
@@ -149,6 +132,10 @@ class ExpoQueryRunner extends AbstractSqliteQueryRunner_1.AbstractSqliteQueryRun
                         }
                         result.raw = resultSet;
                         result.records = resultSet;
+                    }
+                    // return id of inserted row, if query was insert statement.
+                    if (query.startsWith("INSERT INTO")) {
+                        result.raw = raw.insertId;
                     }
                     if (useStructuredResult) {
                         ok(result);

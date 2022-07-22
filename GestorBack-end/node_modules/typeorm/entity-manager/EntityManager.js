@@ -60,7 +60,7 @@ class EntityManager {
             ? isolationOrRunInTransaction
             : runInTransactionParam;
         if (!runInTransaction) {
-            throw new error_1.TypeORMError(`Transaction method requires callback in second paramter if isolation level is supplied.`);
+            throw new error_1.TypeORMError(`Transaction method requires callback in second parameter if isolation level is supplied.`);
         }
         if (this.queryRunner && this.queryRunner.isReleased)
             throw new QueryRunnerProviderAlreadyReleasedError_1.QueryRunnerProviderAlreadyReleasedError();

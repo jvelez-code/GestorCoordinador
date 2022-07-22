@@ -129,7 +129,7 @@ export declare abstract class QueryBuilder<Entity> {
     /**
      * Sets parameter name and its value.
      *
-     * The key for this parametere may contain numbers, letters, underscores, or periods.
+     * The key for this parameter may contain numbers, letters, underscores, or periods.
      */
     setParameter(key: string, value: any): this;
     /**

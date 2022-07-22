@@ -229,8 +229,9 @@ class DbQueryResultCache {
      * Removes all cached results by given identifiers from cache.
      */
     async remove(identifiers, queryRunner) {
+        let _queryRunner = queryRunner || this.getQueryRunner();
         await Promise.all(identifiers.map((identifier) => {
-            const qb = this.getQueryRunner(queryRunner).manager.createQueryBuilder();
+            const qb = _queryRunner.manager.createQueryBuilder();
             return qb
                 .delete()
                 .from(this.queryResultCacheTable)
@@ -239,6 +240,9 @@ class DbQueryResultCache {
             })
                 .execute();
         }));
+        if (!queryRunner) {
+            await _queryRunner.release();
+        }
     }
     // -------------------------------------------------------------------------
     // Protected Methods

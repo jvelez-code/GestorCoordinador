@@ -39,9 +39,9 @@ class SchemaSyncCommand {
             console.log(chalk_1.default.green("Schema synchronization finished successfully."));
         }
         catch (err) {
-            if (dataSource)
-                await dataSource.destroy();
             PlatformTools_1.PlatformTools.logCmdErr("Error during schema synchronization:", err);
+            if (dataSource && dataSource.isInitialized)
+                await dataSource.destroy();
             process_1.default.exit(1);
         }
     }

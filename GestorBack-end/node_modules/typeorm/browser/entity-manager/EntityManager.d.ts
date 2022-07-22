@@ -20,6 +20,7 @@ import { DeleteResult } from "../query-builder/result/DeleteResult";
 import { FindOptionsWhere } from "../find-options/FindOptionsWhere";
 import { IsolationLevel } from "../driver/types/IsolationLevel";
 import { UpsertOptions } from "../repository/UpsertOptions";
+import { ObjectLiteral } from "../common/ObjectLiteral";
 /**
  * Entity manager supposed to work with any entity, automatically find its repository and call its methods,
  * whatever entity type are you passing.
@@ -99,14 +100,14 @@ export declare class EntityManager {
     /**
      * Merges two entities into one new entity.
      */
-    merge<Entity>(entityClass: EntityTarget<Entity>, mergeIntoEntity: Entity, ...entityLikes: DeepPartial<Entity>[]): Entity;
+    merge<Entity extends ObjectLiteral>(entityClass: EntityTarget<Entity>, mergeIntoEntity: Entity, ...entityLikes: DeepPartial<Entity>[]): Entity;
     /**
      * Creates a new entity from the given plain javascript object. If entity already exist in the database, then
      * it loads it (and everything related to it), replaces all values with the new ones from the given object
      * and returns this new entity. This new entity is actually a loaded from the db entity with all properties
      * replaced from the new object.
      */
-    preload<Entity>(entityClass: EntityTarget<Entity>, entityLike: DeepPartial<Entity>): Promise<Entity | undefined>;
+    preload<Entity extends ObjectLiteral>(entityClass: EntityTarget<Entity>, entityLike: DeepPartial<Entity>): Promise<Entity | undefined>;
     /**
      * Saves all given entities in the database.
      * If entities do not exist in the database then inserts, otherwise updates.
@@ -221,7 +222,7 @@ export declare class EntityManager {
      * Does not check if entity exist in the database.
      * Condition(s) cannot be empty.
      */
-    softDelete<Entity>(targetOrEntity: EntityTarget<Entity>, criteria: string | string[] | number | number[] | Date | Date[] | ObjectID | ObjectID[] | any): Promise<UpdateResult>;
+    softDelete<Entity extends ObjectLiteral>(targetOrEntity: EntityTarget<Entity>, criteria: string | string[] | number | number[] | Date | Date[] | ObjectID | ObjectID[] | any): Promise<UpdateResult>;
     /**
      * Restores entities by a given condition(s).
      * Unlike save method executes a primitive operation without cascades, relations and other operations included.
@@ -229,7 +230,7 @@ export declare class EntityManager {
      * Does not check if entity exist in the database.
      * Condition(s) cannot be empty.
      */
-    restore<Entity>(targetOrEntity: EntityTarget<Entity>, criteria: string | string[] | number | number[] | Date | Date[] | ObjectID | ObjectID[] | any): Promise<UpdateResult>;
+    restore<Entity extends ObjectLiteral>(targetOrEntity: EntityTarget<Entity>, criteria: string | string[] | number | number[] | Date | Date[] | ObjectID | ObjectID[] | any): Promise<UpdateResult>;
     /**
      * Counts entities that match given options.
      * Useful for pagination.
@@ -323,24 +324,24 @@ export declare class EntityManager {
      * repository aggregator, where each repository is individually created for this entity manager.
      * When single database connection is not used, repository is being obtained from the connection.
      */
-    getRepository<Entity>(target: EntityTarget<Entity>): Repository<Entity>;
+    getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Repository<Entity>;
     /**
      * Gets tree repository for the given entity class or name.
      * If single database connection mode is used, then repository is obtained from the
      * repository aggregator, where each repository is individually created for this entity manager.
      * When single database connection is not used, repository is being obtained from the connection.
      */
-    getTreeRepository<Entity>(target: EntityTarget<Entity>): TreeRepository<Entity>;
+    getTreeRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): TreeRepository<Entity>;
     /**
      * Gets mongodb repository for the given entity class.
      */
-    getMongoRepository<Entity>(target: EntityTarget<Entity>): MongoRepository<Entity>;
+    getMongoRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): MongoRepository<Entity>;
     /**
      * Creates a new repository instance out of a given Repository and
      * sets current EntityManager instance to it. Used to work with custom repositories
      * in transactions.
      */
-    withRepository<Entity, R extends Repository<Entity>>(repository: R): R;
+    withRepository<Entity extends ObjectLiteral, R extends Repository<Entity>>(repository: R): R;
     /**
      * Gets custom entity repository marked with @EntityRepository decorator.
      *

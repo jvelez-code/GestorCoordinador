@@ -1,3 +1,4 @@
+import { ObjectLiteral } from "../common/ObjectLiteral";
 import { FindTreeOptions } from "../find-options/FindTreeOptions";
 import { SelectQueryBuilder } from "../query-builder/SelectQueryBuilder";
 import { Repository } from "./Repository";
@@ -6,7 +7,7 @@ import { Repository } from "./Repository";
  *
  * @see Repository
  */
-export declare class TreeRepository<Entity> extends Repository<Entity> {
+export declare class TreeRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
     /**
      * Gets complete trees for all roots in the table.
      */

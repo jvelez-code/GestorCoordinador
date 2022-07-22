@@ -1,4 +1,4 @@
-import { DataSource } from "../../data-source/DataSource";
+import { DataSource } from "../../data-source";
 import { ColumnType } from "../types/ColumnTypes";
 import { QueryRunner } from "../../query-runner/QueryRunner";
 import { AbstractSqliteDriver } from "../sqlite-abstract/AbstractSqliteDriver";

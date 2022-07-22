@@ -100,7 +100,7 @@ class QueryExpressionMap {
          */
         this.parameters = {};
         /**
-         * Indicates if alias, table names and column names will be ecaped by driver, or not.
+         * Indicates if alias, table names and column names will be escaped by driver, or not.
          *
          * todo: rename to isQuotingDisabled, also think if it should be named "escaping"
          */

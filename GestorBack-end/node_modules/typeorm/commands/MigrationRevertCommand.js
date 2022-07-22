@@ -61,9 +61,9 @@ class MigrationRevertCommand {
             await dataSource.destroy();
         }
         catch (err) {
-            if (dataSource)
-                await dataSource.destroy();
             PlatformTools_1.PlatformTools.logCmdErr("Error during migration revert:", err);
+            if (dataSource && dataSource.isInitialized)
+                await dataSource.destroy();
             process_1.default.exit(1);
         }
     }

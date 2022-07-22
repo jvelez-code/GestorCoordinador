@@ -365,7 +365,8 @@ class RawSqlResultsToEntityTransformer {
                         }
                         return OrmUtils_1.OrmUtils.mergeDeep(idMap, column.createValueMap(value));
                     }
-                    if (column.referencedColumn.referencedColumn) {
+                    if (!column.isPrimary &&
+                        column.referencedColumn.referencedColumn) {
                         // if column is a relation
                         value =
                             column.referencedColumn.referencedColumn.createValueMap(value);

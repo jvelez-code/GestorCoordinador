@@ -1,11 +1,11 @@
 # Stage 0, based on Node.js, to build and compile Angular
-FROM node:17.3.0 as node
+FROM node:16-alpine as node
 WORKDIR /app
 COPY ./ /app/
-RUN npm install -g npm
-RUN npm link @angular/cli
+RUN npm install -g npm --force
+RUN npm link @angular/cli --force
 ARG configuration=production
-RUN npm run build
+RUN npm run build --force
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
 FROM nginx:alpine
