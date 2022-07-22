@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   HOST: 'http://localhost:3000',
-  TOKEN_NAME: 'access_token'
+  TOKEN_NAME: 'access_token',
+  TOKEN_NAMES: 'access_token'
 
   };
 
