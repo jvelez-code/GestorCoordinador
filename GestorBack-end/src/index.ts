@@ -24,7 +24,7 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
           await DataSourceContact.initialize();
           console.log("Conexion ok Contact");
 
-          app.listen(3000)
+          app.listen(3010)
           console.log("Hola mUndo 2", 3000)
 
      } catch (error) {
