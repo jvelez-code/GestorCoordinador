@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-framework',
@@ -9,26 +9,26 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class FrameworkComponent implements OnInit {
 
 
-  campaignOne!: FormGroup;
-  campaignTwo!: FormGroup;
+  campaignOne!: UntypedFormGroup;
+  campaignTwo!: UntypedFormGroup;
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   constructor() {
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new FormGroup({
-      start: new FormControl(new Date(year, month, 13)),
-      end: new FormControl(new Date(year, month, 16)),
+    this.campaignOne = new UntypedFormGroup({
+      start: new UntypedFormControl(new Date(year, month, 13)),
+      end: new UntypedFormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new FormGroup({
-        start: new FormControl(new Date(year, month, 15)),
-        end: new FormControl(new Date(year, month, 19)),
+      this.campaignTwo = new UntypedFormGroup({
+        start: new UntypedFormControl(new Date(year, month, 15)),
+        end: new UntypedFormControl(new Date(year, month, 19)),
       });
 
   }

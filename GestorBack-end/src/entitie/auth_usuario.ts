@@ -4,8 +4,12 @@ import {
     PrimaryGeneratedColumn, 
     CreateDateColumn, 
     UpdateDateColumn,
-    BaseEntity
+    BaseEntity,
+    JoinColumn,
+    OneToOne
 } from "typeorm"
+import { Empresa } from "./empresa";
+
 import {MinLength, IsNotEmpty} from 'class-validator';
 import * as bcrypt from 'bcryptjs';
 
@@ -40,7 +44,11 @@ export class AuthUsuario extends BaseEntity {
 
     @Column()
     correo!: string
-
+    
+    //@OneToOne(() => Empresa)
+    //@JoinColumn()
+    //Empresa: any;
+    
     @Column()
     id_empresa!: number
 

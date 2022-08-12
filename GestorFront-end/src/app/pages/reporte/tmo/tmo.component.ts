@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +10,7 @@ import * as moment from 'moment';
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
+//import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 import { async } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
 const EXCEL_TYPE =
@@ -30,11 +30,11 @@ export class TmoComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   reporteName : string ="TMO"
 
-  campaignOne!: FormGroup;
-  campaignTwo!: FormGroup;
+  campaignOne!: UntypedFormGroup;
+  campaignTwo!: UntypedFormGroup;
 
   fechaparametro1 !:  string;
   fechaparametro2 !:  string;
@@ -59,15 +59,15 @@ export class TmoComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new FormGroup({
-      start: new FormControl(new Date(year, month, 13)),
-      end: new FormControl(new Date(year, month, 16)),
+    this.campaignOne = new UntypedFormGroup({
+      start: new UntypedFormControl(new Date(year, month, 13)),
+      end: new UntypedFormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new FormGroup({
-        start: new FormControl(new Date(year, month, 15)),
-        end: new FormControl(new Date(year, month, 19)),
+      this.campaignTwo = new UntypedFormGroup({
+        start: new UntypedFormControl(new Date(year, month, 15)),
+        end: new UntypedFormControl(new Date(year, month, 19)),
       });
 
   }

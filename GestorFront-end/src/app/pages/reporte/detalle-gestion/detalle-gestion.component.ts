@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CityI } from '../../../_model/cityI';
 import { Parametros } from 'src/app/_model/parametros';
 import * as moment from 'moment';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -21,11 +21,11 @@ export class DetalleGestionComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   reported : string ="jaime velez"
 
-  campaignOne!: FormGroup;
-  campaignTwo!: FormGroup;
+  campaignOne!: UntypedFormGroup;
+  campaignTwo!: UntypedFormGroup;
 
   mensaje !: string;
   gestion !: Gestion[];
@@ -49,15 +49,15 @@ export class DetalleGestionComponent implements OnInit {
                 const month = today.getMonth();
                 const year = today.getFullYear();
             
-                this.campaignOne = new FormGroup({
-                  start: new FormControl(new Date(year, month, 13)),
-                  end: new FormControl(new Date(year, month, 16)),
+                this.campaignOne = new UntypedFormGroup({
+                  start: new UntypedFormControl(new Date(year, month, 13)),
+                  end: new UntypedFormControl(new Date(year, month, 16)),
 
                 });
 
-                  this.campaignTwo = new FormGroup({
-                    start: new FormControl(new Date(year, month, 15)),
-                    end: new FormControl(new Date(year, month, 19)),
+                  this.campaignTwo = new UntypedFormGroup({
+                    start: new UntypedFormControl(new Date(year, month, 15)),
+                    end: new UntypedFormControl(new Date(year, month, 19)),
                   });
                }
                

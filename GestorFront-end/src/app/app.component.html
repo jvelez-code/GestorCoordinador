@@ -37,7 +37,7 @@
 
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="sidenav.toggle()" routerLink="/monitoreo" style="cursor: pointer">
-              <mat-icon>accessibility</mat-icon>
+              <mat-icon>explore</mat-icon>
               <span>Monitoreo</span>
           </button>
   
@@ -52,6 +52,13 @@
               <mat-icon>assessment</mat-icon>
               <span>Reportes</span>
           </button>
+
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/adminUsuario" style="cursor: pointer">
+              <mat-icon>accessibility</mat-icon>
+              <span>AdminUsuarios</span>
+          </button>
+
       </mat-sidenav>
       
       <mat-sidenav-content>

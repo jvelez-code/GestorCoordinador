@@ -39,6 +39,9 @@ import { LoadingComponent } from './pages/monitoreo/loading/loading.component';
 import { LlamadasRecibidasComponent } from './pages/reporte/llamadas-recibidas/llamadas-recibidas.component';
 import { EntranteSalienteComponent } from './pages/reporte/entrante-saliente/entrante-saliente.component';
 import { LlamadasCalificadasComponent } from './pages/reporte/llamadas-calificadas/llamadas-calificadas.component';
+import { LlamadasonlineComponent } from './pages/grafico/llamadasonline/llamadasonline.component';
+import { AdminUsuariosComponent } from './pages/adminUsuarios/admin-usuarios.component';
+import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin-edicion.component';
 registerLocaleData(localeEs,'es');
 
 
@@ -66,7 +69,10 @@ registerLocaleData(localeEs,'es');
     LoadingComponent,
     LlamadasRecibidasComponent,
     EntranteSalienteComponent,
-    LlamadasCalificadasComponent
+    LlamadasCalificadasComponent,
+    LlamadasonlineComponent,
+    AdminUsuariosComponent,
+    AdminEdicionComponent
   ],
   imports: [
     BrowserModule,

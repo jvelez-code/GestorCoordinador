@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +10,7 @@ import * as moment from 'moment';
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
+//import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 import { Usuario } from 'src/app/_model/usuario';
 import { Observable } from 'rxjs';
 
@@ -31,8 +31,8 @@ const EXCEL_EXT = '.xlsx';
 export class TmoDetalladoComponent implements OnInit {
  
 
-  campaignOne!: FormGroup;
-  campaignTwo!: FormGroup;
+  campaignOne!: UntypedFormGroup;
+  campaignTwo!: UntypedFormGroup;
 
   tmo !: Tmo[];
   usuarios  !: Usuario[];
@@ -46,7 +46,7 @@ export class TmoDetalladoComponent implements OnInit {
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
   usuarioSeleccionado !: string;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   reporteName : string ="TMO Detallado";
 
   fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
@@ -61,15 +61,15 @@ export class TmoDetalladoComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new FormGroup({
-      start: new FormControl(new Date(year, month, 13)),
-      end: new FormControl(new Date(year, month, 16)),
+    this.campaignOne = new UntypedFormGroup({
+      start: new UntypedFormControl(new Date(year, month, 13)),
+      end: new UntypedFormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new FormGroup({
-        start: new FormControl(new Date(year, month, 15)),
-        end: new FormControl(new Date(year, month, 19)),
+      this.campaignTwo = new UntypedFormGroup({
+        start: new UntypedFormControl(new Date(year, month, 15)),
+        end: new UntypedFormControl(new Date(year, month, 19)),
       });
 
   }

@@ -1,10 +1,45 @@
 import { Request , Response } from 'express';
 import { AuthUsuario } from '../entitie/auth_usuario';
 import { validate } from 'class-validator';
+import { createQueryBuilder } from 'typeorm';
+import { DataSourceGestor } from '../db';
+import { Empresa } from '../entitie/empresa';
+import { Console } from 'console';
 
 export const selectAuthUsuario = async ( req: Request,res:Response)=>{
      const authUsuario= await AuthUsuario.find()
+
+
+     /* const authUsuario = await DataSourceGestor
+    .getRepository(AuthUsuario)
+    .createQueryBuilder("authUsuario")
+    .where("authUsuario.id_usuario = :id AND authUsuario.usuario = :name", { id: 23, name: "jvelez_9" })
+    .getOne()
+
+
+    const authUsuario = await DataSourceGestor
+    .getRepository(AuthUsuario)
+    .createQueryBuilder("authUsuario")
+    .leftJoinAndSelect("authUsuario.empresa", "empresa")
+    .getMany()*/
+    console.log(authUsuario);
+
 return res.json(authUsuario);
+}
+
+export const selectAuthUsuarioId = async ( req: Request,res:Response)=>{
+     try {
+          const { id } = req.params;
+          const authUsuario= await AuthUsuario.findBy( { id_usuario : parseInt(id) })
+          return res.json(authUsuario);
+          
+     } catch (error) {
+          if (error instanceof Error){
+               return res.status(500).json({ message: error.message})
+          }
+          
+     }
+ 
 }
 
 export const insertAuthUsuario = async (req: Request , res: Response )=>{
@@ -22,7 +57,7 @@ export const insertAuthUsuario = async (req: Request , res: Response )=>{
      authUsuario.apellido=apellido;
      authUsuario.documento=documento;
      authUsuario.correo=correo;
-     authUsuario.id_empresa=id_empresa;
+     //authUsuario.empresa=Empresa;
      authUsuario.id_rol=id_rol;
 
      authUsuario.hashPassword();
@@ -85,3 +120,7 @@ export const insertAuthUsuario = async (req: Request , res: Response )=>{
           }         
 
      }
+
+function id_usuario(id_usuario: any, arg1: number) {
+     throw new Error('Function not implemented.');
+}

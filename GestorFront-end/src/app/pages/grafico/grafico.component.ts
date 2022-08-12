@@ -8,6 +8,12 @@ import { multi } from '../../_model/data'
   styleUrls: ['./grafico.component.css']
 })
 export class GraficoComponent {
+
+  longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
+  from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
+  originally bred for hunting.`;
+
+  
   multi !: any[];
   view : [number, number] = [900, 400]; 
 
@@ -27,6 +33,7 @@ export class GraficoComponent {
     domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
   };
 
+
   constructor() {
     Object.assign(this, { multi });
   }
@@ -42,5 +49,7 @@ export class GraficoComponent {
   onDeactivate(data: any): void {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
+
+  
 
 }

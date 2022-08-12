@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
 
-  public aFormGroup!: FormGroup;
+  public aFormGroup!: UntypedFormGroup;
   private subscripcion : Subscription = new Subscription();
 
 
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor( 
     private loginService: LoginService,
     private router: Router,
-    private formBuilder: FormBuilder ) { }
+    private formBuilder: UntypedFormBuilder ) { }
 
 
   ngOnInit(): void {

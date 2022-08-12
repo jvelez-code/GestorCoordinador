@@ -9,6 +9,7 @@ class AuthController{
     static logins = async (req: Request, res: Response)=>{
         res.send("Hola")
     }
+    
 
     static login = async (req: Request, res: Response)=>{
 
@@ -40,11 +41,11 @@ class AuthController{
 
     let usuarioLog=authUsuario.usuario;
     let rolLog=authUsuario.id_rol;
-    let empLog=authUsuario.id_empresa;
+    //let empLog=authUsuario.id_empresa;
     
     const token = jwt.sign({ id: authUsuario.id_usuario, usuario: authUsuario.usuario }, config.jwtSecret, { expiresIn:'1h'})
     //res.send(authUsuario);
-    res.json({message: 'OK', token, usuarioLog, rolLog, empLog})
+    res.json({message: 'OK', token, usuarioLog, rolLog })
 
     
     } 

@@ -5,7 +5,7 @@ import { ReporteService } from '../../_services/reporte.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
 import {FormsModule} from '@angular/forms';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -34,7 +34,7 @@ export class ReporteComponent implements OnInit {
   cities !: CityI;
 
 
-  form !: FormGroup;
+  form !: UntypedFormGroup;
   tituloPagina = 'Parte de Horas';
   fechaActual:Date=new Date();
   mesActual:number=this.fechaActual.getMonth();

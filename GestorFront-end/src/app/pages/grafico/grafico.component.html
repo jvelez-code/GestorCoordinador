@@ -1,17 +1,33 @@
-<ngx-charts-line-chart
-  [view]="view"
-  scheme="cool"
-  [legend]="legend"
-  [showXAxisLabel]="showXAxisLabel"
-  [showYAxisLabel]="showYAxisLabel"
-  [xAxis]="xAxis"
-  [yAxis]="yAxis"
-  [xAxisLabel]="xAxisLabel"
-  [yAxisLabel]="yAxisLabel"
-  [timeline]="timeline"
-  [results]="multi"
-  (select)="onSelect($event)"
-  (activate)="onActivate($event)"
-  (deactivate)="onDeactivate($event)"
-  >
-</ngx-charts-line-chart>
+<!-- Cards with media area -->
+
+<mat-card class="example-card">
+  <mat-card-title-group>
+    <mat-card-title>LLamadas por Hora</mat-card-title>
+    <mat-card-subtitle>En Linea</mat-card-subtitle>
+    <img mat-card-lg-image src="assets/reporte.png" >
+  </mat-card-title-group>
+  <mat-card-content>
+    {{longText}}
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary">Consultar
+      <mat-icon>trending_up</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card class="example-card">
+  <mat-card-title-group>
+    <mat-card-title>LLamadas por Hora</mat-card-title>
+    <mat-card-subtitle>Historico</mat-card-subtitle>
+    <img mat-card-lg-image src="assets/reporte.png" >
+  </mat-card-title-group>
+  <mat-card-content>
+    {{longText}}
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary">Consultar
+      <mat-icon>trending_up</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

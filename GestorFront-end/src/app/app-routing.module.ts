@@ -15,6 +15,8 @@ import { SeguimientoAgenteComponent } from './pages/reporte/seguimiento-agente/s
 import { LlamadasRecibidasComponent } from './pages/reporte/llamadas-recibidas/llamadas-recibidas.component';
 import { EntranteSalienteComponent } from './pages/reporte/entrante-saliente/entrante-saliente.component';
 import { LlamadasCalificadasComponent } from './pages/reporte/llamadas-calificadas/llamadas-calificadas.component';
+import { AdminUsuariosComponent } from './pages/adminUsuarios/admin-usuarios.component';
+import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin-edicion.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -32,6 +34,10 @@ const routes: Routes = [
   { path: 'grafico', component: GraficoComponent },
   { path: 'monitoreo', component: MonitoreoComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'adminUsuario', component: AdminUsuariosComponent, children: [ 
+    { path: 'admin-edicion/:id', component: AdminEdicionComponent },
+    { path: 'admin-nuevo', component: AdminEdicionComponent },
+  ]},
   { path: '', redirectTo:'login', pathMatch: 'full' },
 ];
 
