@@ -3,7 +3,7 @@ WORKDIR /app
 
 #intalacion de dependencias
 COPY package*.json ./
-RUN npm install
+RUN npm install --save --force
 
 COPY . .
 
