@@ -31,7 +31,7 @@ export class AdminUsuariosService {
 
   crearUsuarios(authUsuario: AuthUsuario) {
     const headers = { 'content-type': 'application/json'}  
-    return this.http.post(`http://localhost:3010/authUsuario`, authUsuario, {'headers':headers})
+    return this.http.post(`${this.url}/authUsuario/`, authUsuario, {'headers':headers})
   };
 
   actualizarUsuarios(authUsuario: AuthUsuario) {

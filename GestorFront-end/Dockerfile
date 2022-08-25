@@ -2,7 +2,7 @@
 FROM node:16-alpine as node
 WORKDIR /app
 COPY ./ /app/
-RUN npm install --save --g npm --force
+RUN npm install --save --location=global npm --force
 RUN npm link @angular/cli --force
 ARG configuration=production
 RUN npm run build --force
