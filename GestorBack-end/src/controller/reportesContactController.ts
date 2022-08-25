@@ -50,6 +50,7 @@ static postSecretariaVirtual = async (req: Request, res:Response ) =>{
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
+        
         const response = await poolcont.query(`SELECT fecha, sum (total_dia) as total, SUM(cant_devueltas_dia) AS devueltas,
         SUM(cant_pendientes_dia) as pendientes,
         telefono
@@ -246,6 +247,7 @@ static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
+
         const response = await poolcont.query(`SELECT TO_CHAR(fecha_grabacion,'YYYY-MM-DD')AS fecha,
         id_Agente AS agente,
         login_agente AS login ,
@@ -307,6 +309,7 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
         let usuario=req.body.usuario
+
         console.log( fechaini );
         console.log( fechafin );
         console.log( empresa );
@@ -394,6 +397,7 @@ static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
         //alt +96 `
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin 
+        let empresa=req.body.empresa;  
         const response = await pool.query(`Select Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
         Prin.tipificacionPadre
         from (
@@ -436,7 +440,9 @@ static postDetalleGestiones= async (req: Request, res:Response ) =>{
 try {
      
     let fechaini=req.body.fechaini
-    let fechafin=req.body.fechafin   
+    let fechafin=req.body.fechafin
+    let empresa=req.body.empresa;  
+
     console.log(fechaini);
     console.log(fechafin);
     const response = await pool.query(`SELECT
@@ -572,8 +578,9 @@ static postReportes =async (req: Request, res:Response ) => {
     static potsMonitoreo = async (req: Request, res:Response ) =>{
        // res.send('Hola mundo post final');
         try {
-            console.log(req.body);
-            let fecha=req.body.fecha  
+            let fecha=req.body.fecha;
+            let empresa=req.body.empresa;  
+
             let date = new Date();
             const formatDate = (date: Date)=>{
                 let formatted_date = date.getFullYear() + "-" + (date.getMonth() + 1) + 
@@ -581,13 +588,11 @@ static postReportes =async (req: Request, res:Response ) => {
                 return formatted_date;
             }
             let fechaFinal=formatDate(date);
-            console.log('Hola Fecha', fechaFinal);
-
         const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
         fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
-        AND empresa='ASISTIDA' ORDER BY ae.id_estado,5 desc`,[fechaFinal]);
+        AND empresa=($2) ORDER BY ae.id_estado,5 desc`,[fechaFinal, empresa ]);
         if (res !== undefined) {
             return res.json(response.rows);
             

@@ -13,11 +13,10 @@ return res.json(usuario);
 
 export const postMonitoreo = async (req: Request, res:Response)=>{
     try {
-        console.log("Holaas",req.body);
+        
         let fecha=req.body.fecha  
         let now= new Date();
-        console.log('La fecha actual es',now);
-        
+
         now= new Date();
         const formatDate = (now:any)=>{
             let formatted_date = now.getFullYear() + "-" + (now.getMonth() + 1) + 

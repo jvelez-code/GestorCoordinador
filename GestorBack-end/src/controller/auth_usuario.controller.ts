@@ -30,7 +30,8 @@ return res.json(authUsuario);
 export const selectAuthUsuarioId = async ( req: Request,res:Response)=>{
      try {
           const { id } = req.params;
-          const authUsuario= await AuthUsuario.findBy( { id_usuario : parseInt(id) })
+          const authUsuario = await DataSourceGestor.getRepository(AuthUsuario)
+          .findOneByOrFail( { id_usuario : parseInt(id) });
           return res.json(authUsuario);
           
      } catch (error) {
@@ -47,8 +48,8 @@ export const insertAuthUsuario = async (req: Request , res: Response )=>{
    try {
      console.log("Hola Inser", req.body);
      const { usuario , clave, nombre,
-             apellido, documento, correo,
-             id_empresa, id_rol} = req.body
+             apellido, documento, estado, 
+             correo, id_empresa, id_rol} = req.body
  
      const authUsuario = new AuthUsuario();
      authUsuario.usuario=usuario;
@@ -56,14 +57,16 @@ export const insertAuthUsuario = async (req: Request , res: Response )=>{
      authUsuario.nombre=nombre;
      authUsuario.apellido=apellido;
      authUsuario.documento=documento;
+     authUsuario.estado=estado;
      authUsuario.correo=correo;
-     //authUsuario.empresa=Empresa;
+     authUsuario.id_empresa=id_empresa;
      authUsuario.id_rol=id_rol;
 
      authUsuario.hashPassword();
      await authUsuario.save();
  
-     res.send('Hola Post')
+     //return res.send('Hola Post')
+     return res.json(authUsuario);
         
    } catch (error) {
      if (error instanceof Error){
@@ -77,17 +80,15 @@ export const insertAuthUsuario = async (req: Request , res: Response )=>{
     export const updateAuthUsuario = async (req: Request , res: Response )=>{
       
 
-               console.log(req.params);
-               console.log(req.body);
                const { clave }= req.body
-               const { id } = req.params;
+               const { id } = req.body.id_usuario;
                try {
-               const authUsuario= await AuthUsuario.findOneBy({id_usuario : parseInt(req.params.id)})
+               const authUsuario= await AuthUsuario.findOneBy({id_usuario : parseInt(req.body.id_usuario)})
 
                if(!authUsuario) return res.status(404).json({ message: "AuthUsuario no se encuentra"});
             
 
-               await AuthUsuario.update({ id_usuario : parseInt(id) }, req.body);
+               await AuthUsuario.update({ id_usuario : parseInt(req.body.id_usuario) }, req.body);
 
                return res.json('Recibido')
               

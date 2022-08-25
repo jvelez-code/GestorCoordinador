@@ -3,6 +3,7 @@ import { AuthUsuario } from '../entitie/auth_usuario';
 import * as jwt from 'jsonwebtoken';
 import config from '../config/config'
 import { validate } from 'class-validator';
+import { Empresa } from '../entitie/empresa';
 
 class AuthController{
 
@@ -23,6 +24,7 @@ class AuthController{
     
     let authUsuario = new AuthUsuario();
 
+    //TRAER EL USUARIO EN LOGEO
     try {
         authUsuario = await AuthUsuario.findOneOrFail({
             where: {
@@ -39,13 +41,27 @@ class AuthController{
         return res.status(400).json({message: 'Usuario y Contraseña son Incorrectos'})
     }
 
+    //TRAER EMPRESA
+    let empresa = new Empresa();
+    const idEmpresa = authUsuario.id_empresa;
+    try {
+        empresa = await Empresa.findOneOrFail({
+            where: {
+                id_empresa: idEmpresa,
+            },
+        })        
+    } catch (error) {
+        return res.status(400).json({message: 'Empresa no valida'})
+        
+    }
+
     let usuarioLog=authUsuario.usuario;
     let rolLog=authUsuario.id_rol;
-    //let empLog=authUsuario.id_empresa;
+    let id_empresa=empresa.pseudonimo;
     
     const token = jwt.sign({ id: authUsuario.id_usuario, usuario: authUsuario.usuario }, config.jwtSecret, { expiresIn:'1h'})
     //res.send(authUsuario);
-    res.json({message: 'OK', token, usuarioLog, rolLog })
+    res.json({message: 'OK', token, usuarioLog, rolLog, id_empresa })
 
     
     } 

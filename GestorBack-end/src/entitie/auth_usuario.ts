@@ -37,9 +37,7 @@ export class AuthUsuario extends BaseEntity {
     @Column()
     documento!: string
 
-    @Column({
-        default: true
-    })
+    @Column()
     estado!: string
 
     @Column()
