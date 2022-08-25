@@ -5,8 +5,7 @@
 export const environment = {
   production: false,
   HOST: 'http://10.1.0.231:3010',
-  TOKEN_NAME: 'access_token',
-  TOKEN_NAMES: 'access_token'
+  TOKEN_NAME: 'auth'
 
   };
 

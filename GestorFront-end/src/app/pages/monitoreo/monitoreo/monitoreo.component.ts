@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
-import { interval, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Subject, Subscription } from 'rxjs';
 import { AskEstadoExtension } from 'src/app/_model/askEstadoExtension';
+import { LoginService } from 'src/app/_services/login.service';
 import { MonitoreoService } from '../../../_services/monitoreo.service'
 
 
@@ -28,22 +29,26 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
 
 
 
-  constructor( private monitoreoService : MonitoreoService ) {
+  constructor( 
+    private monitoreoService : MonitoreoService,
+    private loginService: LoginService
+            ) {
     this.loading=true;
     
   }
-
   ngOnInit(): void {
-    this.empresaparametro = 'ASISTIDA'
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
+   
+    //this.empresaparametro = 'ASISTIDA'
 
  
     const parametros= {empresa:this.empresaparametro }
-   //
 
     const actualizar = interval(3000)
     this.subscripcion= actualizar.subscribe(n=>{
-      console.log("total",n)
-     
+      console.log("total",n)     
          this.monitoreoService.monitoreoEmpresa(parametros).subscribe(data=>{
           this.dataSource= new MatTableDataSource(data);
           this.loading=false;

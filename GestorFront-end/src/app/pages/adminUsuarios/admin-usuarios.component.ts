@@ -5,6 +5,8 @@ import { MatTableDataSource} from '@angular/material/table';
 import { AuthUsuario }  from 'src/app/_model/auth_usuario'
 import { AdminUsuariosService } from 'src/app/_services/admin-usuarios.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { switchMap } from 'rxjs/operators';
 
 
 
@@ -18,8 +20,8 @@ export class AdminUsuariosComponent implements OnInit {
   displayedColumns: string[] = ['id_usuario','usuario', 'id_empresa', 'id_rol','acciones'];
   dataSource !: MatTableDataSource<AuthUsuario>;      
 
-  constructor(private _liveAnnouncer: LiveAnnouncer,
-    private adminUsuariosService: AdminUsuariosService) { }
+  constructor(private adminUsuariosService: AdminUsuariosService,
+              private snackBar: MatSnackBar) { }
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -28,6 +30,16 @@ export class AdminUsuariosComponent implements OnInit {
  
 
   ngOnInit(): void {
+    this.adminUsuariosService.getUsuarioCambio().subscribe(data=>{
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+
+    this.adminUsuariosService.getMensajeCambio().subscribe(data =>{
+      this.snackBar.open(data, 'AVISO', {duration: 4000});
+    });
+
     this.adminUsuariosService.listarUsuarios().subscribe(data =>{
       console.log(data);     
       this.dataSource = new MatTableDataSource(data);
@@ -44,7 +56,14 @@ export class AdminUsuariosComponent implements OnInit {
       this.dataSource.filter = valor.trim().toLowerCase();
     }
 
-    eliminar(idPaciente: number) {
+    eliminar(idUsuario: number) {
+      this.adminUsuariosService.eliminarUsuarios(idUsuario).pipe(switchMap (()=>{
+        return this.adminUsuariosService.listarUsuarios()
+      })).subscribe(data => {
+        this.adminUsuariosService.setUsuarioCambio(data);
+        this.adminUsuariosService.setMensajecambio('SE ELIMINÓ')
+
+      });
     }
 
 }

@@ -1,41 +1,58 @@
-<mat-card>Ingrese los datos del paciente</mat-card>
+<mat-card>Ingrese los datos del usuario</mat-card>
 
 <!-- No olvidar agregar ReactiveFormsModule en App.module.ts, util para trabajar con formularios-->
-<form class="example-container" [formGroup]="form" #frmPaciente="ngForm" (ngSubmit)="operar()">
+<form class="example-container" [formGroup]="form" #frmAdminUsuario="ngForm" (ngSubmit)="operar()">
 
     <div [hidden]="true">
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="ID" required formControlName="id">
+            <input matInput placeholder="ID" required formControlName="id_usuario">
         </mat-form-field>
     </div>
 
     <mat-form-field class="example-full-width">            
-        <input matInput placeholder="Nombres" minlength="3" required formControlName="nombres">
+        <input matInput placeholder="usuario" minlength="3" required formControlName="usuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">        
-        <input matInput placeholder="Apellidos" required formControlName="apellidos">       
+        <input matInput placeholder="clave" required formControlName="clave"> 
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input matInput placeholder="DNI" required formControlName="dni" type="number">
+        <input matInput placeholder="nombre" required formControlName="nombre" >
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input matInput placeholder="Teléfono" required formControlName="telefono" type="number">
+        <input matInput placeholder="apellido" required formControlName="apellido">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input matInput placeholder="Direccion" required formControlName="direccion">
+        <input matInput placeholder="documentox" required formControlName="documento">
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="frmPaciente.invalid">
+    <mat-form-field class="example-full-width">
+        <input matInput placeholder="estado" required formControlName="estado" >
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input matInput placeholder="correo" required formControlName="correo">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input matInput placeholder="id_empresa" required formControlName="id_empresa" type="number">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input matInput placeholder="id_rol" required formControlName="id_rol" type="number">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="frmAdminUsuario.invalid">
         <mat-icon>done</mat-icon>
         <span>Aceptar</span>
     </button>
-    <button mat-raised-button color="accent" routerLink='/paciente' type="button">
+    <button mat-raised-button color="accent" routerLink='/adminUsuario' type="button">
         <mat-icon>close</mat-icon>
         <span>Cancelar</span>
     </button>
 
 </form>
+

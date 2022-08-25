@@ -1,4 +1,5 @@
 export class Usuario {
+    //pruebas
     id_usuario!: number;
     usuario!:  string;
     clave!:  string;    
@@ -6,6 +7,7 @@ export class Usuario {
     apellido!:  string;
     documento!:  string;
     estado!:  string;
+    correo!:  string;
     id_empresa!: number; 
     id_rol!: number;
     pseudonimo!:  string;

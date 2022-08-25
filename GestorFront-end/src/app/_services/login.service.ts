@@ -1,12 +1,13 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, observable, Observable, throwError } from 'rxjs';
+import { HttpClient ,HttpHeaders} from '@angular/common/http';
+import { Injectable,  } from '@angular/core';
+import { BehaviorSubject, catchError, map, observable, Observable, Subject, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Parametros } from '../_model/parametros';
 import { Router } from '@angular/router';
 import { User, UserResponse } from '../_model/userLogin';
 import { Token } from '@angular/compiler';
 import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 const helper = new JwtHelperService();
 
@@ -17,6 +18,10 @@ const helper = new JwtHelperService();
 export class LoginService {
 
   private logedIn = new BehaviorSubject<boolean>(false);
+  private logeoEmpresa=  new BehaviorSubject<string>('1');
+  private userToken=  new BehaviorSubject<string>('null') ;
+
+
 
   //reporteName : boolean = false;
 
@@ -24,7 +29,7 @@ export class LoginService {
   //sudo kill $(sudo lsof -t -i:4200)
 
 
-
+  header = new HttpHeaders();
   constructor( 
     private http: HttpClient,
     private router: Router 
@@ -36,15 +41,28 @@ export class LoginService {
       return this.logedIn.asObservable();
     }
 
+    get isEmpresa(): Observable<string>{
+      return this.logeoEmpresa.asObservable();
+    }
+
+    get userTokenValue(): string{
+      return this.userToken.getValue();
+    }
+
+
+  
+
 
   login(user: User ): Observable <UserResponse  | any>{
 
-    return this.http.post<UserResponse>(`${this.url}/auth/login`,user )
+    return this.http.post<UserResponse>(`${this.url}/auth/login`,user)
     .pipe(
       map((res: UserResponse)=>{
-        console.log(res);
+        console.log('holaaa',res.id_empresa);
         this.savetoken(res.token)
         this.logedIn.next(true);
+        this.logeoEmpresa.next(res.id_empresa);
+        this.userToken.next(res.token);
         return res;
       }),
       catchError((err) => this.handlerError(err) )
@@ -71,6 +89,7 @@ export class LoginService {
      localStorage.removeItem('token');
      this.logedIn.next(false);
      this.router.navigate(['login']);
+     this.userToken.next('null')
     // this.reporteName= false
     // console.log("Hola login", this.reporteName)
     
@@ -82,6 +101,7 @@ export class LoginService {
    private checktoken (): void{
      const userToken: any = localStorage.getItem('token');
      const isExpired = helper.isTokenExpired(userToken);
+     this.userToken.next(userToken);
      //set userisLogged = isExpired;
      console.log('isExpired',isExpired)
      isExpired ? this.cerrarSesion() : this.logedIn.next(true);
@@ -93,7 +113,7 @@ export class LoginService {
    };
    
    private handlerError (err:any): Observable<never>{
-     let errorMessage ='Ha ocurrido un error reciviendo Data'
+     let errorMessage ='Ha ocurrido un error recibiendo Data'
      if(err){
        errorMessage = `Error: code ${err.errorMessage}`
 

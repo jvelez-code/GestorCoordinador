@@ -10,6 +10,7 @@ export interface UserResponse {
     message: string;
     token: string;
     userId: string;
+    id_empresa: string;
     id_rol: Roles;
 
 }

@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxCaptchaModule } from 'ngx-captcha';
 
@@ -42,7 +42,15 @@ import { LlamadasCalificadasComponent } from './pages/reporte/llamadas-calificad
 import { LlamadasonlineComponent } from './pages/grafico/llamadasonline/llamadasonline.component';
 import { AdminUsuariosComponent } from './pages/adminUsuarios/admin-usuarios.component';
 import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin-edicion.component';
+import { environment } from 'src/environments/environment';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AdminInterceptors } from './interceptors/admin-interceptors';
 registerLocaleData(localeEs,'es');
+
+
+// export function tokenGetter() {
+//   return localStorage.getItem(environment.TOKEN_NAME);
+// }
 
 
 
@@ -85,8 +93,19 @@ registerLocaleData(localeEs,'es');
     MatInputModule,
     NoopAnimationsModule,
     SocketIoModule.forRoot(config),
-    NgxCaptchaModule  ],
-  providers: [{ provide:LOCALE_ID,useValue:'es' }],
-  bootstrap: [AppComponent]
-})
+    NgxCaptchaModule,
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: tokenGetter,
+    //     allowedDomains: [environment.HOST.substring(7)],
+    //     disallowedRoutes: [`http://${environment.HOST.substring(7)}/login/enviarCorreo`],
+    //   },
+    // }),
+    ],
+  providers: [
+    { provide:LOCALE_ID,useValue:'es' },
+    { provide :HTTP_INTERCEPTORS, useClass: AdminInterceptors, multi:true}
+      ],
+       bootstrap: [AppComponent]
+    })
 export class AppModule { }

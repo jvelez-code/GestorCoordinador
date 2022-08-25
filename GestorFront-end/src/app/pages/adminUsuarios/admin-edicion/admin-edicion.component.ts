@@ -3,6 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AdminUsuariosService } from 'src/app/_services/admin-usuarios.service';
 import { switchMap } from 'rxjs/operators';
+import { Usuario } from 'src/app/_model/usuario';
+import { AuthUsuario } from 'src/app/_model/auth_usuario';
+
 
 
 @Component({
@@ -20,17 +23,21 @@ export class AdminEdicionComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private pacienteService: AdminUsuariosService
+    private usuarioService: AdminUsuariosService
   ) { }
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      'id': new FormControl(0),
-      'nombres': new FormControl('', [Validators.required, Validators.minLength(3)]),
-      'apellidos': new FormControl('', Validators.required),
-      'dni': new FormControl(''),
-      'telefono': new FormControl(''),
-      'direccion': new FormControl('')
+    this.form = new FormGroup({      
+      'id_usuario': new FormControl(0),
+      'usuario': new FormControl(),
+      'clave': new FormControl(),
+      'nombre': new FormControl('', Validators.required),
+      'apellido': new FormControl('', Validators.required),
+      'documento': new FormControl(),
+      'estado': new FormControl(),
+      'correo': new FormControl(),
+      'id_empresa': new FormControl(),
+      'id_rol': new FormControl()
     });
 
     this.route.params.subscribe((data: Params) => {
@@ -44,67 +51,77 @@ export class AdminEdicionComponent implements OnInit {
   get f() { return this.form.controls; }
 
   private initForm() {
-    console.log('tres');
+    
     if (this.edicion) {
-      console.log('cuatro');
-      this.pacienteService.listarUsuariosId(this.id).subscribe(data => {
-        console.log('uno',data);
-        console.log('dos',data.apellido);
-        this.form = new FormGroup({
-          'id': new FormControl(data.apellido),
-          'nombres': new FormControl(data.apellido),
-          'apellidos': new FormControl(data.apellido),
-          'dni': new FormControl(data.apellido),
-          'telefono': new FormControl(data.apellido),
-          'direccion': new FormControl(data.apellido)
-        });
+        this.usuarioService.listarUsuariosId(this.id).subscribe(data => {
+        this.form = new FormGroup({          
+          'id_usuario': new FormControl(data.id_usuario),
+          'usuario': new FormControl(data.usuario),
+          'clave': new FormControl(data.clave),
+          'nombre': new FormControl(data.nombre),
+          'apellido': new FormControl(data.apellido),
+          'documento': new FormControl(data.documento),
+          'estado': new FormControl(data.estado),
+          'correo': new FormControl(data.correo),
+          'id_empresa': new FormControl(data.id_empresa),
+          'id_rol': new FormControl(data.id_rol)       
+         });
 
       });
     }
   }
 
   operar() {
+    if (this.form.invalid) { return; }
+    //valoresdel formulario
+    let authUsuario = new AuthUsuario();
 
-    /*if (this.form.invalid) { return; }
-
-    let paciente = new Paciente();
-    paciente.idPaciente = this.form.value['id'];
-    paciente.nombres = this.form.value['nombres'];
-    paciente.apellidos = this.form.value['apellidos'];
-    paciente.dni = this.form.value['dni'];
-    paciente.telefono = this.form.value['telefono'];
-    paciente.direccion = this.form.value['direccion'];
+    authUsuario.id_usuario = this.form.value['id_usuario'];
+    //authUsuario.id_usuario = 55;
+    authUsuario.usuario= this.form.value['usuario'];
+    authUsuario.clave = this.form.value['clave'];
+    authUsuario.nombre = this.form.value['nombre'];
+    authUsuario.apellido = this.form.value['apellido'];
+    authUsuario.documento = this.form.value['documento'];
+    authUsuario.estado = this.form.value['estado'];
+    authUsuario.correo = this.form.value['correo'];
+    authUsuario.id_empresa = this.form.value['id_empresa'];
+    authUsuario.id_rol = this.form.value['id_rol'];
 
     if (this.edicion) {
       //MODIFICAR
+      //no devuelve data
 
-      /*this.pacienteService.modificar(paciente).subscribe(() => {
-        this.pacienteService.listar().subscribe(data => {
-          //this.pacienteService.pacienteCambio.next(data);
-          this.pacienteService.setPacienteCambio(data);
-        });
-      });
+      /*this.usuarioService.actualizarUsuarios(authUsuario).subscribe();//() => {
+        this.usuarioService.listarUsuarios().subscribe(data => {
+          //this.usuarioService.setUsuarioCambio.next(data);
+          this.usuarioService.setUsuarioCambio(data);
+       // });
+     });*/
 
       //PRACTICA IDEAL
-      this.pacienteService.modificar(paciente).pipe(switchMap(() => {
-        return this.pacienteService.listar();
+      this.usuarioService.actualizarUsuarios(authUsuario).pipe(switchMap(() => {
+        return this.usuarioService.listarUsuarios();
       })).subscribe(data => {
-        this.pacienteService.setPacienteCambio(data);
-        this.pacienteService.setMensajecambio('SE MODIFICÓ');
+        this.usuarioService.setUsuarioCambio(data);
+        this.usuarioService.setMensajecambio('SE MODIFICÓ');
       });
-    } else {
-      //REGISTRAR
-      //PRACTICA COMUN
-      this.pacienteService.registrar(paciente).subscribe(() => {
-        this.pacienteService.listar().subscribe(data => {
-          this.pacienteService.setPacienteCambio(data);
-          this.pacienteService.setMensajecambio('SE REGISTRÓ');
-        });
+    } 
+    else {
+
+      this.usuarioService.crearUsuarios(authUsuario).pipe(switchMap(() => {
+        console.log('uno');
+        return this.usuarioService.listarUsuarios();
+        console.log('dos');
+      })).subscribe(data => {
+        console.log('tres');
+        this.usuarioService.setUsuarioCambio(data);
+        this.usuarioService.setMensajecambio('SE REGISTRÓ');
       });
     }
-
-    this.router.navigate(['paciente']);*/
+    this.router.navigate(['adminUsuario']);
   }
+
 
 
 }

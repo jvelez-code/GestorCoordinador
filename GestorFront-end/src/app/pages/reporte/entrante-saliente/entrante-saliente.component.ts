@@ -10,6 +10,7 @@ import * as moment from 'moment';
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { LoginService } from 'src/app/_services/login.service';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -46,7 +47,8 @@ export class EntranteSalienteComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor( private reporteService : ReporteService ) { 
+  constructor( private reporteService : ReporteService,
+    private loginService: LoginService  ) { 
 
     const today = new Date();
     const month = today.getMonth();
@@ -66,12 +68,16 @@ export class EntranteSalienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
   }
 
   aceptar(){    
     this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
     this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-    this.empresaparametro = 'ASISTIDA'
+    //this.empresaparametro = 'ASISTIDA'
 
  
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }

@@ -73,18 +73,22 @@ export class TmoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
   }
 
   aceptar(){    
     this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
     this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-    this.empresaparametro = 'ASISTIDA'
+    //this.empresaparametro = 'ASISTIDA'
 
  
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
+   console.log(parametros)
     this.reporteService.reporTmo(parametros).subscribe(data=>{
-    console.log(data);
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

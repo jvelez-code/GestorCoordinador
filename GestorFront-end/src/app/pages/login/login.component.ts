@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
 
-  public aFormGroup!: UntypedFormGroup;
+  public aFormGroup!: FormGroup;
   private subscripcion : Subscription = new Subscription();
 
 
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor( 
     private loginService: LoginService,
     private router: Router,
-    private formBuilder: UntypedFormBuilder ) { }
+    private formBuilder: FormBuilder ) { }
 
 
   ngOnInit(): void {
@@ -43,12 +43,12 @@ export class LoginComponent implements OnInit, OnDestroy {
      this.subscripcion.unsubscribe();
   }
 
-  siteKey :string= "6Ldg4NEgAAAAADsM8zee7pEVzDmNp1zMyl6sz60e";
 
 
   iniciarSesion(){
     const user= {usuario:this.usuario, clave:this.clave }
     this.subscripcion = this.loginService.login(user).subscribe(data=>{
+      localStorage.setItem(environment.TOKEN_NAME,data.token );
        this.router.navigate(['reporte']);
     })
     
