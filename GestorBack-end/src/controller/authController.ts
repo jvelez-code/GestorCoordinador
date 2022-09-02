@@ -33,7 +33,7 @@ class AuthController{
         })
         
     } catch (error) {
-        return res.status(400).json({message: 'Usuario y Contraseña son Incorrectos'})
+        return res.status(400).json({message: 'Usuario y Contraseña son incorrectos'})
         
     }
 

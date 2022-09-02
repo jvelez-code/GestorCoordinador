@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { User, UserResponse } from '../_model/userLogin';
 import { Token } from '@angular/compiler';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Empresa } from '../_model/empresa';
 
 
 const helper = new JwtHelperService();
@@ -18,8 +19,11 @@ const helper = new JwtHelperService();
 export class LoginService {
 
   private logedIn = new BehaviorSubject<boolean>(false);
-  private logeoEmpresa=  new BehaviorSubject<string>('1');
+  private logeoEmpresa=  new BehaviorSubject<string>('--SIN EMPRESA--');
   private userToken=  new BehaviorSubject<string>('null') ;
+
+  private empresaCambio = new Subject<string>();
+  pseudonimo !: string;
 
 
 
@@ -37,6 +41,16 @@ export class LoginService {
       this.checktoken();
     }
 
+    getEmpresaCambio(){
+      return this.empresaCambio.asObservable();
+    }
+  
+    setEmpresaCambio(empresa: string){
+      this.empresaCambio.next(empresa);
+      this.logeoEmpresa.next(empresa);
+    }
+  
+
     get isLogged(): Observable<boolean>{
       return this.logedIn.asObservable();
     }
@@ -44,6 +58,12 @@ export class LoginService {
     get isEmpresa(): Observable<string>{
       return this.logeoEmpresa.asObservable();
     }
+    
+     
+    set setEmpresa(empresa: string){
+       this.logeoEmpresa.next(empresa);
+    }
+         
 
     get userTokenValue(): string{
       return this.userToken.getValue();
@@ -54,11 +74,12 @@ export class LoginService {
 
 
   login(user: User ): Observable <UserResponse  | any>{
+    
 
     return this.http.post<UserResponse>(`${this.url}/auth/login`,user)
     .pipe(
       map((res: UserResponse)=>{
-        console.log('holaaa',res.id_empresa);
+        console.log('holaaa',res);
         this.savetoken(res.token)
         this.logedIn.next(true);
         this.logeoEmpresa.next(res.id_empresa);

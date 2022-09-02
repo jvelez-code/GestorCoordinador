@@ -59,10 +59,14 @@
   }
   
   table {
-    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    text-align: center;
   }
   
   .mat-form-field {
     font-size: 14px;
     width: 100%;
   }
+  tr:hover {background-color: coral;}

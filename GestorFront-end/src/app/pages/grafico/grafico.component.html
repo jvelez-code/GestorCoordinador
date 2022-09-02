@@ -1,33 +1,21 @@
-<!-- Cards with media area -->
+<router-outlet></router-outlet>
 
+<div [hidden]="route.children.length !== 0">
 <mat-card class="example-card">
-  <mat-card-title-group>
-    <mat-card-title>LLamadas por Hora</mat-card-title>
-    <mat-card-subtitle>En Linea</mat-card-subtitle>
-    <img mat-card-lg-image src="assets/reporte.png" >
-  </mat-card-title-group>
-  <mat-card-content>
-    {{longText}}
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button color="primary">Consultar
-      <mat-icon>trending_up</mat-icon>
-    </button>
-  </mat-card-actions>
-</mat-card>
+    <mat-card-title-group>
+      <mat-card-title>LLamadas por Hora</mat-card-title>
+      <mat-card-subtitle>En Linea</mat-card-subtitle>
+      <img mat-card-lg-image src="assets/reporte.png" >
+    </mat-card-title-group>
+    <mat-card-content>
+      {{longText}}
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary"  routerLink="/graficos/llamadaHora">
+        Consultar
+        <mat-icon>trending_up</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
 
-<mat-card class="example-card">
-  <mat-card-title-group>
-    <mat-card-title>LLamadas por Hora</mat-card-title>
-    <mat-card-subtitle>Historico</mat-card-subtitle>
-    <img mat-card-lg-image src="assets/reporte.png" >
-  </mat-card-title-group>
-  <mat-card-content>
-    {{longText}}
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button color="primary">Consultar
-      <mat-icon>trending_up</mat-icon>
-    </button>
-  </mat-card-actions>
-</mat-card>

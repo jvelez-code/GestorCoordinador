@@ -17,6 +17,8 @@ import { EntranteSalienteComponent } from './pages/reporte/entrante-saliente/ent
 import { LlamadasCalificadasComponent } from './pages/reporte/llamadas-calificadas/llamadas-calificadas.component';
 import { AdminUsuariosComponent } from './pages/adminUsuarios/admin-usuarios.component';
 import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin-edicion.component';
+import { LlamadasonlineComponent } from './pages/grafico/llamadasonline/llamadasonline.component';
+import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -38,6 +40,10 @@ const routes: Routes = [
     { path: 'admin-edicion/:id', component: AdminEdicionComponent },
     { path: 'admin-nuevo', component: AdminEdicionComponent },
   ]},
+  { path: 'graficos', component: GraficoComponent, children: [ 
+    { path: 'llamadaHora', component: LlamadasonlineComponent }
+  ]},
+  { path: 'empresas', component: EmpresasComponent },
   { path: '', redirectTo:'login', pathMatch: 'full' },
 ];
 

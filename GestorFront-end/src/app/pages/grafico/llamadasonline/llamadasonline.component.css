@@ -1,0 +1,41 @@
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    text-align: justify;
+  }
+  
+  .span {
+    margin: auto;
+  }
+  
+  table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    text-align: center;
+  }
+  
+  tr:hover {background-color: coral;}
+
+  section {
+    display: table;
+  }
+    
+  .example-button-row {
+    display: table-cell;
+    width: 490px;
+  }
+  
+  .example-button-row .mat-button-base {
+    margin: 8px 8px 8px 0;
+  }
+  
+  .save-button-1 {
+    background: yellowgreen;
+  }
+
+  .save-button-2 {
+    background: rgb(50, 195, 205);
+  }

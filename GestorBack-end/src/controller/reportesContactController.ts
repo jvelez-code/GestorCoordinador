@@ -43,6 +43,33 @@ class ReporContact {
 //BD CONTACT
 
 
+
+static postllamadasporHora = async (req: Request, res:Response ) =>{
+    try {
+        //parametro de header
+        //alt +96 `
+        let fechaini=req.body.fechaini
+        let fechafin=req.body.fechafin   
+        let empresa=req.body.empresa
+        
+        const response = await poolcont.query(`select hora_llamada, sum(contestadas) AS ANSWERED,
+        count(hora_llamada)-sum(contestadas) AS NO_ANSWER,count(hora_llamada) AS TOTALES 
+        from ( select  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
+        WHEN id_agente='777777777' THEN 0 END  contestadas from grabaciones_pila 
+        where fecha_grabacion BETWEEN ($1) and ($2)  AND empresa=($3)
+        AND tipo_de_llamada='Entrante' ) as t group by hora_llamada order by 1`,[fechaini ,fechafin, empresa] );
+
+    if (res !== undefined) {
+        return res.json(response.rows);        
+      }
+      
+    } 
+    catch (error) {
+        console.log(error); 
+    } 
+};
+
+
 static postSecretariaVirtual = async (req: Request, res:Response ) =>{
     try {
         //parametro de header
@@ -578,7 +605,7 @@ static postReportes =async (req: Request, res:Response ) => {
     static potsMonitoreo = async (req: Request, res:Response ) =>{
        // res.send('Hola mundo post final');
         try {
-            let fecha=req.body.fecha;
+
             let empresa=req.body.empresa;  
 
             let date = new Date();
@@ -589,7 +616,7 @@ static postReportes =async (req: Request, res:Response ) => {
             }
             let fechaFinal=formatDate(date);
         const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
-        fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
+        numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
         AND empresa=($2) ORDER BY ae.id_estado,5 desc`,[fechaFinal, empresa ]);

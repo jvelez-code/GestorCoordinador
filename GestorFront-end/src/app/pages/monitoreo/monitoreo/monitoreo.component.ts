@@ -23,7 +23,7 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
 
   
 
-  displayedColumns = ['serial','extension', 'login', 'fecha', 'descripcion', 'total'];
+  displayedColumns = ['serial','extension', 'login', 'fecha','descripcion', 'numero_origen','total'];
   dataSource !: MatTableDataSource<AskEstadoExtension>;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -37,17 +37,18 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
     
   }
   ngOnInit(): void {
+    
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
+      console.log(this.empresaparametro)
     })
-   
-    //this.empresaparametro = 'ASISTIDA'
 
- 
+        
     const parametros= {empresa:this.empresaparametro }
 
     const actualizar = interval(3000)
     this.subscripcion= actualizar.subscribe(n=>{
+      
       console.log("total",n)     
          this.monitoreoService.monitoreoEmpresa(parametros).subscribe(data=>{
           this.dataSource= new MatTableDataSource(data);

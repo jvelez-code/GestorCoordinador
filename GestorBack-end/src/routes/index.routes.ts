@@ -9,6 +9,7 @@ import reporContact from "./reportesContact.routes";
 import reporGestor from "./reportesGestor.routes";
 
 
+
 const router = Router();
 
 router.use('/auth', auth)

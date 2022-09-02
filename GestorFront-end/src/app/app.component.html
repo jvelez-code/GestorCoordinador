@@ -51,7 +51,14 @@
           <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
               <mat-icon>assessment</mat-icon>
               <span>Reportes</span>
-          </button>
+          </button>        
+
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/empresas" style="cursor: pointer">
+              <mat-icon>attach_file</mat-icon>
+              <span>Empresas</span>
+          </button>        
+
 
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="sidenav.toggle()" routerLink="/adminUsuario" style="cursor: pointer">

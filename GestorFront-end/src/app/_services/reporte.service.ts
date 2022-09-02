@@ -9,6 +9,7 @@ import { Parametros } from '../_model/parametros'
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { Empresa } from '../_model/empresa';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -22,6 +23,8 @@ const EXCEL_EXT = '.xlsx';
 
 
 export class ReporteService {
+
+  private mensajeCambio = new Subject<string>();
   
   private urlCon:string = `${environment.HOST}/reporContact`;
   private urlGes:string = `${environment.HOST}/reporGestor`;
@@ -130,6 +133,20 @@ export class ReporteService {
       console.log("Hola Body"+body)
       return this.http.post<Parametros>(`${this.urlCon}/usuarios`,body,{'headers':headers});
 
+    }
+
+    empresas(){
+      return this.http.get<Empresa[]>(`${this.urlGes}/empresas`);
+
+    }
+
+
+    getMensajeCambio(){
+      return this.mensajeCambio.asObservable();
+    }
+  
+    setMensajecambio(mensaje: string){
+      return this.mensajeCambio.next(mensaje);
     }
 
 

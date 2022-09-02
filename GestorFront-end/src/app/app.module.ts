@@ -45,6 +45,7 @@ import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin
 import { environment } from 'src/environments/environment';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AdminInterceptors } from './interceptors/admin-interceptors';
+import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
 registerLocaleData(localeEs,'es');
 
 
@@ -80,7 +81,8 @@ registerLocaleData(localeEs,'es');
     LlamadasCalificadasComponent,
     LlamadasonlineComponent,
     AdminUsuariosComponent,
-    AdminEdicionComponent
+    AdminEdicionComponent,
+    EmpresasComponent
   ],
   imports: [
     BrowserModule,

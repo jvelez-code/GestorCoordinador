@@ -76,6 +76,7 @@ export class TmoComponent implements OnInit {
 
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
+      console.log('tmp',this.empresaparametro)
     })
   }
 

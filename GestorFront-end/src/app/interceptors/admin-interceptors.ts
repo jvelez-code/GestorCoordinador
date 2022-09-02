@@ -9,7 +9,7 @@ export class AdminInterceptors implements HttpInterceptor{
     constructor(private loginService: LoginService ){}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if(req.url.includes('authUsuario')){
+        if(!req.url.includes('login')){
         const authToken= this.loginService.userTokenValue;
         const authReq = req.clone({
             setHeaders:{

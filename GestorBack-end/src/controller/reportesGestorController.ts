@@ -41,16 +41,33 @@ class reporGestor {
 
 //DB GESTOR
 
+static getEmpresas = async (req: Request, res:Response ) =>{
+    try {
+        
+        const response = await pool.query(`SELECT * FROM empresa WHERE id_empresa >0  ORDER BY id_empresa`);
+          
+
+    if (res !== undefined) {
+        return res.json(response.rows);        
+      }
+      
+    } 
+    catch (error) {
+        console.log(error); 
+    } 
+};
+
+
 static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
     try {
         //parametro de header
         //alt +96 `
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin 
-        const response = await pool.query(`Select Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
+        const response = await pool.query(`SELECT Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
         Prin.tipificacionPadre
         from (
-            select case when eg.id_estado_gestion_padre is null
+            SELECT case when eg.id_estado_gestion_padre is null
                         then null
                         else egp.id_estado_gestion
                         end as EstadoPrincipal,
@@ -69,7 +86,7 @@ static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
             on Prin.IdTipificacion = est.id_estado_gestion
         where 	  Prin.fecha_hora_sis between ($1) and ($2)
         group by Prin.IdTipificacion, est.nombre,Prin.tipificacionPadre
-        order by Prin.IdTipificacion`,[fechaini ,fechafin] );
+        ORDER BY Prin.IdTipificacion`,[fechaini ,fechafin] );
 
         //Prin.id_campana IN ($P!{idCampanas}) and
            
@@ -150,7 +167,7 @@ static postReportesGestion = async (req: Request, res:Response ) =>{
         let fecha2=req.body.fecha   
         console.log(req.body.fecha);
         const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion>=$1 order by fecha_gestion `,[fecha2] );
+        FROM gestion WHERE fecha_gestion>=$1 ORDER BY fecha_gestion `,[fecha2] );
     if (res !== undefined) {
         return res.json(response.rows);
         
@@ -165,7 +182,7 @@ static postReportesGestion = async (req: Request, res:Response ) =>{
 static getReportesGestion = async (req: Request, res:Response ) =>{
     try {
         const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion is not null order by fecha_gestion limit 5 `);
+        FROM gestion WHERE fecha_gestion is not null ORDER BY fecha_gestion limit 5 `);
     if (res !== undefined) {
         return res.json(response.rows);
       }
@@ -188,7 +205,7 @@ static postUsuariosXempresa = async (req: Request, res:Response ) =>{
         try {   
         
             let empresa=req.body.empresa
-            const response = await pool.query(`select id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
+            const response = await pool.query(`SELECT id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
             id_empresa, pseudonimo from usuario u,empresa e 
             where u.empresa=e.id_empresa AND pseudonimo=($1) and estado<5 ORDER BY usuario`,[empresa] );
 
@@ -206,7 +223,7 @@ static postUsuariosXempresa = async (req: Request, res:Response ) =>{
 static getReportes = async (req: Request, res:Response ) =>{
     try {
         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12') ORDER BY  nombre_reporte`);
+        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54','12') ORDER BY  nombre_reporte`);
     if (res !== undefined) {
         return res.json(response.rows);
         pool.close();
@@ -222,7 +239,7 @@ static getReportes = async (req: Request, res:Response ) =>{
 static getReportesprueba = async (req: Request, res:Response ) =>{
     try {
         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
+        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54','12')`);
     if (res !== undefined) {
         return res.json(response.rows);
         pool.close();

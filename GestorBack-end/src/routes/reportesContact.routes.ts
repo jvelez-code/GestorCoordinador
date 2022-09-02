@@ -17,6 +17,7 @@ router.post('/calificacionServicio', ReporContact.postCalificacionServicio );
 router.post('/llamadasRecibidas', ReporContact.postLlamadasRecibidas );
 router.post('/tmoEntranteSaliente', ReporContact.postTmoEntranteSaliente );
 router.post('/SecretariaVirtual', ReporContact.postSecretariaVirtual );
+router.post('/llamadasporHora', ReporContact.postllamadasporHora);
 
 export default router;
  
