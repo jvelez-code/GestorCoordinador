@@ -86,6 +86,13 @@ export class TmoDetalladoComponent implements OnInit {
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
     })
+
+    this.parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,
+      empresa:this.empresaparametro, usuario:this.usuarioSeleccionado }  
+
+
+       //this.usuarios$ = this.reporteService.usuariosXEmpresa(this.parametros);
+
       
   }
 
@@ -95,11 +102,12 @@ export class TmoDetalladoComponent implements OnInit {
 
 
  
-    const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,
+    this.parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,
       empresa:this.empresaparametro, usuario:this.usuarioSeleccionado }
    //parametros son los paramatros que enviamos y node.js los toma en el header
 
-    this.reporteService.reporTmoDetallado(parametros).subscribe(data=>{
+    this.reporteService.reporTmoDetallado(this.parametros).subscribe(data=>{
+      console.log('tmo',data)
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

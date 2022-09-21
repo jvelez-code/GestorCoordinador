@@ -412,7 +412,7 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         WHERE uniqueid=callid  AND agent=nro_documento
         AND id_agente=agent AND fecha_grabacion BETWEEN ($1)  AND ($2) 
         AND g.empresa=($3)  AND tipo_de_llamada='Entrante' AND event='CONNECT' AND activo=true 
-            AND login_agente=($4)
+            
         ) AS c
         INNER JOIN (
         SELECT time,callid,agent,event
@@ -420,7 +420,9 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         WHERE uniqueid=callid AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSFER')) AS t
         ON c.callid=t.callid AND c.agent=t.agent
         ORDER BY c.time`
-        ,[fechaini ,fechafin, empresa, usuario ] );
+        ,[fechaini ,fechafin, empresa] );
+
+        //AND login_agente=($4)
 
     if (res !== undefined) {
         return res.json(response.rows);        
