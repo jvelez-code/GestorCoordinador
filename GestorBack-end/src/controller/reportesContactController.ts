@@ -44,6 +44,68 @@ class ReporContact {
 
 
 
+static postIVR = async (req: Request, res:Response ) =>{
+    try {
+        //parametro de header
+        //alt +96 `
+        let fechaini=req.body.fechaini
+        let fechafin=req.body.fechafin   
+        let empresa=req.body.empresa
+        
+        const response = await poolcont.query(`SELECT ivr_date,ivr_hora,
+        ivr_ide,ivr_pin,ivr_per,
+        ivr_tel,ivr_state
+        from call_ivr where ivr_date between ($1)
+        AND ($2) ORDER BY ivr_date,ivr_hora `,[fechaini ,fechafin] );
+
+    if (res !== undefined) {
+        return res.json(response.rows);        
+      }
+      
+    } 
+    catch (error) {
+        console.log(error); 
+    } 
+};
+
+
+
+static postDuracionEstados = async (req: Request, res:Response ) =>{
+    try {
+        //parametro de header
+        //alt +96 `
+        let fechaini=req.body.fechaini
+        let fechafin=req.body.fechafin   
+        let empresa=req.body.empresa
+        
+        const response = await poolcont.query(`SELECT extensiones, agente, dias, total::time , hora_limite::time,(hora_limite-total)::time as diferencia, descripcion ,Hora FROM  (
+            SELECT  ale.id_extension AS extensiones,login_agente AS agente,count(*) AS dias ,sum(fecha_fin-fecha_ini) AS total,(time '01:02:00')*count(*) AS hora_limite,
+            (sum(fecha_fin-fecha_ini))-((time '01:02:00')*count(*) ) AS diferencia,descripcion,time '01:02:00' AS Hora
+            FROM ASk_log_estados ale,ASk_estado,ASk_estado_extension aee
+            where ale.estado=id_estado AND ale.id_extension=aee.id_extension AND fecha_ini between ($1) AND  ($2)
+            AND  aee.empresa=($3) AND ale.estado in ('5')
+            GROUP BY ale.id_extension,login_agente,descripcion UNION
+            SELECT ale.id_extension AS extensiones,login_agente AS agente,count(*) AS dias,sum(fecha_fin-fecha_ini) AS total,(time '00:20:00')*count(*) AS hora_limite,
+            (sum(fecha_fin-fecha_ini))-((time '00:20:00')*count(*) ) AS diferencia,descripcion,time '00:20:00' AS Hora
+            FROM ASk_log_estados ale,ASk_estado,ASk_estado_extension aee
+            where ale.estado=id_estado AND ale.id_extension=aee.id_extension AND fecha_ini between ($1) AND  ($2)
+            AND  aee.empresa=($3) AND ale.estado in ('7','8')
+            GROUP BY ale.id_extension,login_agente,descripcion) AS horarios
+            ORDER BY dias desc,agente,diferencia desc`,[fechaini ,fechafin, empresa] );
+
+    if (res !== undefined) {
+        return res.json(response.rows);        
+      }
+      
+    } 
+    catch (error) {
+        console.log(error); 
+    } 
+};
+
+
+
+
 static postllamadasporHora = async (req: Request, res:Response ) =>{
     try {
         //parametro de header
@@ -52,12 +114,12 @@ static postllamadasporHora = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
         
-        const response = await poolcont.query(`select hora_llamada, sum(contestadas) AS ANSWERED,
+        const response = await poolcont.query(`SELECT hora_llamada, sum(contestadas) AS ANSWERED,
         count(hora_llamada)-sum(contestadas) AS NO_ANSWER,count(hora_llamada) AS TOTALES 
-        from ( select  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
+        from ( SELECT  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
         WHEN id_agente='777777777' THEN 0 END  contestadas from grabaciones_pila 
         where fecha_grabacion BETWEEN ($1) and ($2)  AND empresa=($3)
-        AND tipo_de_llamada='Entrante' ) as t group by hora_llamada order by 1`,[fechaini ,fechafin, empresa] );
+        AND tipo_de_llamada='Entrante' ) as t group by hora_llamada ORDER BY 1`,[fechaini ,fechafin, empresa] );
 
     if (res !== undefined) {
         return res.json(response.rows);        
@@ -206,15 +268,15 @@ static postLlamadasRecibidas = async (req: Request, res:Response ) =>{
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
-        const response = await poolcont.query(`select fecha_llamada ,
+        const response = await poolcont.query(`SELECT fecha_llamada ,
         sum(COALESCE(llamadas,'0'))-sum(COALESCE(positiva,'0'))-sum(COALESCE(negativas,'0'))-sum(COALESCE(no_atendidas,'0')) AS no_calificadas,
         sum(COALESCE(positiva,'0')) AS calif_positiva,
         sum(COALESCE(negativas,'0')) AS calif_negativo,
         sum(COALESCE(llamadas,'0'))-sum(COALESCE(no_atendidas,'0'))AS atendidas,
         sum(COALESCE(llamadas,'0')) AS total_llamadas,linea_servicio as telefono FROM
-        (select date(fecha_grabacion) AS fecha_llamada ,COUNT(uniqueid) AS llamadas , CASE WHEN calificacion =1 THEN 1 END AS positiva,CASE WHEN calificacion =2 THEN 1 END AS negativas,
+        (SELECT date(fecha_grabacion) AS fecha_llamada ,COUNT(uniqueid) AS llamadas , CASE WHEN calificacion =1 THEN 1 END AS positiva,CASE WHEN calificacion =2 THEN 1 END AS negativas,
         CASE WHEN id_agente='777777777' THEN 1 END AS no_atendidas, linea_servicio FROM
-        (select fecha_grabacion,uniqueid,calificacion,linea_servicio,id_agente
+        (SELECT fecha_grabacion,uniqueid,calificacion,linea_servicio,id_agente
         from grabaciones_pila gp, queue_log
         WHERE uniqueid=callid
         AND fecha_grabacion BETWEEN ($1) and ($2)
@@ -425,10 +487,10 @@ static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin 
         let empresa=req.body.empresa;  
-        const response = await pool.query(`Select Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
+        const response = await pool.query(`SELECT Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
         Prin.tipificacionPadre
         from (
-            select case when eg.id_estado_gestion_padre is null
+            SELECT case when eg.id_estado_gestion_padre is null
                         then null
                         else egp.id_estado_gestion
                         end as EstadoPrincipal,
@@ -447,7 +509,7 @@ static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
             on Prin.IdTipificacion = est.id_estado_gestion
         where 	  Prin.fecha_hora_sis between ($1) and ($2)
         group by Prin.IdTipificacion, est.nombre,Prin.tipificacionPadre
-        order by Prin.IdTipificacion`,[fechaini ,fechafin] );
+        ORDER BY Prin.IdTipificacion`,[fechaini ,fechafin] );
 
         //Prin.id_campana IN ($P!{idCampanas}) and
            
@@ -530,7 +592,7 @@ static postReportesGestion = async (req: Request, res:Response ) =>{
         let fecha2=req.body.fecha   
         console.log(req.body.fecha);
         const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion>=$1 order by fecha_gestion `,[fecha2] );
+        FROM gestion WHERE fecha_gestion>=$1 ORDER BY fecha_gestion `,[fecha2] );
     if (res !== undefined) {
         return res.json(response.rows);
         
@@ -545,7 +607,7 @@ static postReportesGestion = async (req: Request, res:Response ) =>{
 static getReportesGestion = async (req: Request, res:Response ) =>{
     try {
         const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion is not null order by fecha_gestion limit 5 `);
+        FROM gestion WHERE fecha_gestion is not null ORDER BY fecha_gestion limit 5 `);
     if (res !== undefined) {
         return res.json(response.rows);
       }
@@ -670,7 +732,7 @@ static postUsuariosXempresa = async (req: Request, res:Response ) =>{
         try {   
         
             let empresa=req.body.empresa
-            const response = await pool.query(`select id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
+            const response = await pool.query(`SELECT id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
             id_empresa, pseudonimo from usuario u,empresa e 
             where u.empresa=e.id_empresa AND pseudonimo=($1) and estado<5 ORDER BY usuario`,[empresa] );
 

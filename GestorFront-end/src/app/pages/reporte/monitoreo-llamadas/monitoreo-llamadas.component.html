@@ -1,0 +1,106 @@
+<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>  
+ <div class="example-containe mat-elevation-z8">
+   <form method="POST">
+     
+<div>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Selecccione las fechas</mat-label>
+      <mat-date-range-input
+        [formGroup]="campaignOne"
+        [rangePicker]="campaignOnePicker"
+        [comparisonStart]="campaignTwo.value.start"
+        [comparisonEnd]="campaignTwo.value.end">
+        <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+        <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <button mat-raised-button color="primary" (click)="aceptar()">Consultar
+      <mat-icon>trending_up</mat-icon>
+    </button>
+  </div>
+  </form>
+</div>
+
+<mat-form-field appearance="standard">
+  <mat-label >Buscar</mat-label>
+  <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+</mat-form-field>
+
+
+<table mat-table [dataSource]="dataSource" matSort  class="mat-elevation-z8 demo-table" >
+
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef> FECHA </th>
+      <td mat-cell *matCellDef="let element"> {{element.fecha | date:"mediumDate" }} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="hora">
+      <th mat-header-cell *matHeaderCellDef> HORA </th>
+      <td mat-cell *matCellDef="let element"> {{element.fecha | date: 'shortTime'}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="usuario">
+      <th mat-header-cell *matHeaderCellDef> USUARIO </th>
+      <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="empresa">
+      <th mat-header-cell *matHeaderCellDef> EMPRESA </th>
+      <td mat-cell *matCellDef="let element"> {{element.empresa}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cliente">
+      <th mat-header-cell *matHeaderCellDef> CLIENTE </th>
+      <td mat-cell *matCellDef="let element"> {{element.cliente}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="plan">
+      <th mat-header-cell *matHeaderCellDef> PLAN </th>
+      <td mat-cell *matCellDef="let element"> {{element.plan}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="canal">
+      <th mat-header-cell *matHeaderCellDef> CANAL </th>
+      <td mat-cell *matCellDef="let element"> {{element.canal}} </td>
+    </ng-container>
+  
+
+    <ng-container matColumnDef="observacion">
+      <th mat-header-cell *matHeaderCellDef> OBSERVACION </th>
+      <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="calificacion">
+      <th mat-header-cell *matHeaderCellDef> CALIFICACIÒN </th>
+      <td mat-cell *matCellDef="let element"> {{element.calificacion}} </td>
+    </ng-container>
+  
+    
+  
+  
+   
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
+  </table>
+
+  <div>
+    <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+      <mat-icon>laptop</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+      <mat-icon>phone_android</mat-icon>
+    </button>
+  
+  </div>
+
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+

@@ -3,6 +3,13 @@
   margin: auto;
   }
 
+  .centre {
+    font-size: 20px;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+  }
+
  
 
 .example-container {

@@ -7,13 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ReporteService } from 'src/app/_services/reporte.service';
 import * as moment from 'moment';
-//descargar a excel
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
-//import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
-const EXCEL_TYPE =
-'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
-const EXCEL_EXT = '.xlsx';
+import { LoginService } from 'src/app/_services/login.service';
+
 
 @Injectable()
 @Component({
@@ -43,7 +38,8 @@ export class TmoSalienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   
-  constructor( private reporteService : ReporteService ) { 
+  constructor( private reporteService : ReporteService,
+    private loginService: LoginService ) { 
 
     const today = new Date();
     const month = today.getMonth();
@@ -63,12 +59,15 @@ export class TmoSalienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
   }
 
   aceptar(){    
     this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
     this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-    this.empresaparametro = 'ASISTIDA'
+    //this.empresaparametro = 'ASISTIDA'
 
  
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
@@ -82,21 +81,7 @@ export class TmoSalienteComponent implements OnInit {
   });    }
 
 
-  //Exportar a excel
-  exportar(json: any[], excelFileName:string): void{
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    const workbook :  XLSX.WorkBook = {
-      Sheets:{'data': worksheet},
-      SheetNames: ['data']
-  };
-  const excelBuffer: any = XLSX.write(workbook, {bookType: 'xlsx', type:'array'});
-  this.saveExcel(excelBuffer, excelFileName)
-}
-
-private saveExcel(buffer:any, fileName:string): void {
-  const data: Blob = new Blob([buffer], {type: EXCEL_TYPE});
-  FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXT);
-}
+ 
 
 exportarTodo(): void {
   this.reporteService.exportar(this.dataSource.data,this.reporteName);

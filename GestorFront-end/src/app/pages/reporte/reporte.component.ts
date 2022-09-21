@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs/operators';
+import { LoginService } from 'src/app/_services/login.service';
 
 
 @Component({
@@ -27,11 +28,10 @@ export class ReporteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  mensaje !: string;
-  nombrepadre :string ="Sin nombre";
-
+ 
   reportes !:Reportes[];
-  cities !: CityI;
+  empresaparametro !:  string;
+
 
 
   form !: UntypedFormGroup;
@@ -51,14 +51,21 @@ export class ReporteComponent implements OnInit {
 
   constructor( 
                private reporteService : ReporteService,
+               private loginService :LoginService,
                public route: ActivatedRoute,
                private snackBar: MatSnackBar
                ) { }
 
   ngOnInit(): void {
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
+
+
+    const parametros= {empresa:this.empresaparametro}
 
     
-     this.reporteService.listar().subscribe(data => {
+     this.reporteService.reporEmpresa(parametros).subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

@@ -58,6 +58,36 @@ static getEmpresas = async (req: Request, res:Response ) =>{
 };
 
 
+static postMonitoreoLlamadas= async (req: Request, res:Response ) =>{
+    try {
+         
+        let fechaini=req.body.fechaini
+        let fechafin=req.body.fechafin
+    
+        console.log(fechaini);
+        console.log(fechafin);
+        const response = await pool.query(`SELECT m.fecha_monitoreo as fecha , monitoreo_calidad as calidad , u.usuario as usuario,pseudonimo as empresa, monitoreo_cliente as cliente,
+        plandeaccion as plan,canal_comunicacion as canal,monitoreo_observacion as observacion,calificacion_total as calificacion
+        FROM monitoreo_grabaciones m,usuario u,monitoteo_plandeaccion mp, empresa e
+        WHERE  m.monitoreo_usuario=u.id_usuario::text AND m.plan_accion=mp.id_plan::text AND u.empresa=e.id_empresa
+        AND m.fecha_monitoreo BETWEEN   ($1) AND ($2)
+        ORDER BY m.fecha_monitoreo`,[fechaini , fechafin]);
+        //,[fechaini , fechafin]
+    
+        if (res !== undefined) {
+            return res.json(response.rows);
+            
+          }
+        
+    } catch (error) {
+        /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
+        
+        console.log(error); 
+    }
+    }
+    
+
+
 static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
     try {
         //parametro de header
@@ -106,9 +136,12 @@ static postDetalleGestiones= async (req: Request, res:Response ) =>{
 try {
      
     let fechaini=req.body.fechaini
-    let fechafin=req.body.fechafin   
+    let fechafin=req.body.fechafin
+    let empresa=req.body.empresa
+
     console.log(fechaini);
     console.log(fechafin);
+    console.log( empresa );
     const response = await pool.query(`SELECT
     CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
     clte.tipo_documento as tipoDocAportante,
@@ -123,25 +156,26 @@ try {
     ag.usuario as usuario,
     emp.descripcion as empresa,
     egpdg.nombre as padreTipificacion,
-    egdg.nombre as tipificacion,
-    g.fecha_gestion as fechaGestion,
+    egdg.nombre as tipicacion,
+    dg.fecha_gestion as fechaGestion,
     c.id_campana as numeroCampana,
     replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
-    g.id_gestion as idGestion
+    cont.nro_empleado as empleados
     FROM gestion g
     INNER JOIN estado_gestion eg ON g.id_estado_gestion=eg.id_estado_gestion
     INNER JOIN campana c ON g.id_campana=c.id_campana
     INNER JOIN tipo_campana tc ON c.id_tipo_campana=tc.id_tipo_campana
-    INNER JOIN detalle_gestion dg ON g.id_gestion=dg.id_gestion
+    LEFT JOIN detalle_gestion dg ON g.id_gestion=dg.id_gestion
     LEFT JOIN estado_gestion egdg ON dg.id_estado_gestion=egdg.id_estado_gestion
     LEFT JOIN estado_gestion egpdg ON egdg.id_estado_gestion_padre=egpdg.id_estado_gestion
     INNER JOIN cliente clte ON g.id_cliente=clte.id_cliente
     LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
     LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
-    INNER JOIN empresa emp ON ag.empresa=emp.id_empresa 
-    WHERE g.fecha_gestion BETWEEN ($1) AND ($2) AND emp.id_empresa='3'
-    ORDER BY g.fecha_gestion `,[fechaini , fechafin]);
-    //,[fechaini , fechafin]
+    LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
+    WHERE 
+    dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND pseudonimo=($3)
+    ORDER BY dg.fecha_gestion`,[fechaini , fechafin, empresa]);
+    //,[fechaini , fechafin] g.id_campana IN ('2983')  AND
 
     if (res !== undefined) {
         return res.json(response.rows);
@@ -220,20 +254,29 @@ static postUsuariosXempresa = async (req: Request, res:Response ) =>{
     } 
 };
 
-static getReportes = async (req: Request, res:Response ) =>{
+
+static postReportesEmpresa= async (req: Request, res:Response ) =>{
     try {
-        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54','12') ORDER BY  nombre_reporte`);
-    if (res !== undefined) {
-        return res.json(response.rows);
-        pool.close();
-      }
-      
-    } 
-    catch (error) {
+         
+        let empresa=req.body.empresa;
+        console.log(empresa);
+        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
+        '12','19','48','49','11')     
+        AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `,[empresa]);
+        //,[fechaini , fechafin]
+    
+        if (res !== undefined) {
+            return res.json(response.rows);
+            
+          }
+        
+    } catch (error) {
+        /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
+        
         console.log(error); 
-    } 
-};
+    }
+    }
+    
 
 
 static getReportesprueba = async (req: Request, res:Response ) =>{
@@ -270,13 +313,31 @@ static getReportesprueba = async (req: Request, res:Response ) =>{
         } 
 } 
 
-static postReportes =async (req: Request, res:Response) => {
+static postReportesNuevo =async (req: Request, res:Response) => {
     const {id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas} = req.body;
     const response = await pool.query('insert into reportes values ($1, $2, $3, $4, $5, $6, $7 )', [id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas] );
    
     res.send('Hola mundo post final');
     pool.close();
 };
+
+static getReportes = async (req: Request, res:Response ) =>{
+    try {
+        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
+        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
+        '12','19','48','49','11') ORDER BY  nombre_reporte`);
+    if (res !== undefined) {
+        return res.json(response.rows);
+        pool.close();
+      }
+      
+    } 
+    catch (error) {
+        console.log(error); 
+    } 
+};
+
+
 
 
 }

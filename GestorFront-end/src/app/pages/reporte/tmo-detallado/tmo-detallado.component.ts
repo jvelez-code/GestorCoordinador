@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -13,6 +13,8 @@ import * as XLSX from 'xlsx';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 import { Usuario } from 'src/app/_model/usuario';
 import { Observable } from 'rxjs';
+import { LoginService } from 'src/app/_services/login.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -56,20 +58,24 @@ export class TmoDetalladoComponent implements OnInit {
 
    
 
-  constructor( private reporteService : ReporteService ) { 
+  constructor( 
+    private reporteService : ReporteService,
+    private loginService :LoginService,
+    public route: ActivatedRoute, ) { 
+
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
     this.campaignOne = new UntypedFormGroup({
-      start: new UntypedFormControl(new Date(year, month, 13)),
-      end: new UntypedFormControl(new Date(year, month, 16)),
+      start: new FormControl(new Date(year, month, 13)),
+      end: new FormControl(new Date(year, month, 16)),
 
     });
 
       this.campaignTwo = new UntypedFormGroup({
-        start: new UntypedFormControl(new Date(year, month, 15)),
-        end: new UntypedFormControl(new Date(year, month, 19)),
+        start: new FormControl(new Date(year, month, 15)),
+        end: new FormControl(new Date(year, month, 19)),
       });
 
   }
@@ -77,15 +83,9 @@ export class TmoDetalladoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,
-      empresa:this.empresaparametro, usuario:this.usuarioSeleccionado }  
-
-    /*this.reporteService.usuariosXEmpresa(parametros).subscribe(data=>{
-      this.usuarios=data;
-       });*/
-
-       this.usuarios$ = this.reporteService.usuariosXEmpresa(parametros);
-
+    this.loginService.isEmpresa.subscribe(data=>{
+      this.empresaparametro=data;
+    })
       
   }
 

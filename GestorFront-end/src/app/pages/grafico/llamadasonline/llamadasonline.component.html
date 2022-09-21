@@ -29,16 +29,15 @@
  
 <section>
     <div class="example-button-row">
-    <button mat-raised-button color="primary"(click)="llamadasporHora()">Aceptar
-      <mat-icon>trending_up</mat-icon></button>
-    <button mat-raised-button color="accent" (click)="cambiar()">Graficas
-      <mat-icon>trending_up</mat-icon>
+    <button mat-raised-button color="primary" [disabled]=cargando (click)="llamadasporHora()">
+     <i [ngClass]="{'fa-save':cargando, 'fa-refresh':!cargando}"
+     class="fa"></i> Aceptar
     </button>
-    <button mat-raised-button class="save-button-1" (click)="llamadasporHora()">Aceptar
-      <mat-icon>trending_up</mat-icon></button>
-    <button mat-raised-button class="save-button-2" (click)="cambiar()">Graficas
-      <mat-icon>trending_up</mat-icon>
-    </button>
+    <button mat-raised-button color="accent"  [disabled]=cargando  (click)="cambiar()">Graficas
+      <mat-icon>satellite</mat-icon></button>
+    <button mat-raised-button class="save-button-2" (click)="descargar()">Descarga
+      <mat-icon>laptop</mat-icon>
+    </button>  
   </div>
 </section>
 

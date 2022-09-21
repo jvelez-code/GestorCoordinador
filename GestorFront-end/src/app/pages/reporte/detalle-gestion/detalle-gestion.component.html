@@ -1,4 +1,5 @@
-<mat-toolbar>Consulta Reporte {{reported}}</mat-toolbar>
+      
+<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>
   <router-outlet></router-outlet>
   
  <div class="example-containe mat-elevation-z8">
@@ -28,33 +29,119 @@
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-    <ng-container matColumnDef="campana">
-      <th mat-header-cell *matHeaderCellDef> CAMPAÑA </th>
+    <ng-container matColumnDef="nombrecampana">
+      <th mat-header-cell *matHeaderCellDef> nombrecampana </th>
       <td mat-cell *matCellDef="let element"> {{element.nombrecampana}} </td>
     </ng-container>
   
     <!-- Name Column -->
-    <ng-container matColumnDef="tipo">
-      <th mat-header-cell *matHeaderCellDef> TIPO DOC </th>
+    <ng-container matColumnDef="tipodocaportante">
+      <th mat-header-cell *matHeaderCellDef>tipodocaportante</th>
       <td mat-cell *matCellDef="let element"> {{element.tipodocaportante}} </td>
     </ng-container>
   
     <!-- Weight Column -->
-    <ng-container matColumnDef="documento">
-      <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
+    <ng-container matColumnDef="numdocaporta">
+      <th mat-header-cell *matHeaderCellDef> numdocaporta </th>
       <td mat-cell *matCellDef="let element"> {{element.numdocaporta}} </td>
     </ng-container>
   
     <!-- Symbol Column -->
-    <ng-container matColumnDef="razonSocial">
-      <th mat-header-cell *matHeaderCellDef> RAZÓN SOCIAL </th>
+    <ng-container matColumnDef="razonsocial">
+      <th mat-header-cell *matHeaderCellDef> razonsocial </th>
       <td mat-cell *matCellDef="let element"> {{element.razonsocial}} </td>
     </ng-container>
     
+    <ng-container matColumnDef="tipogestion">
+      <th mat-header-cell *matHeaderCellDef> tipogestion </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipogestion}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombrecontacto">
+      <th mat-header-cell *matHeaderCellDef> nombrecontacto </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombrecontacto}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefono1">
+      <th mat-header-cell *matHeaderCellDef> telefono1 </th>
+      <td mat-cell *matCellDef="let element"> {{element.telefono1}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefono2">
+      <th mat-header-cell *matHeaderCellDef> telefono2 </th>
+      <td mat-cell *matCellDef="let element"> {{element.telefono2}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefono3">
+      <th mat-header-cell *matHeaderCellDef> telefono3 </th>
+      <td mat-cell *matCellDef="let element"> {{element.telefono3}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numerorealmarcado">
+      <th mat-header-cell *matHeaderCellDef> numerorealmarcado </th>
+      <td mat-cell *matCellDef="let element"> {{element.numerorealmarcado}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="usuario">
+      <th mat-header-cell *matHeaderCellDef> usuario </th>
+      <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+    </ng-container>
   
+
+    <ng-container matColumnDef="empresa">
+      <th mat-header-cell *matHeaderCellDef> empresa </th>
+      <td mat-cell *matCellDef="let element"> {{element.empresa}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="padretipificacion">
+      <th mat-header-cell *matHeaderCellDef> padretipificacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.padretipificacion}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="tipicacion">
+      <th mat-header-cell *matHeaderCellDef> tipicacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipicacion}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="fechagestion">
+      <th mat-header-cell *matHeaderCellDef> fechagestion </th>
+      <td mat-cell *matCellDef="let element"> {{element.fechagestion}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="numerocampana">
+      <th mat-header-cell *matHeaderCellDef> numerocampana </th>
+      <td mat-cell *matCellDef="let element"> {{element.numerocampana}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="observacion">
+      <th mat-header-cell *matHeaderCellDef> observacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="empleados">
+      <th mat-header-cell *matHeaderCellDef> empleados </th>
+      <td mat-cell *matCellDef="let element"> {{element.empleados}} </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
   </table>
+
+  <div>
+    <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+      <mat-icon>laptop</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+      <mat-icon>phone_android</mat-icon>
+    </button>
+  
+  </div>
 
 
 

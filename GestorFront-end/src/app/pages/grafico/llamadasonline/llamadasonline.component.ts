@@ -6,13 +6,11 @@ import * as moment from 'moment';
 import { Parametros } from 'src/app/_model/parametros';
 import { GraficosService } from 'src/app/_services/graficos.service';
 import { LoginService } from 'src/app/_services/login.service';
+import { LamadasPorHoraI } from 'src/app/_model/llamadasPorHora';
+import { ExcelServiceService } from 'src/app/_services/excel.service.service';
 
-export interface PeriodicElement {
-  total: string;
-  contestadas: number;
-  nocontestadas: number;
-  totalG: number;
-}
+
+
 
 
 
@@ -30,8 +28,9 @@ export class LlamadasonlineComponent implements OnInit {
   fechafin !: string;
   empresa  !: string;
   parametros !: Parametros;
-  parametrosTotal !: PeriodicElement[];
-  
+  llamadasPorHoraI !: LamadasPorHoraI[];
+  reporteName : string ="LLamadas Por Hora";
+  cargando : boolean=false; 
   
   totalContestadas !: number;
   totalNoContestadas !: number;
@@ -42,8 +41,9 @@ export class LlamadasonlineComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  fechaparametro1 !:  string;
-  fechaparametro2 !:  string;
+  fechaparametro1 : string = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
+  fechaparametro2 : string = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
+
   empresaparametro !:  string;
 
   titulo : boolean = true;
@@ -53,13 +53,15 @@ export class LlamadasonlineComponent implements OnInit {
   displayedColumns = ['hora_llamada', 'answered', 'no_answer','totales'];
   dataSource !: MatTableDataSource<Parametros>;
 
-  displayedColumnss: string[]=['total','contestadas', 'nocontestadas', 'totalG']
-  dataSources !: MatTableDataSource<PeriodicElement>;
+  displayedColumnss =['total','contestadas', 'nocontestadas', 'totalG']
+  dataSources !: MatTableDataSource<LamadasPorHoraI>;
 
   
   constructor(
     private graficosService: GraficosService,
-    private loginService: LoginService ) { 
+    private loginService: LoginService,
+    private _excelServiceService : ExcelServiceService ) { 
+
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -83,31 +85,37 @@ export class LlamadasonlineComponent implements OnInit {
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
     })  
+  
   }
 
   
   llamadasporHora(){
 
+    this.cargando= true;
+
+
+    console.log("hola munod", this.cargando)
     if (this.chart != null) {
       this.chart.destroy();
     }
     
-    this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
-    this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-    
+   
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
     
     this.graficosService.llamadasporHora(parametros).subscribe(data =>{
     this.dataSource = new MatTableDataSource(data);
+    console.log(data);
+ 
+
     
     this.totalContestadas=data.map((x: { answered: any; })=>x.answered).reduce((count: number, x: string) => count + parseFloat(x), 0),
     this.totalNoContestadas=data.map((x: { no_answer: any; })=>x.no_answer).reduce((count: number, x: string) => count + parseFloat(x), 0),
-    this.totalLLamadas=data.map((x: { totales: any; })=>x.totales).reduce((count: number, x: string) => count + parseFloat(x), 0),
- 
-    this.parametrosTotal = [{total: 'TOTAL', contestadas: this.totalContestadas, nocontestadas: this.totalNoContestadas, 
+    this.totalLLamadas=data.map((x: { totales: any; })=>x.totales).reduce((count: number, x: string) => count + parseFloat(x), 0);
+
+    this.llamadasPorHoraI = [{total: 'TOTAL', contestadas: this.totalContestadas, nocontestadas: this.totalNoContestadas, 
       totalG: this.totalLLamadas }]
 
-    this.dataSources = new MatTableDataSource(this.parametrosTotal);
+    this.dataSources = new MatTableDataSource(this.llamadasPorHoraI);
     });
 
     this.graficosService.llamadasporHora(parametros).subscribe(data =>{
@@ -150,6 +158,23 @@ export class LlamadasonlineComponent implements OnInit {
 
 
   });
+  setTimeout(()=>{this.cargando = false;
+  },3000);
+  
+
+  }
+
+  ejecutar(){
+
+
+  this.cargando= true;
+  setTimeout(()=>{
+    this.cargando = false;
+  },3000);
+  console.log("hola munod1", this.cargando)
+
+
+
 
   }
   
@@ -174,6 +199,21 @@ export class LlamadasonlineComponent implements OnInit {
 
   
 
+
+exportarTodo(): void {
+this.graficosService.exportar(this.dataSource.data, this.reporteName );
+
+}
+
+descargar(){
+  const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
+    
+
+  this.graficosService.llamadasporHora(parametros).subscribe(data =>{
+    this._excelServiceService.dowloadExcel(data);
+  });
+
+}
 
 
 }

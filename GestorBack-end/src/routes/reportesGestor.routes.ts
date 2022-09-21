@@ -7,11 +7,13 @@ const router =  Router();
 
 router.get('/reportes', ReporGestor.getReportes );
 router.get('/reportes/:id', ReporGestor.getReportesid );
-router.post('/reportes', ReporGestor.postReportes );
+router.post('/reportess', ReporGestor.postReportesNuevo );
+router.post('/reportes', ReporGestor.postReportesEmpresa );
 router.get('/gestion', ReporGestor.getReportesGestion );
 router.post('/gestion', ReporGestor.postReportesGestion );
 router.post('/detallegestiones', ReporGestor.postDetalleGestiones );
 router.post('/porcentaje', ReporGestor.postPorcentajeTipificacion );
+router.post('/monitoreoLLamadas', ReporGestor.postMonitoreoLlamadas );
 router.get('/empresas',[checkJwt], checkRole([1]), ReporGestor.getEmpresas );
 
 export default router;

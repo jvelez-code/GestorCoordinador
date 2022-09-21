@@ -17,9 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 //componentes
 import { GraficoComponent } from './pages/grafico/grafico.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
-import { VisualizarComponent } from './pages/reporte/visualizar/visualizar.component';
 import { DetalleGestionComponent } from './pages/reporte/detalle-gestion/detalle-gestion.component';
-import { LlamadasFueraComponent } from './pages/reporte/llamadas-fuera/llamadas-fuera.component';
 import { MonitoreoComponent } from './pages/monitoreo/monitoreo/monitoreo.component';
 import { LoginComponent } from './pages/login/login.component';
 
@@ -46,6 +44,9 @@ import { environment } from 'src/environments/environment';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AdminInterceptors } from './interceptors/admin-interceptors';
 import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
+import { DuracionEstadoComponent } from './pages/reporte/duracion-estado/duracion-estado.component';
+import { MonitoreoLlamadasComponent } from './pages/reporte/monitoreo-llamadas/monitoreo-llamadas.component';
+import { IvrComponent } from './pages/reporte/ivr/ivr.component';
 registerLocaleData(localeEs,'es');
 
 
@@ -63,9 +64,7 @@ registerLocaleData(localeEs,'es');
     AppComponent,
     GraficoComponent,
     ReporteComponent,
-    VisualizarComponent,
     DetalleGestionComponent,
-    LlamadasFueraComponent,
     MonitoreoComponent,
     LoginComponent,
     TmoComponent,
@@ -82,7 +81,10 @@ registerLocaleData(localeEs,'es');
     LlamadasonlineComponent,
     AdminUsuariosComponent,
     AdminEdicionComponent,
-    EmpresasComponent
+    EmpresasComponent,
+    DuracionEstadoComponent,
+    MonitoreoLlamadasComponent,
+    IvrComponent
   ],
   imports: [
     BrowserModule,

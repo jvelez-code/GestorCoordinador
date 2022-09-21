@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ReporteComponent } from './pages/reporte/reporte.component';
 import { GraficoComponent } from './pages/grafico/grafico.component';
-import { VisualizarComponent } from './pages/reporte/visualizar/visualizar.component';
-import { LlamadasFueraComponent } from './pages/reporte/llamadas-fuera/llamadas-fuera.component';
 import { DetalleGestionComponent } from './pages/reporte/detalle-gestion/detalle-gestion.component';
 import { MonitoreoComponent } from './pages/monitoreo/monitoreo/monitoreo.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -19,10 +17,12 @@ import { AdminUsuariosComponent } from './pages/adminUsuarios/admin-usuarios.com
 import { AdminEdicionComponent } from './pages/adminUsuarios/admin-edicion/admin-edicion.component';
 import { LlamadasonlineComponent } from './pages/grafico/llamadasonline/llamadasonline.component';
 import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
+import { DuracionEstadoComponent } from './pages/reporte/duracion-estado/duracion-estado.component';
+import { MonitoreoLlamadasComponent } from './pages/reporte/monitoreo-llamadas/monitoreo-llamadas.component';
+import { IvrComponent } from './pages/reporte/ivr/ivr.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
-    { path: 'LlamadasFueraHorario', component: LlamadasFueraComponent },
     { path: 'ConsolidadoGestiones', component: DetalleGestionComponent },
     { path: 'ReporteTMO', component: TmoComponent },
     { path: 'ReporteTMODetallado', component: TmoDetalladoComponent },
@@ -31,7 +31,12 @@ const routes: Routes = [
     { path: 'SeguimientoAgente', component: SeguimientoAgenteComponent },
     { path: 'LlamadasRecibidas', component: LlamadasRecibidasComponent },
     { path: 'TmoEntranteSaliente', component: EntranteSalienteComponent },
+    { path: 'DetalladoNuevo', component: DetalleGestionComponent },
+    { path: 'Duracion Estados', component: DuracionEstadoComponent },
+    { path: 'Monitoreo Llamadas', component: MonitoreoLlamadasComponent },
+    { path: 'ReporteIVR', component: IvrComponent },
     { path: 'CalificacionDelServicio', component: LlamadasCalificadasComponent }
+    
   ]},
   { path: 'grafico', component: GraficoComponent },
   { path: 'monitoreo', component: MonitoreoComponent },

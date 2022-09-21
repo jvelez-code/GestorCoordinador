@@ -18,6 +18,8 @@ router.post('/llamadasRecibidas', ReporContact.postLlamadasRecibidas );
 router.post('/tmoEntranteSaliente', ReporContact.postTmoEntranteSaliente );
 router.post('/SecretariaVirtual', ReporContact.postSecretariaVirtual );
 router.post('/llamadasporHora', ReporContact.postllamadasporHora);
+router.post('/duracionEstado', ReporContact.postDuracionEstados);
+router.post('/ivr', ReporContact.postIVR);
 
 export default router;
  

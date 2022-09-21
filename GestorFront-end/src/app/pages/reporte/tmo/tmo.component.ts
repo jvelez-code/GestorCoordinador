@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,15 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ReporteService } from 'src/app/_services/reporte.service';
 import * as moment from 'moment';
-//descargar a excel
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
-//import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
-import { async } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
-const EXCEL_TYPE =
-'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
-const EXCEL_EXT = '.xlsx';
+
 
 @Injectable()
 
@@ -30,11 +23,11 @@ export class TmoComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: UntypedFormGroup;
+  form!: FormGroup;
   reporteName : string ="TMO"
 
-  campaignOne!: UntypedFormGroup;
-  campaignTwo!: UntypedFormGroup;
+  campaignOne!: FormGroup;
+  campaignTwo!: FormGroup;
 
   fechaparametro1 !:  string;
   fechaparametro2 !:  string;
@@ -51,23 +44,23 @@ export class TmoComponent implements OnInit {
     private reporteService : ReporteService,
     private loginService: LoginService ) { 
 
-    this.loginService.isLogged.subscribe(data=>{
-      console.log('pruebaObservable',data)
-    })
+    // this.loginService.isLogged.subscribe(data=>{
+    //   console.log('pruebaObservable',data)
+    // })
 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new UntypedFormGroup({
-      start: new UntypedFormControl(new Date(year, month, 13)),
-      end: new UntypedFormControl(new Date(year, month, 16)),
+    this.campaignOne = new FormGroup({
+      start: new FormControl(new Date(year, month, 13)),
+      end: new FormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new UntypedFormGroup({
-        start: new UntypedFormControl(new Date(year, month, 15)),
-        end: new UntypedFormControl(new Date(year, month, 19)),
+      this.campaignTwo = new FormGroup({
+        start: new FormControl(new Date(year, month, 15)),
+        end: new FormControl(new Date(year, month, 19)),
       });
 
   }
@@ -76,7 +69,6 @@ export class TmoComponent implements OnInit {
 
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
-      console.log('tmp',this.empresaparametro)
     })
   }
 
@@ -96,22 +88,6 @@ export class TmoComponent implements OnInit {
 
   });    }
 
-
-  //Exportar a excel
-  exportar(json: any[], excelFileName:string): void{
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    const workbook :  XLSX.WorkBook = {
-      Sheets:{'data': worksheet},
-      SheetNames: ['data']
-  };
-  const excelBuffer: any = XLSX.write(workbook, {bookType: 'xlsx', type:'array'});
-  this.saveExcel(excelBuffer, excelFileName)
-}
-
-private saveExcel(buffer:any, fileName:string): void {
-  const data: Blob = new Blob([buffer], {type: EXCEL_TYPE});
-  FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXT);
-}
 
 exportarTodo(): void {
   this.reporteService.exportar(this.dataSource.data,this.reporteName);

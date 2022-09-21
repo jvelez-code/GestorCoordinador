@@ -6,6 +6,7 @@ table {
 }
   .span {
     margin: auto;
+    font-size: 16px;
   }
   
   .make-gold {
@@ -17,7 +18,9 @@ table {
   }
   
   .Disponible_Entrante {
-    background-color:#9ED5A0
+    background-color:#9ED5A0;
+
+    font-size: 16px;
   }
   
   .En_Llamada {

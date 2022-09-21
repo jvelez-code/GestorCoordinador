@@ -6,6 +6,7 @@ import { environment } from './../../environments/environment';
 import { Observable,Subject } from 'rxjs';
 import { CityI} from '../_model/cityI'
 import { Parametros } from '../_model/parametros'
+
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -89,6 +90,14 @@ export class ReporteService {
     return this.http.post<Parametros>(`${this.urlCon}/tmo`,body,{'headers':headers});
    }
 
+   reporIvr(parametros: Parametros):Observable<any>{
+      
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(parametros);
+    return this.http.post<Parametros>(`${this.urlCon}/ivr`,body,{'headers':headers});
+   }
+
+
  
 
 
@@ -96,13 +105,20 @@ export class ReporteService {
   //REPORTES GESTOR
 
     listar(){
-      return this.http.get<Reportes[]>(`${this.urlGes}/reportes`);
+      return this.http.get<Reportes[]>(`${this.urlGes}/reportess`);
     }
 
     listarId(id: number){
-      return this.http.get<Reportes>(`${this.urlGes}/reportes/${id}`);
+      return this.http.get<Reportes>(`${this.urlGes}/reportess/${id}`);
 
     }
+
+    reporEmpresa(parametros: Parametros):Observable<any>{
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<Parametros>(`${this.urlGes}/reportes`,body,{'headers':headers});
+     }
   
     listarGestion(){
       return this.http.get<Gestion[]>(`${this.urlGes}/gestion`);
@@ -116,14 +132,29 @@ export class ReporteService {
       
     }
 
-    // reporDetalleGestiones(parametros: Parametros):Observable<any>{
+    reporMonitoreoLlamadas(parametros: Parametros):Observable<any>{
       
-    //   const headers = { 'content-type': 'application/json'}  
-    //   const body=JSON.stringify(parametros);
-    //   console.log("Hola Body"+body)
-    //   return this.http.post<CityI>(`${this.url/detallegestiones`,body,{'headers':headers});
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<Parametros>(`${this.urlGes}/monitoreoLlamadas`,body,{'headers':headers});
+     }
 
-    // }
+
+    reporDuracionEstado(parametros: Parametros):Observable<any>{
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<Parametros>(`${this.urlCon}/duracionEstado`,body,{'headers':headers});
+     }
+
+     reporDetalleGestion(parametros: Parametros):Observable<any>{
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<Parametros>(`${this.urlGes}/detallegestiones`,body,{'headers':headers});
+     }
+
+ 
 
     //USUARIO
     usuariosXEmpresa(parametros: Parametros):Observable<any>{
