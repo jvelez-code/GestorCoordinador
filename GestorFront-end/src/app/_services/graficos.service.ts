@@ -8,6 +8,7 @@ import { Parametros } from '../_model/parametros';
 //descargar a excel
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { Console } from 'console';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
 const EXCEL_EXT = '.xlsx';
@@ -25,6 +26,7 @@ export class GraficosService {
     private router: Router ) { }
 
  llamadasporHora(parametros: Parametros):Observable<any>{
+   console.log('parame',parametros)
       
   const headers = { 'content-type': 'application/json'}  
   const body=JSON.stringify(parametros);

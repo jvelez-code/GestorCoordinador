@@ -22,7 +22,6 @@ import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter } from '@angular/mate
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
-import { ColorPickerModule } from 'ngx-color-picker';
 
 
 
@@ -30,7 +29,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 //archivos locales
 import { CustomDateAdapter } from './custom-adapter';
 import { MatPaginatorImpl } from './mat-paginator';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
  
 
@@ -65,9 +63,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatNativeDateModule,
     MatExpansionModule,
     MatListModule,
-    NgxChartsModule,
     BrowserAnimationsModule,
-    ColorPickerModule,
     NgChartsModule
   ],
   providers: [

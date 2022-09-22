@@ -8,6 +8,7 @@ import { GraficosService } from 'src/app/_services/graficos.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { LamadasPorHoraI } from 'src/app/_model/llamadasPorHora';
 import { ExcelServiceService } from 'src/app/_services/excel.service.service';
+import { ContentObserver } from '@angular/cdk/observers';
 
 
 
@@ -41,9 +42,9 @@ export class LlamadasonlineComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  fechaparametro1 : string = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
-  fechaparametro2 : string = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-
+  fechaparametro1 !:  string;
+  fechaparametro2 !:  string;
+ 
   empresaparametro !:  string;
 
   titulo : boolean = true;
@@ -92,9 +93,9 @@ export class LlamadasonlineComponent implements OnInit {
   llamadasporHora(){
 
     this.cargando= true;
-
-
-    console.log("hola munod", this.cargando)
+    this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
+    this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
+  
     if (this.chart != null) {
       this.chart.destroy();
     }
@@ -103,6 +104,7 @@ export class LlamadasonlineComponent implements OnInit {
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
     
     this.graficosService.llamadasporHora(parametros).subscribe(data =>{
+      console.log('hola',data)
     this.dataSource = new MatTableDataSource(data);
     console.log(data);
  

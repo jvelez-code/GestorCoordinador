@@ -19,7 +19,8 @@
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
-          "options": {
+          "options": { "allowedCommonJsDependencies": [
+            "lodash"],
             "outputPath": "dist/reportesFront",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -31,11 +32,9 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css",
-              "./node_modules/@fortawesome/fontawesome-free/css/all.css"
+              "src/styles.css"
             ],
             "scripts": [
-              "./node_modules/@fortawesome/fontawesome-free/js/all.js"
             ]
           },
           "configurations": {
@@ -44,7 +43,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",

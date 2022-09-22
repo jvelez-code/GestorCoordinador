@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PatternValidator } from '@angular/forms';
-import { faBold } from '@fortawesome/free-solid-svg-icons';
 import { Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 import { type } from 'os';

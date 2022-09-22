@@ -9,7 +9,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NgxCaptchaModule } from 'ngx-captcha';
 
 import { MaterialModule } from './material/material.module'
 import { MatInputModule } from '@angular/material/input';
@@ -21,9 +20,7 @@ import { DetalleGestionComponent } from './pages/reporte/detalle-gestion/detalle
 import { MonitoreoComponent } from './pages/monitoreo/monitoreo/monitoreo.component';
 import { LoginComponent } from './pages/login/login.component';
 
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { TmoComponent } from './pages/reporte/tmo/tmo.component';
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 import localeEs  from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
@@ -96,8 +93,6 @@ registerLocaleData(localeEs,'es');
     FormsModule,
     MatInputModule,
     NoopAnimationsModule,
-    SocketIoModule.forRoot(config),
-    NgxCaptchaModule,
     // JwtModule.forRoot({
     //   config: {
     //     tokenGetter: tokenGetter,
