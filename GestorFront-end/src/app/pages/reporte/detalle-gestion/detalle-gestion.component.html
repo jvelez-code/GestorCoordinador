@@ -7,7 +7,7 @@
      
 <div>
     <mat-form-field class="example-form-field" appearance="fill">
-      <mat-label>First campaign</mat-label>
+      <mat-label>Selecccione las fechas</mat-label>
       <mat-date-range-input
         [formGroup]="campaignOne"
         [rangePicker]="campaignOnePicker"
@@ -21,6 +21,17 @@
     </mat-form-field>
   </div>
 
+  <div  class="center">
+    <mat-form-field appearance="fill">
+      <mat-label>Seleccciona la Campana</mat-label>
+      <mat-select placeholder="SELECCCION" [(value)]="idCampana">
+        <mat-option *ngFor="let p of ( campana$ | async )" [value]="p.id_campana">
+          {{p.id_campana}} {{p.nombre}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </div >
+
   <div>
     <button mat-raised-button color="primary" (click)="aceptar()">Aceptar</button>
   </div>
@@ -30,102 +41,90 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
     <ng-container matColumnDef="nombrecampana">
-      <th mat-header-cell *matHeaderCellDef> nombrecampana </th>
+      <th mat-header-cell *matHeaderCellDef> CAMPAÑA </th>
       <td mat-cell *matCellDef="let element"> {{element.nombrecampana}} </td>
     </ng-container>
   
     <!-- Name Column -->
     <ng-container matColumnDef="tipodocaportante">
-      <th mat-header-cell *matHeaderCellDef>tipodocaportante</th>
+      <th mat-header-cell *matHeaderCellDef>TIPO</th>
       <td mat-cell *matCellDef="let element"> {{element.tipodocaportante}} </td>
     </ng-container>
   
     <!-- Weight Column -->
     <ng-container matColumnDef="numdocaporta">
-      <th mat-header-cell *matHeaderCellDef> numdocaporta </th>
+      <th mat-header-cell *matHeaderCellDef> NÚMERO </th>
       <td mat-cell *matCellDef="let element"> {{element.numdocaporta}} </td>
     </ng-container>
   
     <!-- Symbol Column -->
     <ng-container matColumnDef="razonsocial">
-      <th mat-header-cell *matHeaderCellDef> razonsocial </th>
+      <th mat-header-cell *matHeaderCellDef> RAZÒN S </th>
       <td mat-cell *matCellDef="let element"> {{element.razonsocial}} </td>
     </ng-container>
     
     <ng-container matColumnDef="tipogestion">
-      <th mat-header-cell *matHeaderCellDef> tipogestion </th>
+      <th mat-header-cell *matHeaderCellDef> GESTIÒN </th>
       <td mat-cell *matCellDef="let element"> {{element.tipogestion}} </td>
     </ng-container>
 
     <ng-container matColumnDef="nombrecontacto">
-      <th mat-header-cell *matHeaderCellDef> nombrecontacto </th>
+      <th mat-header-cell *matHeaderCellDef> CONTACTO </th>
       <td mat-cell *matCellDef="let element"> {{element.nombrecontacto}} </td>
     </ng-container>
 
     <ng-container matColumnDef="telefono1">
-      <th mat-header-cell *matHeaderCellDef> telefono1 </th>
+      <th mat-header-cell *matHeaderCellDef> TELÉFONO </th>
       <td mat-cell *matCellDef="let element"> {{element.telefono1}} </td>
     </ng-container>
 
     <ng-container matColumnDef="telefono2">
-      <th mat-header-cell *matHeaderCellDef> telefono2 </th>
+      <th mat-header-cell *matHeaderCellDef> TELÉFONO </th>
       <td mat-cell *matCellDef="let element"> {{element.telefono2}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="telefono3">
-      <th mat-header-cell *matHeaderCellDef> telefono3 </th>
-      <td mat-cell *matCellDef="let element"> {{element.telefono3}} </td>
-    </ng-container>
-
     <ng-container matColumnDef="numerorealmarcado">
-      <th mat-header-cell *matHeaderCellDef> numerorealmarcado </th>
+      <th mat-header-cell *matHeaderCellDef> REAL </th>
       <td mat-cell *matCellDef="let element"> {{element.numerorealmarcado}} </td>
     </ng-container>
 
     <ng-container matColumnDef="usuario">
-      <th mat-header-cell *matHeaderCellDef> usuario </th>
+      <th mat-header-cell *matHeaderCellDef> USUARIO </th>
       <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
     </ng-container>
   
 
     <ng-container matColumnDef="empresa">
-      <th mat-header-cell *matHeaderCellDef> empresa </th>
+      <th mat-header-cell *matHeaderCellDef> EMPRESA </th>
       <td mat-cell *matCellDef="let element"> {{element.empresa}} </td>
     </ng-container>
 
 
     <ng-container matColumnDef="padretipificacion">
-      <th mat-header-cell *matHeaderCellDef> padretipificacion </th>
+      <th mat-header-cell *matHeaderCellDef> ESTADO </th>
       <td mat-cell *matCellDef="let element"> {{element.padretipificacion}} </td>
     </ng-container>
 
 
     <ng-container matColumnDef="tipicacion">
-      <th mat-header-cell *matHeaderCellDef> tipicacion </th>
+      <th mat-header-cell *matHeaderCellDef> SUBESTADO </th>
       <td mat-cell *matCellDef="let element"> {{element.tipicacion}} </td>
     </ng-container>
 
 
     <ng-container matColumnDef="fechagestion">
-      <th mat-header-cell *matHeaderCellDef> fechagestion </th>
+      <th mat-header-cell *matHeaderCellDef> FECHA </th>
       <td mat-cell *matCellDef="let element"> {{element.fechagestion}} </td>
     </ng-container>
 
-
-    <ng-container matColumnDef="numerocampana">
-      <th mat-header-cell *matHeaderCellDef> numerocampana </th>
-      <td mat-cell *matCellDef="let element"> {{element.numerocampana}} </td>
-    </ng-container>
-
-
     <ng-container matColumnDef="observacion">
-      <th mat-header-cell *matHeaderCellDef> observacion </th>
+      <th mat-header-cell *matHeaderCellDef> OBSERVACION </th>
       <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
     </ng-container>
 
 
     <ng-container matColumnDef="empleados">
-      <th mat-header-cell *matHeaderCellDef> empleados </th>
+      <th mat-header-cell *matHeaderCellDef> EMPLEADOS </th>
       <td mat-cell *matCellDef="let element"> {{element.empleados}} </td>
     </ng-container>
 

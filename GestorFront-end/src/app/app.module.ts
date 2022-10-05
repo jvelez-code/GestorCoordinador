@@ -44,6 +44,10 @@ import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
 import { DuracionEstadoComponent } from './pages/reporte/duracion-estado/duracion-estado.component';
 import { MonitoreoLlamadasComponent } from './pages/reporte/monitoreo-llamadas/monitoreo-llamadas.component';
 import { IvrComponent } from './pages/reporte/ivr/ivr.component';
+import { LlamadasFueraHorarioComponent } from './pages/reporte/llamadas-fuera-horario/llamadas-fuera-horario.component';
+import { LlamadasFueraHorarioEventualComponent } from './pages/reporte/llamadas-fuera-horario-eventual/llamadas-fuera-horario-eventual.component';
+import { LlamadasCalificadasGDEComponent } from './pages/reporte/llamadas-calificadas-gde/llamadas-calificadas-gde.component';
+import { FacturacionComponent } from './pages/reporte/facturacion/facturacion.component';
 registerLocaleData(localeEs,'es');
 
 
@@ -81,7 +85,11 @@ registerLocaleData(localeEs,'es');
     EmpresasComponent,
     DuracionEstadoComponent,
     MonitoreoLlamadasComponent,
-    IvrComponent
+    IvrComponent,
+    LlamadasFueraHorarioComponent,
+    LlamadasFueraHorarioEventualComponent,
+    LlamadasCalificadasGDEComponent,
+    FacturacionComponent
   ],
   imports: [
     BrowserModule,

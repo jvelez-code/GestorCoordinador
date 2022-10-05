@@ -104,7 +104,6 @@ export class LlamadasonlineComponent implements OnInit {
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
     
     this.graficosService.llamadasporHora(parametros).subscribe(data =>{
-      console.log('hola',data)
     this.dataSource = new MatTableDataSource(data);
     console.log(data);
  
@@ -173,7 +172,6 @@ export class LlamadasonlineComponent implements OnInit {
   setTimeout(()=>{
     this.cargando = false;
   },3000);
-  console.log("hola munod1", this.cargando)
 
 
 

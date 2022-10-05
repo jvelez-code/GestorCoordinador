@@ -19,7 +19,7 @@
   </div>
 
   <div>
-    <button mat-raised-button color="primary" (click)="aceptar()">Aceptar
+    <button mat-raised-button color="primary" (click)="aceptar()">Consultar
       <mat-icon>trending_up</mat-icon>
     </button>
   </div>
@@ -34,36 +34,41 @@
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-    <ng-container matColumnDef="fecha_llamada">
+    <ng-container matColumnDef="fecha">
       <th mat-header-cell *matHeaderCellDef> FECHA </th>
-      <td mat-cell *matCellDef="let element"> {{element.fecha_llamada |date:"mediumDate" }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.fecha |date:"mediumDate" }} </td>
     </ng-container>
+
+    <ng-container matColumnDef="hora">
+        <th mat-header-cell *matHeaderCellDef> HORA </th>
+        <td mat-cell *matCellDef="let element"> {{element.fecha |date: 'h:mm:ss a' }} </td>
+      </ng-container>
   
     <!-- Name Column -->
-    <ng-container matColumnDef="no_calificadas">
-      <th mat-header-cell *matHeaderCellDef> CALIFICADAS </th>
-      <td mat-cell *matCellDef="let element"> {{element.no_calificadas}} </td>
+    <ng-container matColumnDef="ruta">
+      <th mat-header-cell *matHeaderCellDef> RUTA </th>
+      <td mat-cell *matCellDef="let element"> {{element.ruta}} </td>
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="calif_positiva">
-      <th mat-header-cell *matHeaderCellDef> CAL. POSITIVA </th>
-      <td mat-cell *matCellDef="let element"> {{element.calif_positiva}} </td>
+    <ng-container matColumnDef="idasterisk">
+      <th mat-header-cell *matHeaderCellDef> ID ASTERISK </th>
+      <td mat-cell *matCellDef="let element"> {{element.idasterisk}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="calif_negativo">
-      <th mat-header-cell *matHeaderCellDef> CAL. NEGATIVA </th>
-      <td mat-cell *matCellDef="let element"> {{element.calif_negativo}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="total_llamadas">
-      <th mat-header-cell *matHeaderCellDef> TOTAL LLAMADAS </th>
-      <td mat-cell *matCellDef="let element"> {{element.total_llamadas}} </td>
+    <ng-container matColumnDef="calificacion">
+      <th mat-header-cell *matHeaderCellDef> CALIFICACIÒN </th>
+      <td mat-cell *matCellDef="let element"> {{element.calificacion}} </td>
     </ng-container>
 
     <ng-container matColumnDef="telefono">
-      <th mat-header-cell *matHeaderCellDef> TELEFONO </th>
+      <th mat-header-cell *matHeaderCellDef> TELÉFONO </th>
       <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="agente">
+      <th mat-header-cell *matHeaderCellDef> AGENTE </th>
+      <td mat-cell *matCellDef="let element"> {{element.agente}} </td>
     </ng-container>
   
   
@@ -85,3 +90,4 @@
 
 
 <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+

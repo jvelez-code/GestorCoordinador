@@ -1,32 +1,25 @@
-import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Parametros } from 'src/app/_model/parametros';
-import { Tmo } from 'src/app/_model/tmo';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { ReporteService } from 'src/app/_services/reporte.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
+import { LlamadaFueraHorarioI } from 'src/app/_model/llamadaFueraHorario';
+import { Parametros } from 'src/app/_model/parametros';
 import { LoginService } from 'src/app/_services/login.service';
-import { GraficosService } from 'src/app/_services/graficos.service';
-import { ExcelServiceService } from 'src/app/_services/excel.service.service';
-
-
-@Injectable()
-
-
+import { ReporteService } from 'src/app/_services/reporte.service';
 
 @Component({
-  selector: 'app-tmo',
-  templateUrl: './tmo.component.html',
-  styleUrls: ['./tmo.component.css']
+  selector: 'app-llamadas-fuera-horario',
+  templateUrl: './llamadas-fuera-horario.component.html',
+  styleUrls: ['./llamadas-fuera-horario.component.css']
 })
-export class TmoComponent implements OnInit {  
+export class LlamadasFueraHorarioComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
   form!: FormGroup;
-  reporteName : string ="TMO"
+  reporteName : string ="LLAMADA FUERA DE HORARIO"
 
   campaignOne!: FormGroup;
   campaignTwo!: FormGroup;
@@ -35,17 +28,16 @@ export class TmoComponent implements OnInit {
   fechaparametro2 !:  string;
   empresaparametro !:  string;
 
-  tmo !: Tmo[];
+  llamadaFueraHorarioI !: LlamadaFueraHorarioI
   parametros !: Parametros;
-  displayedColumns: string[] = ['fecha', 'documento', 'agente', 'cantidadgrabaciones', 'duracionllamadas','segundos'];
-  dataSource!: MatTableDataSource<Tmo>;
+  displayedColumns: string[] = ['gestion','ruta_entrante', 'tipo_doc', 'numero_documento','numero_origen','fecha_asterisk','hora_asterisk'];
+  dataSource!: MatTableDataSource<LlamadaFueraHorarioI>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor( 
     private reporteService : ReporteService,
-    private loginService: LoginService,
-    private _excelServiceService:ExcelServiceService ) { 
+    private loginService: LoginService ) { 
 
     // this.loginService.isLogged.subscribe(data=>{
     //   console.log('pruebaObservable',data)
@@ -83,9 +75,9 @@ export class TmoComponent implements OnInit {
  
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
-   console.log(parametros)
-    this.reporteService.reporTmo(parametros).subscribe(data=>{
-    this.dataSource = new MatTableDataSource(data);
+    this.reporteService.reporLlamadasFueradeHorario(parametros).subscribe(data=>{
+    console.log(data);
+      this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
@@ -107,16 +99,6 @@ exportarFiltro(): void{
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
-descargar(){
-  
-  const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }    
-
-  this.reporteService.reporTmo(parametros).subscribe(data=>{
-    this._excelServiceService.tmoExcel(data);
-  });
-
-}
 
 
 }

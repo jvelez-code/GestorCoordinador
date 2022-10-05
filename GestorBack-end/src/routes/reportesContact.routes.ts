@@ -21,5 +21,11 @@ router.post('/llamadasporHora', ReporContact.postllamadasporHora);
 router.post('/duracionEstado', ReporContact.postDuracionEstados);
 router.post('/ivr', ReporContact.postIVR);
 
+//reportes asterisk_pagosgde
+
+router.post('/llamadasFueradeHorario', ReporContact.postLlamadasFueradeHorario);
+router.post('/llamadasFueradeHorarioEventual', ReporContact.postLlamadasFueradeHorarioEventual);
+router.post('/llamadasCalificadasGDE', ReporContact.postLlamadasCalificadasGDE);
+
 export default router;
  

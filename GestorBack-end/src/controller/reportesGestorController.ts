@@ -1,21 +1,23 @@
 import { Request , Response } from 'express';
 
+const c = require('../config/configBd');
 const { Pool }= require('pg');
 
-const configes ={
-    host: '10.1.1.7',
-    //host: '10.1.1.25',
-    user: 'postgres',
-    password: '' ,
-    database: 'gestorclientes',
-    //database: 'gestorclientes20210204',
-    port: '5432'
-}
+// const configes ={
+//     host: '10.1.1.7',
+//     //host: '10.1.1.25',
+//     user: 'postgres',
+//     password: '' ,
+//     database: 'gestorclientes',
+//     //database: 'gestorclientes20210204',
+//     port: '5432'
+// }
 
 
 
 /// conexiones a las bases de datos
-const pool = new Pool(configes);
+const pool = new Pool(c.config_bd_gc);
+//const pool = new Pool(configes);
 
 
 class reporGestor {
@@ -138,10 +140,12 @@ try {
     let fechaini=req.body.fechaini
     let fechafin=req.body.fechafin
     let empresa=req.body.empresa
+    let campana=req.body.campana
 
     console.log(fechaini);
     console.log(fechafin);
     console.log( empresa );
+    console.log( campana );
     const response = await pool.query(`SELECT
     CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
     clte.tipo_documento as tipoDocAportante,
@@ -172,9 +176,8 @@ try {
     LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
     LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
     LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
-    WHERE 
-    dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND pseudonimo=($3)
-    ORDER BY dg.fecha_gestion`,[fechaini , fechafin, empresa]);
+    WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND pseudonimo=($3) AND g.id_campana=($4)
+    ORDER BY dg.fecha_gestion`,[fechaini , fechafin, empresa, campana]);
     //,[fechaini , fechafin] g.id_campana IN ('2983')  AND
 
     if (res !== undefined) {
@@ -261,7 +264,8 @@ static postReportesEmpresa= async (req: Request, res:Response ) =>{
         let empresa=req.body.empresa;
         console.log(empresa);
         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
-        '12','19','48','49','11')     
+        '12','19','48','49','11',
+        '36','38','40','56')     
         AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `,[empresa]);
         //,[fechaini , fechafin]
     
@@ -336,6 +340,28 @@ static getReportes = async (req: Request, res:Response ) =>{
         console.log(error); 
     } 
 };
+static postCampanas= async (req: Request, res:Response ) =>{
+    try {
+         
+        let empresa=req.body.empresa;
+        console.log('PRUEBA',empresa);
+        const response = await pool.query(`SELECT  * FROM campana WHERE grupo_rol= ($1) ORDER BY 1 DESC LIMIT 20`, [empresa]);
+        //const response = await pool.query(`SELECT  * FROM campana  ORDER BY 1 DESC LIMIT 20`);
+        
+    
+        if (res !== undefined) {
+            return res.json(response.rows);
+            
+          }
+        
+    } catch (error) {
+         
+        console.log(error); 
+    }
+
+    }
+    
+
 
 
 

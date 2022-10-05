@@ -1,8 +1,13 @@
 export class Tmo {
 
+    fecha !:  string;
+    documento !:  string;
+    agente !:  string;
+    duracionllamadas !:  string;
+    cantidadgrabaciones !:  string;
+    segundos !:  string;
     
     nro_documento !:  string;
-    agente !:  string;
     duracion_llamadas !:  string;
     cantidad_llamadas !:  string;
     promedio_llamadas !:  string;

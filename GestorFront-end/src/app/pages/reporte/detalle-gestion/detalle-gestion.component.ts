@@ -11,6 +11,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { LoginService } from 'src/app/_services/login.service';
+import { Observable } from 'rxjs';
+import { CampanaI } from 'src/app/_model/capanaI';
+import { Empresa } from 'src/app/_model/empresa';
 
 
 @Component({
@@ -24,6 +27,10 @@ export class DetalleGestionComponent implements OnInit {
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
   empresaparametro !:  string;
+  campana !: number;
+
+  campana$ !: Observable<CampanaI[]>
+  idCampana !: number;
 
   form!: FormGroup;
   reporteName : string ="DETALLE GESTIONES"
@@ -36,8 +43,8 @@ export class DetalleGestionComponent implements OnInit {
   parametros !: Parametros;
 
   displayedColumns: string[] = ['nombrecampana', 'tipodocaportante', 'numdocaporta', 'razonsocial','tipogestion',
-                                'nombrecontacto', 'telefono1', 'telefono2', 'telefono3','numerorealmarcado',
-                                'usuario', 'empresa', 'padretipificacion', 'tipicacion','fechagestion','numerocampana','observacion','empleados'];
+                                'nombrecontacto', 'telefono1', 'telefono2', 'numerorealmarcado',
+                                'usuario', 'empresa', 'padretipificacion', 'tipicacion','fechagestion', 'observacion','empleados'];
 
   dataSource!: MatTableDataSource<DetalleGestion>;
   @ViewChild(MatSort) sort!: MatSort;
@@ -74,7 +81,18 @@ export class DetalleGestionComponent implements OnInit {
   ngOnInit(): void {
     this.loginService.isEmpresa.subscribe(data=>{
       this.empresaparametro=data;
-    })
+    });
+
+    const parametros = {empresa:this.empresaparametro}
+
+    this.campana$=this.reporteService.listarCampanas(parametros);
+    console.log('333',parametros)
+    
+  //   this.reporteService.listarCampanas(parametros).subscribe(data =>{
+  //     console.log('333',parametros)
+  //     console.log(data)
+  //  });
+
      
     }
 
@@ -84,16 +102,22 @@ export class DetalleGestionComponent implements OnInit {
       //this.empresaparametro = 'ASISTIDA'
   
    
-      const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
+      const parametros= { fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro,
+                          campana:this.idCampana}
      //parametros son los paramatros que enviamos y node.js los toma en el header
-     console.log(parametros)
+     console.log('111',parametros)
       this.reporteService.reporDetalleGestion(parametros).subscribe(data=>{
-        console.log(data)
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
   
-    });    }
+    });  
+
+    this.reporteService.listarCampanas(parametros).subscribe(data =>{
+      console.log('222',parametros)
+      console.log(data)
+   });
+  }
   
   
   exportarTodo(): void {

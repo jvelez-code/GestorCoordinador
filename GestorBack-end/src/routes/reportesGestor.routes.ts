@@ -14,7 +14,10 @@ router.post('/gestion', ReporGestor.postReportesGestion );
 router.post('/detallegestiones', ReporGestor.postDetalleGestiones );
 router.post('/porcentaje', ReporGestor.postPorcentajeTipificacion );
 router.post('/monitoreoLLamadas', ReporGestor.postMonitoreoLlamadas );
-router.get('/empresas',[checkJwt], checkRole([1]), ReporGestor.getEmpresas );
+router.get('/empresas', ReporGestor.getEmpresas );
+router.post('/campanas', ReporGestor.postCampanas );
+
+
 
 export default router;
  

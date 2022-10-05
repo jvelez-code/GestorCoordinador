@@ -19,7 +19,7 @@
   </div>
 
   <div>
-    <button mat-raised-button color="primary" (click)="aceptar()">Aceptar
+    <button mat-raised-button color="primary" (click)="aceptar()">Consultar
       <mat-icon>trending_up</mat-icon>
     </button>
   </div>
@@ -34,39 +34,45 @@
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-    <ng-container matColumnDef="fecha_llamada">
+     
+    <!-- Name Column -->
+    <ng-container matColumnDef="gestion">
+      <th mat-header-cell *matHeaderCellDef> TIPO GESTION </th>
+      <td mat-cell *matCellDef="let element"> Entrada de Llamada </td>
+    </ng-container>  
+
+    <ng-container matColumnDef="ruta_entrante">
+      <th mat-header-cell *matHeaderCellDef> LINEA INGRESO </th>
+      <td mat-cell *matCellDef="let element"> {{element.ruta_entrante}} </td>
+    </ng-container>     
+   
+
+    <ng-container matColumnDef="tipo_doc">
+      <th mat-header-cell *matHeaderCellDef> TIPO </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipo_doc}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numero_documento">
+      <th mat-header-cell *matHeaderCellDef> NÚMERO </th>
+      <td mat-cell *matCellDef="let element"> {{element.numero_documento}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numero_origen">
+      <th mat-header-cell *matHeaderCellDef> TELEFONO INGRESO </th>
+      <td mat-cell *matCellDef="let element"> {{element.numero_origen}} </td>
+    </ng-container>
+  
+
+    <ng-container matColumnDef="fecha_asterisk">
       <th mat-header-cell *matHeaderCellDef> FECHA </th>
-      <td mat-cell *matCellDef="let element"> {{element.fecha_llamada |date:"mediumDate" }} </td>
-    </ng-container>
-  
-    <!-- Name Column -->
-    <ng-container matColumnDef="no_calificadas">
-      <th mat-header-cell *matHeaderCellDef> CALIFICADAS </th>
-      <td mat-cell *matCellDef="let element"> {{element.no_calificadas}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:"longDate" }} </td>
     </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="calif_positiva">
-      <th mat-header-cell *matHeaderCellDef> CAL. POSITIVA </th>
-      <td mat-cell *matCellDef="let element"> {{element.calif_positiva}} </td>
+    <ng-container matColumnDef="hora_asterisk">
+      <th mat-header-cell *matHeaderCellDef> HORA </th>
+      <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:'h:mm:ss a' }} </td>
     </ng-container>
-
-    <ng-container matColumnDef="calif_negativo">
-      <th mat-header-cell *matHeaderCellDef> CAL. NEGATIVA </th>
-      <td mat-cell *matCellDef="let element"> {{element.calif_negativo}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="total_llamadas">
-      <th mat-header-cell *matHeaderCellDef> TOTAL LLAMADAS </th>
-      <td mat-cell *matCellDef="let element"> {{element.total_llamadas}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="telefono">
-      <th mat-header-cell *matHeaderCellDef> TELEFONO </th>
-      <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
-    </ng-container>
-  
-  
+    
    
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

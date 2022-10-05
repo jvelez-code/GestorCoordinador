@@ -20,6 +20,10 @@ import { EmpresasComponent } from './pages/empresa/empresas/empresas.component';
 import { DuracionEstadoComponent } from './pages/reporte/duracion-estado/duracion-estado.component';
 import { MonitoreoLlamadasComponent } from './pages/reporte/monitoreo-llamadas/monitoreo-llamadas.component';
 import { IvrComponent } from './pages/reporte/ivr/ivr.component';
+import { LlamadasCalificadasGDEComponent } from './pages/reporte/llamadas-calificadas-gde/llamadas-calificadas-gde.component';
+import { LlamadasFueraHorarioComponent } from './pages/reporte/llamadas-fuera-horario/llamadas-fuera-horario.component';
+import { LlamadasFueraHorarioEventualComponent } from './pages/reporte/llamadas-fuera-horario-eventual/llamadas-fuera-horario-eventual.component';
+import { FacturacionComponent } from './pages/reporte/facturacion/facturacion.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -35,7 +39,11 @@ const routes: Routes = [
     { path: 'Duracion Estados', component: DuracionEstadoComponent },
     { path: 'Monitoreo Llamadas', component: MonitoreoLlamadasComponent },
     { path: 'ReporteIVR', component: IvrComponent },
-    { path: 'CalificacionDelServicio', component: LlamadasCalificadasComponent }
+    { path: 'CalificacionDelServicio', component: LlamadasCalificadasComponent },
+    { path: 'CalificacionDelServicioGDE', component: LlamadasCalificadasGDEComponent },
+    { path: 'LlamadasFueraHorario', component: LlamadasFueraHorarioComponent },
+    { path: 'LlamadasFueraHorarioEventual', component: LlamadasFueraHorarioEventualComponent },
+    { path: 'FacturacionGde', component: FacturacionComponent }
     
   ]},
   { path: 'grafico', component: GraficoComponent },

@@ -2,15 +2,15 @@ import { Request , Response } from 'express';
 
 const { Pool }= require('pg');
 
-const configes ={
-    host: '10.1.1.7',
-    //host: '10.1.1.25',
-    user: 'postgres',
-    password: '' ,
-    database: 'gestorclientes',
-    //database: 'gestorclientes20210204',
-    port: '5432'
-}
+// const configes ={
+//     host: '10.1.1.7',
+//     //host: '10.1.1.25',
+//     user: 'postgres',
+//     password: '' ,
+//     database: 'gestorclientes',
+//     //database: 'gestorclientes20210204',
+//     port: '5432'
+// }
 
 const configcont ={
     host: '10.1.1.7',
@@ -18,12 +18,13 @@ const configcont ={
     user: 'postgres',
     password: '' ,
     database: 'contact_center',
+    //database: 'asterisk_pagosgde',
     //database: 'contact_center20210204',
     port: '5432'
 }
 
 /// conexiones a las bases de datos
-const pool = new Pool(configes);
+//const pool = new Pool(configes);
 const poolcont = new Pool(configcont);
 
 class ReporContact {
@@ -114,9 +115,9 @@ static postllamadasporHora = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
         
-        const response = await poolcont.query(`SELECT hora_llamada, sum(contestadas) AS ANSWERED,
-        count(hora_llamada)-sum(contestadas) AS NO_ANSWER,count(hora_llamada) AS TOTALES 
-        from ( SELECT  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
+        const response = await poolcont.query(`SELECT hora_llamada, sum(contestadas)::int AS ANSWERED,
+        (count(hora_llamada)-sum(contestadas))::int AS NO_ANSWER,count(hora_llamada)::int AS TOTALES 
+        FROM ( SELECT  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
         WHEN id_agente='777777777' THEN 0 END  contestadas from grabaciones_pila 
         where fecha_grabacion BETWEEN ($1) and ($2)  AND empresa=($3)
         AND tipo_de_llamada='Entrante' ) as t group by hora_llamada ORDER BY 1`,[fechaini ,fechafin, empresa] );
@@ -178,7 +179,7 @@ static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
         const response = await poolcont.query(`with entrante as(
             SELECT a.agenteE AS documento,a.agente AS agente,
             a.entrante As entrante,
-            SUM(a.duracionE)AS duracione,
+            SUM(a.duracionE)::time AS duracione,
             SUM(COALESCE(a.cantidadE,0)) AS cantidade
             FROM
             (SELECT c.time::date AS fecha ,
@@ -226,15 +227,15 @@ static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
             
             SELECT a.documento AS documento,a.agente AS agente,
             CONCAT(u.primer_nombre,' ',u.segundo_nombre,' ',u.primer_apellido,' ',u.segundo_apellido) AS nombreA,
-            a.entrante As entrante,SUM(COALESCE(a.duracionE,'00:00:00'))AS duracione,
+            a.entrante As entrante,(SUM(COALESCE(a.duracionE,'00:00:00')))::time AS duracione,
             SUM(COALESCE(a.cantidadE,0)) AS cantidade,
             b.documento AS documentos,b.agente AS agenteS,
-            b.Saliente As Saliente, SUM(COALESCE(b.duracions,'00:00:00')) AS duracions,
+            b.Saliente As Saliente, (SUM(COALESCE(b.duracions,'00:00:00')))::time AS duracions,
             SUM(COALESCE(b.cantidadS,0)) AS cantidadS,
-            SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')) AS totalTiempo,
+            (SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')))::time AS totalTiempo,
             SUM(COALESCE(a.cantidadE,0)+COALESCE(b.cantidads,0)) AS totalCantidad,
-            date_trunc('second',(SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')) )/
-            (SUM(COALESCE(a.cantidadE,0)+COALESCE(b.cantidads,0)))) AS totalDuracion
+            (date_trunc('second',(SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')) )/
+            (SUM(COALESCE(a.cantidadE,0)+COALESCE(b.cantidads,0)))))::time AS totalDuracion
             
             FROM entrante a FULL JOIN saliente b
             ON a.documento=b.documento
@@ -243,7 +244,7 @@ static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
             GROUP BY a.documento,a.agente,a.entrante,
             b.documento,b.agente,b.Saliente,
             u.primer_nombre,u.segundo_nombre,primer_apellido,segundo_apellido
-            ORDER BY totalCantidad DESC`,[fechaini ,fechafin, empresa] );
+            ORDER BY totalDuracion DESC`,[fechaini ,fechafin, empresa] );
 
     if (res !== undefined) {
         return res.json(response.rows);        
@@ -464,7 +465,7 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
         INNER JOIN (SELECT DISTINCT(nro_documento), login_Agente
         FROM ask_estado_extension  WHERE activo=true GROUP BY  login_Agente,nro_documento) ask ON c.agent=nro_documento
         GROUP BY c.time::date,c.agent,login_Agente
-        ORDER BY cantidadGrabaciones desc 
+        ORDER BY segundos DESC
         `,[fechaini , fechafin, empresa] );
 
     if (res !== undefined) {
@@ -476,194 +477,6 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
         console.log(error); 
     } 
 };
-
-
-
-
-//DB GESTOR
-
-static postPorcentajeTipificacion = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin 
-        let empresa=req.body.empresa;  
-        const response = await pool.query(`SELECT Prin.IdTipificacion, est.nombre, count(Prin.id_detalle_gestion),
-        Prin.tipificacionPadre
-        from (
-            SELECT case when eg.id_estado_gestion_padre is null
-                        then null
-                        else egp.id_estado_gestion
-                        end as EstadoPrincipal,
-            dg.id_detalle_gestion, eg.nombre as Tipificacion, eg.id_estado_gestion as IdTipificacion,
-            egp.nombre as tipificacionPadre, egp.id_estado_gestion as IdPadreTipificacion,
-            g.id_campana, dg.fecha_hora_sis
-            from gestion g
-            INNER JOIN detalle_gestion dg
-                ON g.id_gestion=dg.id_gestion
-            INNER JOIN estado_gestion eg
-                ON dg.id_estado_gestion=eg.id_estado_gestion
-            LEFT JOIN estado_gestion egp
-                ON eg.id_estado_gestion_padre=egp.id_estado_gestion
-        ) as Prin
-        INNER JOIN estado_gestion est
-            on Prin.IdTipificacion = est.id_estado_gestion
-        where 	  Prin.fecha_hora_sis between ($1) and ($2)
-        group by Prin.IdTipificacion, est.nombre,Prin.tipificacionPadre
-        ORDER BY Prin.IdTipificacion`,[fechaini ,fechafin] );
-
-        //Prin.id_campana IN ($P!{idCampanas}) and
-           
-
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
-
-
-static postDetalleGestiones= async (req: Request, res:Response ) =>{
-try {
-     
-    let fechaini=req.body.fechaini
-    let fechafin=req.body.fechafin
-    let empresa=req.body.empresa;  
-
-    console.log(fechaini);
-    console.log(fechafin);
-    const response = await pool.query(`SELECT
-    CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
-    clte.tipo_documento as tipoDocAportante,
-    clte.nro_documento as numDocAporta,
-    clte.razon_social as razonSocial,
-    tc.nombre as tipoGestion,
-    cont.nombre as nombreContacto,
-    cont.telefono_celular as telefono1,
-    cont.numero_contacto as telefono2,
-    cont.telefono_directo as telefono3,
-    dg.num_real_marcado as numeroRealMarcado,
-    ag.usuario as usuario,
-    emp.descripcion as empresa,
-    egpdg.nombre as padreTipificacion,
-    egdg.nombre as tipificacion,
-    g.fecha_gestion as fechaGestion,
-    c.id_campana as numeroCampana,
-    replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
-    g.id_gestion as idGestion
-    FROM gestion g
-    INNER JOIN estado_gestion eg ON g.id_estado_gestion=eg.id_estado_gestion
-    INNER JOIN campana c ON g.id_campana=c.id_campana
-    INNER JOIN tipo_campana tc ON c.id_tipo_campana=tc.id_tipo_campana
-    INNER JOIN detalle_gestion dg ON g.id_gestion=dg.id_gestion
-    LEFT JOIN estado_gestion egdg ON dg.id_estado_gestion=egdg.id_estado_gestion
-    LEFT JOIN estado_gestion egpdg ON egdg.id_estado_gestion_padre=egpdg.id_estado_gestion
-    INNER JOIN cliente clte ON g.id_cliente=clte.id_cliente
-    LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
-    LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
-    INNER JOIN empresa emp ON ag.empresa=emp.id_empresa 
-    WHERE g.fecha_gestion BETWEEN ($1) AND ($2) AND emp.id_empresa='3'
-    ORDER BY g.fecha_gestion `,[fechaini , fechafin]);
-    //,[fechaini , fechafin]
-
-    if (res !== undefined) {
-        return res.json(response.rows);
-        
-      }
-    
-} catch (error) {
-    /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
-    
-    console.log(error); 
-}
-}
-
-static postReportesGestion = async (req: Request, res:Response ) =>{
-    try {
-         
-        //parametro de url
-        //let fecha1=req.query.fecha;
-        //console.log(req.query.fecha);
-        
-        //parametro de header
-        //alt +96 `
-        let fecha2=req.body.fecha   
-        console.log(req.body.fecha);
-        const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion>=$1 ORDER BY fecha_gestion `,[fecha2] );
-    if (res !== undefined) {
-        return res.json(response.rows);
-        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
-
-static getReportesGestion = async (req: Request, res:Response ) =>{
-    try {
-        const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion is not null ORDER BY fecha_gestion limit 5 `);
-    if (res !== undefined) {
-        return res.json(response.rows);
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
-
-
-
-
-static getEstados = async (req: Request, res:Response ) =>{
-    try {
-        const response = await poolcont.query('SELECT * FROM ask_estado' );
-    if (res !== undefined) {
-        return res.json(response.rows);
-      }
-      poolcont.close();
-    } 
-    
-    catch (error) {
-        console.log(error); 
-    } 
-};
-
-static getReportesid = async (req: Request, res: Response) => {
-    //console.log(req.params.id);
-    //res.end();
-    //El parametro viaja desde la url en el get
- 
-        const id = req.params.id;
-        try {
-            const response = await pool.query
-            ("SELECT * FROM reportes WHERE id = $1 ORDER BY 2 ", [id]);
-        if (res !== undefined) {
-            return res.json(response.rows);
-          }
-          pool.close();
-        } 
-        catch (error) {
-            console.log(error); 
-        } 
-} 
-
-static postReportes =async (req: Request, res:Response ) => {
-        const {id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas} = req.body;
-        const response = await pool.query('insert into reportes values ($1, $2, $3, $4, $5, $6, $7 )', [id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas] );
-       
-        res.send('Hola mundo post final');
-        pool.close();
-    };
-
     //Monitoreo
 
     static potsMonitoreo = async (req: Request, res:Response ) =>{
@@ -695,90 +508,143 @@ static postReportes =async (req: Request, res:Response ) => {
     };
 
 
+    //DB ASTERISK_PAGOSGDE
 
-
-    // const getmonitoreo = async(req: Request, res:Response )=>{
-
-    
-    //     try {
-
-    //           date = new Date();
-    //             const formatDate = (current_datetime)=>{
-    //                 let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + 
-    //                 "-" + current_datetime.getDate() ;
-    //                 return formatted_date;
-    //             }
-    //             fecha=formatDate(date);
-
-    //         const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
-    //         fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
-    //         FROM ask_estado_extension aee ,ask_estado ae
-    //         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
-    //         AND empresa='ASISTIDA' ORDER BY ae.id_estado`,[fecha]);
-    //         if (res !== undefined) {
-    //             return res.json(response.rows);
-                
-    //           }
-    //     } catch (error) {
-    //         console.log('Monitoreo', error);
-    //     }
-    // }
-
-
-
-//Consulta de parametros;
-
-
-
-static postUsuariosXempresa = async (req: Request, res:Response ) =>{
-        try {   
-        
+    static postLlamadasFueradeHorario = async (req: Request, res:Response ) =>{
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini=req.body.fechaini
+            let fechafin=req.body.fechafin   
             let empresa=req.body.empresa
-            const response = await pool.query(`SELECT id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
-            id_empresa, pseudonimo from usuario u,empresa e 
-            where u.empresa=e.id_empresa AND pseudonimo=($1) and estado<5 ORDER BY usuario`,[empresa] );
-
-            if (res !== undefined) {
-            return res.json(response.rows);
-        
-      }
-      
+            
+            const response = await poolcont.query(`SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_doc, numero_documento, numero_origen, date_part('dow',fecha_hora_asterisk) as dia, fuerahorario
+            FROM (
+            SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_documento, numero_documento, numero_origen, desea_devolucion, numero_devolucion, fecha_devolucion, date_part('dow',fecha_hora_asterisk),
+                CASE
+                      WHEN date_part('dow',fecha_hora_asterisk) IN ('1','2','3','4','5') AND fecha_hora_asterisk::time NOT BETWEEN '08:00' AND  '18:00' THEN 0
+                         WHEN date_part('dow',fecha_hora_asterisk) IN ('6')  AND fecha_hora_asterisk::time NOT BETWEEN '08:00' AND '12:00' THEN 0
+                     WHEN date_part('dow',fecha_hora_asterisk) IN ('0') THEN 0
+                     ELSE 1 END
+                AS fuerahorario
+            FROM
+            (SELECT * FROM llamada_entrante
+            LEFT JOIN festivos ON (llamada_entrante.fecha_hora_asterisk::date = festivos.fecha)
+            WHERE fecha_hora_asterisk BETWEEN ($1) AND ($2)
+            AND empresa= ($3)
+            ORDER BY fecha_hora_asterisk
+            ) AS subReporte) AS reporteFinal
+            INNER JOIN tipo_documento ON (tipo_documento = tipo_documento.id)
+            WHERE fuerahorario = 0`,[fechaini , fechafin, empresa] );
+    
+        if (res !== undefined) {
+            return res.json(response.rows);        
+          }
+          
         } 
-            catch (error) {
-            console.log('UsuariosXempresa',error); 
-    } 
-};
+        catch (error) {
+            console.log(error); 
+        } 
+    };
 
-static getReportes = async (req: Request, res:Response ) =>{
-    try {
-        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
-    if (res !== undefined) {
-        return res.json(response.rows);
-        pool.close();
-      }
+    static postLlamadasFueradeHorarioEventual = async (req: Request, res:Response ) =>{
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini=req.body.fechaini
+            let fechafin=req.body.fechafin  
+            let empresa=req.body.empresa
+            let horaLista=req.body.horaEven
+            console.log( fechaini );
+            console.log( fechafin );
+            console.log( horaLista );
+            const response = await poolcont.query(`SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_doc, numero_documento, numero_origen, date_part('dow',fecha_hora_asterisk) as dia, fuerahorario
+            FROM (
+            SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_documento, numero_documento, numero_origen, desea_devolucion, numero_devolucion, fecha_devolucion, date_part('dow',fecha_hora_asterisk),
+                CASE
+                      WHEN date_part('dow',fecha_hora_asterisk) IN ('1','2','3','4','5') AND fecha_hora_asterisk::time NOT BETWEEN '08:00' AND  ($4) THEN 0
+                         WHEN date_part('dow',fecha_hora_asterisk) IN ('6')  AND fecha_hora_asterisk::time NOT BETWEEN '08:00' AND '12:00' THEN 0
+                     WHEN date_part('dow',fecha_hora_asterisk) IN ('0') THEN 0
+                     ELSE 1 END
+                AS fuerahorario
+            FROM
+            (SELECT * FROM llamada_entrante
+            LEFT JOIN festivos ON (llamada_entrante.fecha_hora_asterisk::date = festivos.fecha)
+            WHERE fecha_hora_asterisk BETWEEN ($1) AND ($2)
+            AND empresa= ($3)
+            ORDER BY fecha_hora_asterisk
+            ) AS subReporte) AS reporteFinal
+            INNER JOIN tipo_documento ON (tipo_documento = tipo_documento.id)
+            WHERE fuerahorario = 0`,[fechaini , fechafin, empresa, horaLista ] );
+    
+        if (res !== undefined) {
+            return res.json(response.rows);        
+          }
+          
+        } 
+        catch (error) {
+            console.log(error); 
+        } 
+    };
+
+
+    static postLlamadasCalificadasGDE = async (req: Request, res:Response ) =>{
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini=req.body.fechaini
+            let fechafin=req.body.fechafin  
+            let empresa=req.body.empresa
+            let horaLista=req.body.horaLista
+            console.log( fechaini );
+            console.log( fechafin );
+            console.log( empresa );
+            const response = await poolcont.query(`SELECT gp.fecha_grabacion AS fecha,
+            cdr.uniqueid AS idASterisk,
+            gp.ruta_grabacion AS ruta,
+            CASE WHEN cdr.call_poll=1 THEN 'POSITIVA' WHEN  cdr.call_poll=2 THEN 'NEGATIVA'
+            WHEN cdr.call_poll IS NULL  THEN 'NO CALIFICADA'  END AS calificacion,
+            gp.numero_cliente AS telefono,
+            ask.login_agente AS agente
+            FROM grabaciones_pila gp left join  cdr cdr on gp.uniqueid=cdr.uniqueid
+            LEFT JOIN llamada_entrante lle on cdr.uniqueid=lle.id_Asterisk
+            LEFT JOIN ask_estado_extension ask ON gp.id_agente=ltrim(ask.nro_documento,'Agent/')
+            WHERE gp.fecha_grabacion BETWEEN  ($1) AND ($2)
+            AND gp.id_agente!='777777777' AND tipo_de_llamada='Entrante'
+            and gp.empresa= ($3) and ask.login_agente!='JFERNANDEZ_GDE'
+            AND cdr.lAStapp='Queue'
+            ORDER BY gp.fecha_grabacion`,[fechaini , fechafin, empresa ] );
+    
+        if (res !== undefined) {
+            return res.json(response.rows);        
+          }
+          
+        } 
+        catch (error) {
+            console.log(error); 
+        } 
+    };
+
+
+
+//DB GESTOR
+
+
+
+// static getReportesprueba = async (req: Request, res:Response ) =>{
+//     try {
+//         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
+//         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
+//     if (res !== undefined) {
+//         return res.json(response.rows);
+//         pool.close();
+//       }
       
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
-
-
-static getReportesprueba = async (req: Request, res:Response ) =>{
-    try {
-        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
-    if (res !== undefined) {
-        return res.json(response.rows);
-        pool.close();
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
- }
+//     } 
+//     catch (error) {
+//         console.log(error); 
+//     } 
+//  }
 
 
 }

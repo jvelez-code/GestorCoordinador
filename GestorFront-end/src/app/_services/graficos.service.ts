@@ -25,7 +25,9 @@ export class GraficosService {
     private http: HttpClient,
     private router: Router ) { }
 
- llamadasporHora(parametros: Parametros):Observable<any>{
+ 
+ 
+  llamadasporHora(parametros: Parametros):Observable<any>{
    console.log('parame',parametros)
       
   const headers = { 'content-type': 'application/json'}  
