@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { FormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -33,8 +33,8 @@ const EXCEL_EXT = '.xlsx';
 export class TmoDetalladoComponent implements OnInit {
  
 
-  campaignOne!: UntypedFormGroup;
-  campaignTwo!: UntypedFormGroup;
+  campaignOne!: FormGroup;
+  campaignTwo!: FormGroup;
 
   tmo !: Tmo[];
   usuarios  !: Usuario[];
@@ -48,12 +48,13 @@ export class TmoDetalladoComponent implements OnInit {
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
   usuarioSeleccionado !: string;
-  form!: UntypedFormGroup;
-  reporteName : string ="TMO Detallado";
+  form!: FormGroup;
+  reporteName : string ="TMO DETALLADO";
 
-  fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
-  fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-  empresaparametro = 'ASISTIDA';
+  fechaparametro1 !:  string;
+  fechaparametro2 !:  string;
+  empresaparametro !:  string;
+
   usuarioparametro = this.usuarioSeleccionado;
 
    
@@ -67,13 +68,13 @@ export class TmoDetalladoComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new UntypedFormGroup({
+    this.campaignOne = new FormGroup({
       start: new FormControl(new Date(year, month, 13)),
       end: new FormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new UntypedFormGroup({
+      this.campaignTwo = new FormGroup({
         start: new FormControl(new Date(year, month, 15)),
         end: new FormControl(new Date(year, month, 19)),
       });
@@ -98,16 +99,18 @@ export class TmoDetalladoComponent implements OnInit {
 
 
 
-  aceptar(){    
-
+  aceptar(){  
+        
+    this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
+    this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
+    
 
  
-    this.parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,
-      empresa:this.empresaparametro, usuario:this.usuarioSeleccionado }
+    const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
 
-    this.reporteService.reporTmoDetallado(this.parametros).subscribe(data=>{
-      console.log('tmo',data)
+   
+    this.reporteService.reporTmoDetallado(parametros).subscribe(data=>{
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

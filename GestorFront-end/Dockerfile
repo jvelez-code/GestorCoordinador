@@ -1,11 +1,15 @@
 #Primera Etapa
 FROM node:14.15.4 as node
 WORKDIR /app
-COPY ./ /app/
-RUN npm install 
-RUN npm link @angular/cli --force
-ARG configuration=production
-RUN npm run build
+
+COPY package.json /app
+
+RUN npm install --force
+
+COPY . /app
+
+
+RUN npm run build  --prod
 
 #Segunda Etapa
 FROM nginx:1.17.1-alpine

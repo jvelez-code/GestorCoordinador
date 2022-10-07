@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, FormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,11 +20,11 @@ export class TmoSalienteComponent implements OnInit {
 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: UntypedFormGroup;
-  reporteName : string ="TMO Saliente"
+  form!: FormGroup;
+  reporteName : string ="TMO SALIENTE"
 
-  campaignOne!: UntypedFormGroup;
-  campaignTwo!: UntypedFormGroup;
+  campaignOne!: FormGroup;
+  campaignTwo!: FormGroup;
 
   fechaparametro1 !:  string;
   fechaparametro2 !:  string;
@@ -45,13 +45,13 @@ export class TmoSalienteComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new UntypedFormGroup({
+    this.campaignOne = new FormGroup({
       start: new UntypedFormControl(new Date(year, month, 13)),
       end: new UntypedFormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new UntypedFormGroup({
+      this.campaignTwo = new FormGroup({
         start: new UntypedFormControl(new Date(year, month, 15)),
         end: new UntypedFormControl(new Date(year, month, 19)),
       });

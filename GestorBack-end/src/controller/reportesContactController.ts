@@ -53,9 +53,9 @@ static postIVR = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
         
-        const response = await poolcont.query(`SELECT ivr_date,ivr_hora,
-        ivr_ide,ivr_pin,ivr_per,
-        ivr_tel,ivr_state
+        const response = await poolcont.query(`SELECT ivr_date::TEXT, ivr_hora,
+        ivr_ide, ivr_pin, ivr_per,
+        ivr_tel, ivr_state
         from call_ivr where ivr_date between ($1)
         AND ($2) ORDER BY ivr_date,ivr_hora `,[fechaini ,fechafin] );
 
@@ -141,7 +141,7 @@ static postSecretariaVirtual = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
         
-        const response = await poolcont.query(`SELECT fecha, sum (total_dia) as total, SUM(cant_devueltas_dia) AS devueltas,
+        const response = await poolcont.query(`SELECT fecha::TEXT, sum (total_dia) as total, SUM(cant_devueltas_dia) AS devueltas,
         SUM(cant_pendientes_dia) as pendientes,
         telefono
          FROM (
@@ -269,7 +269,7 @@ static postLlamadasRecibidas = async (req: Request, res:Response ) =>{
         let fechaini=req.body.fechaini
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
-        const response = await poolcont.query(`SELECT fecha_llamada ,
+        const response = await poolcont.query(`SELECT fecha_llamada::TEXT ,
         sum(COALESCE(llamadas,'0'))-sum(COALESCE(positiva,'0'))-sum(COALESCE(negativas,'0'))-sum(COALESCE(no_atendidas,'0')) AS no_calificadas,
         sum(COALESCE(positiva,'0')) AS calif_positiva,
         sum(COALESCE(negativas,'0')) AS calif_negativo,
@@ -338,7 +338,7 @@ static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
 
-        const response = await poolcont.query(`SELECT TO_CHAR(fecha_grabacion,'YYYY-MM-DD')AS fecha,
+        const response = await poolcont.query(`SELECT TO_CHAR(fecha_grabacion,'YYYY-MM-DD')::TEXT AS fecha,
         id_Agente AS agente,
         login_agente AS login ,
         SUBSTRING((sum(duracion)::text||' secs')::TEXT,0,9) AS duracion,
@@ -404,7 +404,7 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         console.log( fechafin );
         console.log( empresa );
         console.log( usuario );
-        const response = await poolcont.query(`SELECT c.time AS fechainicio ,c.callid AS id,
+        const response = await poolcont.query(`SELECT c.time::TEXT AS fechainicio ,c.callid AS id,
         login_agente AS agente ,numero_cliente AS telCliente,
         SUBSTRING((to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)::TEXT,0,9) AS duracion
         FROM (
@@ -420,7 +420,7 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         FROM grabaciones_pila, queue_log
         WHERE uniqueid=callid AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSFER')) AS t
         ON c.callid=t.callid AND c.agent=t.agent
-        ORDER BY c.time`
+        ORDER BY c.time::TEXT`
         ,[fechaini ,fechafin, empresa] );
 
         //AND login_agente=($4)
@@ -446,27 +446,28 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
         console.log( fechaini );
         console.log( fechafin );
         console.log( empresa );
-        const response = await poolcont.query(`SELECT c.time::date AS fecha ,
-        c.agent AS documento,
-        login_Agente AS agente,
-        SUBSTRING(sum(to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)::TEXT,0,9) AS duracionLlamadas,
-        count(*) as cantidadGrabaciones,
-        SUBSTRING((sum(to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)/count(*))::TEXT,0,9) AS segundos
-        FROM (
-        SELECT time,callid,agent,event
-        FROM grabaciones_pila, queue_log
-        WHERE uniqueid=callid AND id_agente=agent AND fecha_grabacion BETWEEN ($1)  AND ($2) 
-        AND empresa=($3) AND event='CONNECT' AND id_agente!='777777777'
-        AND tipo_de_llamada='Entrante') AS c
-        INNER JOIN (
-        SELECT time,callid,agent,event
-        FROM grabaciones_pila, queue_log
-        WHERE uniqueid=callid AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSFER')) AS t ON c.callid=t.callid AND c.agent=t.agent
-        INNER JOIN (SELECT DISTINCT(nro_documento), login_Agente
-        FROM ask_estado_extension  WHERE activo=true GROUP BY  login_Agente,nro_documento) ask ON c.agent=nro_documento
-        GROUP BY c.time::date,c.agent,login_Agente
-        ORDER BY segundos DESC
-        `,[fechaini , fechafin, empresa] );
+        const response = await poolcont.query(`SELECT fecha::text, documento, agente, duracionLlamadas, 
+        cantidadGrabaciones, segundos FROM (
+        SELECT c.time::Date AS fecha ,
+         c.agent AS documento,
+         login_Agente AS agente,
+         SUBSTRING(sum(to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)::TEXT,0,9) AS duracionLlamadas,
+         count(*) as cantidadGrabaciones,
+         SUBSTRING((sum(to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)/count(*))::TEXT,0,9) AS segundos
+         FROM (
+         SELECT time,callid,agent,event
+         FROM grabaciones_pila, queue_log
+         WHERE uniqueid=callid AND id_agente=agent AND fecha_grabacion BETWEEN ($1)  AND ($2)
+         AND empresa=($3) AND event='CONNECT' AND id_agente!='777777777'
+         AND tipo_de_llamada='Entrante') AS c
+         INNER JOIN (
+         SELECT time,callid,agent,event
+         FROM grabaciones_pila, queue_log
+         WHERE uniqueid=callid AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSFER')) AS t ON c.callid=t.callid AND c.agent=t.agent
+         INNER JOIN (SELECT DISTINCT(nro_documento), login_Agente
+         FROM ask_estado_extension  WHERE activo=true GROUP BY  login_Agente,nro_documento) ask ON c.agent=nro_documento
+         GROUP BY c.time::Date,c.agent,login_Agente
+         ORDER BY segundos DESC) AS tmo`,[fechaini , fechafin, empresa] );
 
     if (res !== undefined) {
         return res.json(response.rows);        

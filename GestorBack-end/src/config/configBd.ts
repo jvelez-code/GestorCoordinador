@@ -1,5 +1,5 @@
 
-//Base de datos Asterisk
+ //Base de datos Asterisk
 var config_bd = {
     user: 'pgsql',
     host: '10.1.1.7',
@@ -21,13 +21,12 @@ var config_bd_r = {
 
 //Base de datos Gestor
 var config_bd_gc = { 
+    user: 'pgsql',
     host: '10.1.1.7',
-    //host: '10.1.1.25',
-    user: 'postgres',
-    password: '' ,
     database: 'gestorclientes',
-    //database: 'gestorclientes20210204',
-    port: '5432'
+    password: 'pgsql',
+    port: 5432,
+    toStr: () => `postgresql://${config_bd.user}:${config_bd.password}@${config_bd.host}:${config_bd.port}/${config_bd.database}`
 }
 
 
