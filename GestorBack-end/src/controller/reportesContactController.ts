@@ -338,17 +338,15 @@ static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
         let fechafin=req.body.fechafin   
         let empresa=req.body.empresa
 
-        const response = await poolcont.query(`SELECT TO_CHAR(fecha_grabacion,'YYYY-MM-DD')::TEXT AS fecha,
-        id_Agente AS agente,
-        login_agente AS login ,
-        SUBSTRING((sum(duracion)::text||' secs')::TEXT,0,9) AS duracion,
-        COUNT(numero_cliente) AS cantidad,
-        TO_CHAR(((sum(duracion)::text||' secs')::interval/COUNT(numero_cliente)),'MI:SS')  AS segundos
-        FROM grabaciones_pila gp LEFT JOIN ask_estado_extension ON id_agente=ltrim(nro_documento,'Agent/')
-        WHERE  tipo_de_llamada='Saliente'  AND fecha_grabacion BETWEEN ($1) and ($2)
-        and gp.empresa=($3)
-        GROUP BY FECHA,id_Agente,login_agente
-        ORDER BY cantidad desc `
+        const response = await poolcont.query(`SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente AS agente
+        ,usuario, count(fecha_inicio) as llamadas,sum(fecha_fin-fecha_inicio)::text as duracion,
+        (sum(fecha_fin-fecha_inicio)/count(fecha_inicio))::text AS promedio
+        FROM ac_llamadas_salientes a,grabaciones_pila g, usuario u
+        WHERE a.uniqueid=g.uniqueid AND  a.id_agente=nro_documento 
+        AND  fecha_inicio between ($1) AND ($2)
+        AND  a.empresa=($3) AND  fecha_fin is not null 
+        GROUP BY fecha,a.id_Agente,usuario
+        ORDER by promedio desc `
         ,[fechaini ,fechafin, empresa] );
 
     if (res !== undefined) {

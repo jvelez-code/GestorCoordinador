@@ -8,7 +8,7 @@ router.post('/monitoreo',ReporContact.potsMonitoreo );
 router.get('/a', AuthController.logins );
 router.get('/', ReporContact.logins );
 
-//reportes Contact
+//reportes Contact /reporContact'
 router.post('/tmo'         , ReporContact.postReporteTmo );
 router.post('/tmodetallado', ReporContact.postReporteTmoDetallado );
 router.post('/tmoSaliente' , ReporContact.postReporteTmoSaliente );

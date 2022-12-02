@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -32,7 +32,7 @@ export class TmoSalienteComponent implements OnInit {
 
   tmo !: Tmo[];
   parametros !: Parametros;
-  displayedColumns: string[] = ['fecha', 'agente', 'login', 'duracion', 'cantidad','segundos'];
+  displayedColumns: string[] = ['fecha', 'agente', 'usuario', 'duracion', 'cantidad','segundos'];
   dataSource!: MatTableDataSource<Tmo>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -46,14 +46,14 @@ export class TmoSalienteComponent implements OnInit {
     const year = today.getFullYear();
 
     this.campaignOne = new FormGroup({
-      start: new UntypedFormControl(new Date(year, month, 13)),
-      end: new UntypedFormControl(new Date(year, month, 16)),
+      start: new FormControl(new Date(year, month, 13)),
+      end: new FormControl(new Date(year, month, 16)),
 
     });
 
       this.campaignTwo = new FormGroup({
-        start: new UntypedFormControl(new Date(year, month, 15)),
-        end: new UntypedFormControl(new Date(year, month, 19)),
+        start: new FormControl(new Date(year, month, 15)),
+        end: new FormControl(new Date(year, month, 19)),
       });
 
   }
@@ -73,7 +73,7 @@ export class TmoSalienteComponent implements OnInit {
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
     this.reporteService.reporTmoSaliente(parametros).subscribe(data=>{
-    console.log(data);
+    console.log('tmo saliente',data);
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
