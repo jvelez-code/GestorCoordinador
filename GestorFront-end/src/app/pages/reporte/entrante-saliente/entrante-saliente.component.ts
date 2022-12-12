@@ -40,8 +40,8 @@ export class EntranteSalienteComponent implements OnInit {
 
   tmo !: Tmo[];
   parametros !: Parametros;
-  displayedColumns: string[] = ['documento', 'agente', 'nombrea', 'entrante', 'duracione', 'cantidade',
-                                'documentos', 'agentes', 'saliente', 'duracions', 'cantidads','totaltiempo', 'totalcantidad', 'totalduracion']
+  displayedColumns: string[] = ['documentofinal', 'agentefinal', 'entrante', 'cantidade', 'duracione', 'saliente',
+                                'cantidads', 'duracions', 'catidadt', 'duraciont', 'promedio']
   //, 'nombrea', 'entrante', 'duracione','cantidade',
   //'documentos','agentes','saliente','duracions','cantidads','totaltiempo','totalcantidad','totalduracion','',''];
   dataSource!: MatTableDataSource<Tmo>;

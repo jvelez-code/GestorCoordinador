@@ -32,7 +32,7 @@ export class TmoSalienteComponent implements OnInit {
 
   tmo !: Tmo[];
   parametros !: Parametros;
-  displayedColumns: string[] = ['fecha', 'agente', 'usuario', 'duracion', 'cantidad','segundos'];
+  displayedColumns: string[] = ['fecha', 'agente', 'login', 'duracion', 'cantidad','segundos'];
   dataSource!: MatTableDataSource<Tmo>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

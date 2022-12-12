@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  //sudo kill $(sudo lsof -t -i:4200)
   production: false,
   HOST: 'http://10.1.0.231:3000',
   //HOST: 'http://10.1.1.62:3000',

@@ -26,7 +26,7 @@
   </form>
 </div>
 
-<mat-form-field appearance="standard">
+<mat-form-field appearance="fill">
   <mat-label >Buscar</mat-label>
   <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
 </mat-form-field>
@@ -42,23 +42,23 @@
     <!-- Name Column -->
     <ng-container matColumnDef="agente">
       <th mat-header-cell *matHeaderCellDef> NRO DOCUMENTO </th>
-      <td mat-cell *matCellDef="let element"> {{element.id_agente}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.agente}} </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="login">
       <th mat-header-cell *matHeaderCellDef> AGENTE </th>
-      <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.login}} </td>
     </ng-container>
 
     <ng-container matColumnDef="duracion">
       <th mat-header-cell *matHeaderCellDef> LLAMADAS </th>
-      <td mat-cell *matCellDef="let element"> {{element.duracion}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
     </ng-container>
 
     <ng-container matColumnDef="cantidad">
       <th mat-header-cell *matHeaderCellDef> DURACION </th>
-      <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.duracion}} </td>
     </ng-container>
 
     <ng-container matColumnDef="segundos">

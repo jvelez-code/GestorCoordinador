@@ -25,7 +25,7 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
           console.log("Conexion ok Contact");
 
           app.listen(3000)
-          console.log("Puerto", 3000)
+          console.log("Puertos", 3000)
 
      } catch (error) {
          console.log(error);

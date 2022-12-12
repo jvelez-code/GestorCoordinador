@@ -8,6 +8,7 @@
     text-align: center;
     font-style: italic;
     font-weight: bold;
+    
   }
 
  
@@ -76,4 +77,8 @@
     font-size: 14px;
     width: 100%;
   }
-  tr:hover {background-color: coral;}
+
+
+  table tr:hover {
+    background-color: coral;
+  }

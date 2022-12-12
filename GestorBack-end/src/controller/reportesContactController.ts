@@ -192,8 +192,10 @@ static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
             FROM (
             SELECT time,callid,agent,event,empresa,tipo_de_llamada
             FROM grabaciones_pila, queue_log
-            WHERE uniqueid=callid AND id_agente=agent AND fecha_grabacion BETWEEN ($1) and ($2)
-            AND empresa=($3) and event='CONNECT'
+            WHERE uniqueid=callid AND id_agente=agent AND fecha_grabacion 
+				between ($1) and ($2)
+AND  empresa=($3)
+      and event='CONNECT'
             AND tipo_de_llamada='Entrante' ) AS c
             INNER JOIN (
             SELECT time,callid,agent,event,empresa,tipo_de_llamada
@@ -205,46 +207,38 @@ static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
             ORDER BY c.time::date,c.agent,login_Agente,c.empresa,c.tipo_de_llamada) as a
             GROUP  BY a.agenteE,a.agente,a.entrante
             ),
-            saliente AS
-            (SELECT b.agenteS AS documento,b.login AS agente,
-            b.Saliente As Saliente,SUM(b.duracionS) AS duracions,
-            SUM(COALESCE(b.cantidadS,0)) AS cantidads
-            FROM
-            (SELECT TO_CHAR(fecha_grabacion,'YYYY-MM-DD')AS fecha,
-            tipo_de_llamada AS Saliente,
-            id_Agente AS agenteS,
-            login_agente AS login ,
-            (sum(duracion)::text||' secs')::interval AS duracions,
-            COUNT(numero_cliente) AS cantidadS
-            FROM grabaciones_pila gp , ask_estado_extension ask
-            WHERE id_agente=nro_documento
-            AND tipo_de_llamada='Saliente'  AND fecha_grabacion
-            BETWEEN ($1) and ($2)
-            and gp.empresa=($3) AND activo=true
-            GROUP BY FECHA,tipo_de_llamada,id_Agente,login_agente,duracion
-            ) AS B
-            GROUP  BY b.agenteS,b.login,b.Saliente)
+            saliente AS (
+            (SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente,usuario,
+count(fecha_inicio) as cantidads,sum(fecha_fin-fecha_inicio)::text as duracions,
+(sum(fecha_fin-fecha_inicio)/count(fecha_inicio))::text AS promedio
+FROM ac_llamadas_salientes a,grabaciones_pila g, usuario u
+WHERE a.uniqueid=g.uniqueid AND  a.id_agente=nro_documento 
+AND  fecha_inicio between ($1) and ($2)
+AND  a.empresa=($3) AND  fecha_fin is not null 
+GROUP BY fecha,a.id_Agente,usuario
+ORDER by promedio desc ))
             
-            SELECT a.documento AS documento,a.agente AS agente,
-            CONCAT(u.primer_nombre,' ',u.segundo_nombre,' ',u.primer_apellido,' ',u.segundo_apellido) AS nombreA,
-            a.entrante As entrante,(SUM(COALESCE(a.duracionE,'00:00:00')))::time AS duracione,
-            SUM(COALESCE(a.cantidadE,0)) AS cantidade,
-            b.documento AS documentos,b.agente AS agenteS,
-            b.Saliente As Saliente, (SUM(COALESCE(b.duracions,'00:00:00')))::time AS duracions,
-            SUM(COALESCE(b.cantidadS,0)) AS cantidadS,
-            (SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')))::time AS totalTiempo,
-            SUM(COALESCE(a.cantidadE,0)+COALESCE(b.cantidads,0)) AS totalCantidad,
-            (date_trunc('second',(SUM(COALESCE(a.duracionE,'00:00:00')+COALESCE(b.duracions,'00:00:00')) )/
-            (SUM(COALESCE(a.cantidadE,0)+COALESCE(b.cantidads,0)))))::time AS totalDuracion
-            
-            FROM entrante a FULL JOIN saliente b
-            ON a.documento=b.documento
-            LEFT JOIN usuario u ON a.documento=u.nro_documento
-            
-            GROUP BY a.documento,a.agente,a.entrante,
-            b.documento,b.agente,b.Saliente,
-            u.primer_nombre,u.segundo_nombre,primer_apellido,segundo_apellido
-            ORDER BY totalDuracion DESC`,[fechaini ,fechafin, empresa] );
+            SELECT 
+			CASE 
+			WHEN documento is null  THEN id_agente
+			ELSE documento
+			END AS documentoFinal,
+			CASE 
+			WHEN agente is null  THEN usuario
+			ELSE agente
+			END AS agenteFinal,
+			'Entrante' as entrante,cantidade::int,duracione::text,'Saliente' as saliente,
+			cantidads::int,duracions::text,
+			(COALESCE(cantidade,0)+COALESCE(cantidads,0)) AS catidadt,
+			date_trunc('second',(SUM(COALESCE(duracione::interval ,'00:00:00')+
+									 COALESCE(duracions::interval,'00:00:00'))))::text AS duraciont,
+			date_trunc('second',(SUM(COALESCE(duracione::interval ,'00:00:00')+
+			                         (COALESCE(duracions::interval,'00:00:00'))))/(COALESCE(cantidade,0)+COALESCE(cantidads,0)))::text  AS promedio
+            FROM entrante e FULL JOIN saliente s
+            ON e.documento=s.id_agente
+			GROUP BY documento,id_agente,agente,usuario,entrante,cantidade,duracione,duracione,
+			cantidads,duracions
+			ORDER BY promedio DESC `,[fechaini ,fechafin, empresa] );
 
     if (res !== undefined) {
         return res.json(response.rows);        
@@ -339,14 +333,14 @@ static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
         let empresa=req.body.empresa
 
         const response = await poolcont.query(`SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente AS agente
-        ,usuario, count(fecha_inicio) as llamadas,sum(fecha_fin-fecha_inicio)::text as duracion,
-        (sum(fecha_fin-fecha_inicio)/count(fecha_inicio))::text AS promedio
+        ,usuario as login, count(fecha_inicio) as cantidad,sum(fecha_fin-fecha_inicio)::text as duracion,
+        (sum(fecha_fin-fecha_inicio)/count(fecha_inicio))::text AS segundos
         FROM ac_llamadas_salientes a,grabaciones_pila g, usuario u
         WHERE a.uniqueid=g.uniqueid AND  a.id_agente=nro_documento 
         AND  fecha_inicio between ($1) AND ($2)
         AND  a.empresa=($3) AND  fecha_fin is not null 
         GROUP BY fecha,a.id_Agente,usuario
-        ORDER by promedio desc `
+        ORDER by segundos desc `
         ,[fechaini ,fechafin, empresa] );
 
     if (res !== undefined) {
@@ -495,7 +489,7 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
         numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
-        AND empresa=($2) ORDER BY ae.id_estado,5 desc`,[fechaFinal, empresa ]);
+        AND empresa=($2) ORDER BY ae.id_estado,5 `,[fechaFinal, empresa ]);
         if (res !== undefined) {
             return res.json(response.rows);
             

@@ -7,7 +7,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-form-field appearance="standard">
+<mat-form-field appearance="fill">
   <mat-label >Buscar</mat-label>
   <input matInput (keyup)="filtro($event)" placeholder="USUARIOS" #input>
 </mat-form-field>
@@ -60,4 +60,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

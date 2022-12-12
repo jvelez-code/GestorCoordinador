@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
@@ -26,6 +27,7 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
   displayedColumns = ['serial','extension', 'login', 'fecha','descripcion', 'numero_origen','total'];
   dataSource !: MatTableDataSource<AskEstadoExtension>;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
 
@@ -49,9 +51,10 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
     const actualizar = interval(3000)
     this.subscripcion= actualizar.subscribe(n=>{
       
-      console.log("total",n)     
+      //console.log("total",n)     
          this.monitoreoService.monitoreoEmpresa(parametros).subscribe(data=>{
           this.dataSource= new MatTableDataSource(data);
+          this.dataSource.paginator = this.paginator;
           this.loading=false;
          })
       

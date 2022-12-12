@@ -26,7 +26,7 @@
   </form>
 </div>
 
-<mat-form-field appearance="standard">
+<mat-form-field appearance="fill">
   <mat-label >Buscar</mat-label>
   <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
 </mat-form-field>
@@ -34,30 +34,20 @@
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-    <ng-container matColumnDef="documento">
+    <ng-container matColumnDef="documentofinal">
       <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
-      <td mat-cell *matCellDef="let element"> {{element.documento }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.documentofinal }} </td>
     </ng-container>
   
     <!-- Name Column -->
-    <ng-container matColumnDef="agente">
+    <ng-container matColumnDef="agentefinal">
       <th mat-header-cell *matHeaderCellDef> USUARIO </th>
-      <td mat-cell *matCellDef="let element"> {{element.agente}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="nombrea">
-      <th mat-header-cell *matHeaderCellDef> AGENTE </th>
-      <td mat-cell *matCellDef="let element"> {{element.nombrea}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.agentefinal}} </td>
     </ng-container>
 
     <ng-container matColumnDef="entrante">
-      <th mat-header-cell *matHeaderCellDef> TIPO </th>
-      <td mat-cell *matCellDef="let element"> {{element.entrante}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="duracione">
       <th mat-header-cell *matHeaderCellDef> ENTRANTE </th>
-      <td mat-cell *matCellDef="let element"> {{element.duracione }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.entrante}} </td>
     </ng-container>
 
     <ng-container matColumnDef="cantidade">
@@ -65,24 +55,14 @@
       <td mat-cell *matCellDef="let element"> {{element.cantidade}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="documentos">
-      <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
-      <td mat-cell *matCellDef="let element"> {{element.documentos}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="agentes">
-      <th mat-header-cell *matHeaderCellDef> AGENTE </th>
-      <td mat-cell *matCellDef="let element"> {{element.agentes}} </td>
+    <ng-container matColumnDef="duracione">
+      <th mat-header-cell *matHeaderCellDef> DURACIÒN </th>
+      <td mat-cell *matCellDef="let element"> {{element.duracione }} </td>
     </ng-container>
 
     <ng-container matColumnDef="saliente">
-      <th mat-header-cell *matHeaderCellDef> TIPO </th>
-      <td mat-cell *matCellDef="let element"> {{element.saliente}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="duracions">
       <th mat-header-cell *matHeaderCellDef> SALIENTE </th>
-      <td mat-cell *matCellDef="let element"> {{element.duracions}}  </td>
+      <td mat-cell *matCellDef="let element"> {{element.saliente}} </td>
     </ng-container>
 
     <ng-container matColumnDef="cantidads">
@@ -90,25 +70,27 @@
       <td mat-cell *matCellDef="let element"> {{element.cantidads}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="totaltiempo">
-      <th mat-header-cell *matHeaderCellDef> TIEMPO TOTAL </th>
-      <td mat-cell *matCellDef="let element"> {{element.totaltiempo}} </td>
-    </ng-container>
- 
-
-    <ng-container matColumnDef="totalcantidad">
-      <th mat-header-cell *matHeaderCellDef> CANTIDAD TOTAL </th>
-      <td mat-cell *matCellDef="let element"> {{element.totalcantidad}} </td>
+    <ng-container matColumnDef="duracions">
+      <th mat-header-cell *matHeaderCellDef> DURACIÒN </th>
+      <td mat-cell *matCellDef="let element"> {{element.duracions}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="totalduracion">
+    <ng-container matColumnDef="catidadt">
+      <th mat-header-cell *matHeaderCellDef> TOTAL C </th>
+      <td mat-cell *matCellDef="let element"> {{element.catidadt}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duraciont">
+      <th mat-header-cell *matHeaderCellDef> TOTAL D</th>
+      <td mat-cell *matCellDef="let element"> {{element.duraciont}}  </td>
+    </ng-container>
+
+    <ng-container matColumnDef="promedio">
       <th mat-header-cell *matHeaderCellDef> PROMEDIO </th>
-      <td mat-cell *matCellDef="let element"> {{element.totalduracion}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.promedio}} </td>
     </ng-container>
- 
- 
-   
-  
+
+    
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
   </table>

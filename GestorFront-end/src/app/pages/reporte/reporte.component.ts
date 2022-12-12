@@ -22,7 +22,7 @@ import { LoginService } from 'src/app/_services/login.service';
 })
 export class ReporteComponent implements OnInit {
 
-  displayedColumns = ['serial', 'nombre', 'acciones'];
+  displayedColumns = ['serial','nombre_reporte','acciones' ];
   dataSource !: MatTableDataSource<Reportes>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -66,6 +66,7 @@ export class ReporteComponent implements OnInit {
 
     
      this.reporteService.reporEmpresa(parametros).subscribe(data => {
+      console.log(data);
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
