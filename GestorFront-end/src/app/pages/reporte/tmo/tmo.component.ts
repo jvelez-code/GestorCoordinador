@@ -83,7 +83,8 @@ export class TmoComponent implements OnInit {
  
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
-   console.log(parametros)
+
+   
     this.reporteService.reporTmo(parametros).subscribe(data=>{
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;

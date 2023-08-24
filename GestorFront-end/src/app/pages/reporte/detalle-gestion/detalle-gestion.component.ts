@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { LoginService } from 'src/app/_services/login.service';
 import { Observable } from 'rxjs';
-import { CampanaI } from 'src/app/_model/capanaI';
+import { CampanaI } from 'src/app/_model/campanaI';
 import { Empresa } from 'src/app/_model/empresa';
 
 
@@ -85,8 +85,8 @@ export class DetalleGestionComponent implements OnInit {
 
     const parametros = {empresa:this.empresaparametro}
 
-    this.campana$=this.reporteService.listarCampanas(parametros);
-    console.log('333',parametros)
+    //this.campana$=this.reporteService.listarCampanas(parametros);
+    //console.log('333',parametros)
     
   //   this.reporteService.listarCampanas(parametros).subscribe(data =>{
   //     console.log('333',parametros)
@@ -99,13 +99,12 @@ export class DetalleGestionComponent implements OnInit {
     aceptar(){    
       this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
       this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-      //this.empresaparametro = 'ASISTIDA'
   
    
-      const parametros= { fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro,
-                          campana:this.idCampana}
+      const parametros= { fechaini: this.fechaparametro1, fechafin: this.fechaparametro2, empresa: this.empresaparametro }
+
      //parametros son los paramatros que enviamos y node.js los toma en el header
-     console.log('111',parametros)
+     
       this.reporteService.reporDetalleGestion(parametros).subscribe(data=>{
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
@@ -113,10 +112,10 @@ export class DetalleGestionComponent implements OnInit {
   
     });  
 
-    this.reporteService.listarCampanas(parametros).subscribe(data =>{
+   /* this.reporteService.listarCampanas(parametros).subscribe(data =>{
       console.log('222',parametros)
       console.log(data)
-   });
+   });*/
   }
   
   

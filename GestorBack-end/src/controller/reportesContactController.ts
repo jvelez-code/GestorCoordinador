@@ -13,13 +13,13 @@ const { Pool }= require('pg');
 // }
 
 const configcont ={
-    host: '10.1.1.7',
-    //host: '10.1.1.25',
+    //host: '10.1.1.7',
+    host: '10.1.1.25',
     user: 'postgres',
     password: '' ,
-    database: 'contact_center',
+    //database: 'contact_center',
     //database: 'asterisk_pagosgde',
-    //database: 'contact_center20210204',
+    database: 'contact_center030523_no_la_danen25',
     port: '5432'
 }
 

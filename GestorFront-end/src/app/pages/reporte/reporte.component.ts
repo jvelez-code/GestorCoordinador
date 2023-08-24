@@ -5,7 +5,7 @@ import { ReporteService } from '../../_services/reporte.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
 import {FormsModule} from '@angular/forms';
-import { UntypedFormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -34,12 +34,12 @@ export class ReporteComponent implements OnInit {
 
 
 
-  form !: UntypedFormGroup;
+  form !: FormGroup;
   tituloPagina = 'Parte de Horas';
-  fechaActual:Date=new Date();
-  mesActual:number=this.fechaActual.getMonth();
-  anoActual:number=this.fechaActual.getFullYear();
-  fechaActuals!:string;
+  fechaActual: Date = new Date();
+  mesActual: number = this.fechaActual.getMonth();
+  anoActual: number = this.fechaActual.getFullYear();
+  fechaActuals !: string;
 
   selectedValue!: any;
   maxFecha: Date = new Date();
@@ -66,7 +66,6 @@ export class ReporteComponent implements OnInit {
 
     
      this.reporteService.reporEmpresa(parametros).subscribe(data => {
-      console.log(data);
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

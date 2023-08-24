@@ -1,0 +1,174 @@
+      
+<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>
+<router-outlet></router-outlet>
+
+<div class="example-containe mat-elevation-z8">
+ <form method="POST">
+   
+<div>
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Selecccione las fechas</mat-label>
+    <mat-date-range-input
+      [formGroup]="campaignOne"
+      [rangePicker]="campaignOnePicker"
+      [comparisonStart]="campaignTwo.value.start"
+      [comparisonEnd]="campaignTwo.value.end">
+      <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+      <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+  </mat-form-field>
+</div>
+
+<div>
+  <button mat-raised-button color="primary" (click)="aceptar()">Aceptar</button>
+</div>
+</form>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
+
+  <ng-container matColumnDef="areacomercial">
+    <th mat-header-cell *matHeaderCellDef> ÁREA </th>
+    <td mat-cell *matCellDef="let element"> {{element.areacomercial}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="funcionario">
+    <th mat-header-cell *matHeaderCellDef>AGENTE</th>
+    <td mat-cell *matCellDef="let element"> {{element.funcionario}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="fechagestion">
+    <th mat-header-cell *matHeaderCellDef> GESTIÓN </th>
+    <td mat-cell *matCellDef="let element"> {{element.fechagestion}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="motivo">
+    <th mat-header-cell *matHeaderCellDef> MOTIVO</th>
+    <td mat-cell *matCellDef="let element"> {{element.motivo}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="tipo">
+    <th mat-header-cell *matHeaderCellDef> TIPO </th>
+    <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="documento">
+    <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
+    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="empresa">
+    <th mat-header-cell *matHeaderCellDef> EMPRESA </th>
+    <td mat-cell *matCellDef="let element"> {{element.empresa}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="telefono_fijo">
+    <th mat-header-cell *matHeaderCellDef> TÉLEFONO </th>
+    <td mat-cell *matCellDef="let element"> {{element.telefono_fijo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="telefono_celular">
+    <th mat-header-cell *matHeaderCellDef> CÉLULAR </th>
+    <td mat-cell *matCellDef="let element"> {{element.telefono_celular}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="correo_electronico">
+    <th mat-header-cell *matHeaderCellDef> CORREO </th>
+    <td mat-cell *matCellDef="let element"> {{element.correo_electronico}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="persona_visitada">
+    <th mat-header-cell *matHeaderCellDef> CLIENTE </th>
+    <td mat-cell *matCellDef="let element"> {{element.persona_visitada}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="cargo">
+    <th mat-header-cell *matHeaderCellDef> CARGO </th>
+    <td mat-cell *matCellDef="let element"> {{element.cargo}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="numero_empleados">
+    <th mat-header-cell *matHeaderCellDef> EMPLEADOS </th>
+    <td mat-cell *matCellDef="let element"> {{element.numero_empleados}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="direccion">
+    <th mat-header-cell *matHeaderCellDef> DIRECCIÓN </th>
+    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="operador_actual">
+    <th mat-header-cell *matHeaderCellDef> OPERADOR </th>
+    <td mat-cell *matCellDef="let element"> {{element.operador_actual}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="tipo_compromiso">
+    <th mat-header-cell *matHeaderCellDef> COMPROMISO </th>
+    <td mat-cell *matCellDef="let element"> {{element.tipo_compromiso}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fecha_compromiso">
+    <th mat-header-cell *matHeaderCellDef> FECHA C </th>
+    <td mat-cell *matCellDef="let element"> {{element.fecha_compromiso}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="area_responsable">
+    <th mat-header-cell *matHeaderCellDef> RESPONSABLE </th>
+    <td mat-cell *matCellDef="let element"> {{element.area_responsable}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="estado_compromiso">
+    <th mat-header-cell *matHeaderCellDef> ESTADO C. </th>
+    <td mat-cell *matCellDef="let element"> {{element.estado_compromiso}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="requiere_apoyo">
+    <th mat-header-cell *matHeaderCellDef> APOYO </th>
+    <td mat-cell *matCellDef="let element"> {{element.requiere_apoyo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="observacion">
+    <th mat-header-cell *matHeaderCellDef> OBSERVACIÓN </th>
+    <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ciudad">
+    <th mat-header-cell *matHeaderCellDef> CIUDAD </th>
+    <td mat-cell *matCellDef="let element"> {{element.ciudad}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="departamento">
+    <th mat-header-cell *matHeaderCellDef> DEPARTAMENTO </th>
+    <td mat-cell *matCellDef="let element"> {{element.departamento}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
+</table>
+
+<div>
+  <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+    <mat-icon>laptop</mat-icon>
+  </button>
+  <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+    <mat-icon>phone_android</mat-icon>
+  </button>
+
+</div>
+
+
+
+
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+

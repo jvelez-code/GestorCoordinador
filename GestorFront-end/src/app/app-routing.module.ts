@@ -24,6 +24,9 @@ import { LlamadasCalificadasGDEComponent } from './pages/reporte/llamadas-califi
 import { LlamadasFueraHorarioComponent } from './pages/reporte/llamadas-fuera-horario/llamadas-fuera-horario.component';
 import { LlamadasFueraHorarioEventualComponent } from './pages/reporte/llamadas-fuera-horario-eventual/llamadas-fuera-horario-eventual.component';
 import { FacturacionComponent } from './pages/reporte/facturacion/facturacion.component';
+import { CompromisoComercialComponent } from './pages/reporte/compromiso-comercial/compromiso-comercial.component';
+import { GestionComercialComponent } from './pages/reporte/gestion-comercial/gestion-comercial.component';
+import { ConsolCiclovidaComponent } from './pages/reporte/consol-ciclovida/consol-ciclovida.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -43,7 +46,10 @@ const routes: Routes = [
     { path: 'CalificacionDelServicioGDE', component: LlamadasCalificadasGDEComponent },
     { path: 'LlamadasFueraHorario', component: LlamadasFueraHorarioComponent },
     { path: 'LlamadasFueraHorarioEventual', component: LlamadasFueraHorarioEventualComponent },
-    { path: 'FacturacionGde', component: FacturacionComponent }
+    { path: 'FacturacionGde', component: FacturacionComponent },
+    { path: 'compromisoscomerciales', component: CompromisoComercialComponent },
+    { path: 'ConsolidadoGestiones2', component: GestionComercialComponent },
+    { path: 'ConsolidadodeCicloVida', component: ConsolCiclovidaComponent },
     
   ]},
   { path: 'grafico', component: GraficoComponent },

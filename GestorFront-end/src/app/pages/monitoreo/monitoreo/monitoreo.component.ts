@@ -50,8 +50,6 @@ export class MonitoreoComponent implements OnInit , OnDestroy{
 
     const actualizar = interval(3000)
     this.subscripcion= actualizar.subscribe(n=>{
-      
-      //console.log("total",n)     
          this.monitoreoService.monitoreoEmpresa(parametros).subscribe(data=>{
           this.dataSource= new MatTableDataSource(data);
           this.dataSource.paginator = this.paginator;

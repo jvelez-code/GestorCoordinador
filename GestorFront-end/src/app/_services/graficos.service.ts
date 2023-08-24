@@ -27,9 +27,7 @@ export class GraficosService {
 
  
  
-  llamadasporHora(parametros: Parametros):Observable<any>{
-   console.log('parame',parametros)
-      
+  llamadasporHora(parametros: Parametros):Observable<any>{      
   const headers = { 'content-type': 'application/json'}  
   const body=JSON.stringify(parametros);
   return this.http.post<Parametros>(`${this.url}/llamadasporHora`,body,{'headers':headers});
@@ -46,7 +44,6 @@ export class GraficosService {
         SheetNames: ['data']
     };
     const excelBuffer: any = XLSX.write(workbook, {bookType: 'xlsx', type:'array'});
-    console.log('excelBuffer',excelBuffer)
     this.saveExcel(excelBuffer, excelFileName)
     }
 

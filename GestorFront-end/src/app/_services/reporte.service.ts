@@ -11,7 +11,8 @@ import { Parametros } from '../_model/parametros'
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { Empresa } from '../_model/empresa';
-import { CampanaI } from '../_model/capanaI';
+import { CampanaI } from '../_model/campanaI';
+import { DetalleGestion } from '../_model/detalleGestiones';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -153,7 +154,6 @@ export class ReporteService {
     listarGestionxfecha(cities: CityI):Observable<any>{
       const headers = { 'content-type': 'application/json'}  
       const body=JSON.stringify(cities);
-      console.log("Hola Body"+body)
       return this.http.post<CityI>(`${this.urlGes}/gestion`,body,{'headers':headers});
       
     }
@@ -177,10 +177,29 @@ export class ReporteService {
       
       const headers = { 'content-type': 'application/json'}  
       const body=JSON.stringify(parametros);
-      console.log("Hola Body1"+body)
       return this.http.post<Parametros>(`${this.urlGes}/detallegestiones`,body,{'headers':headers});
      }
 
+     reporCompromisoComercial(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/compromisos`,body,{'headers':headers});
+     }
+
+     reporConsolidadoGestionComercial(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/gestionComercial`,body,{'headers':headers});
+     }
+
+     reporConsolidadoCicloVida(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/ConsolidadodeCicloVida`,body,{'headers':headers});
+     }
  
 
     //USUARIO
@@ -188,7 +207,6 @@ export class ReporteService {
       
       const headers = { 'content-type': 'application/json'}  
       const body=JSON.stringify(parametros);
-      console.log("Hola Body"+body)
       return this.http.post<Parametros>(`${this.urlCon}/usuarios`,body,{'headers':headers});
 
     }
@@ -201,7 +219,6 @@ export class ReporteService {
     listarCampanas(parametros: Parametros):Observable<any>{
         const headers = { 'content-type': 'application/json'}  
         const body=JSON.stringify(parametros);
-        console.log("Hola Body"+body)      
       return this.http.post<CampanaI>(`${this.urlGes}/campanas`,body, {'headers':headers});
     }
 

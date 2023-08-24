@@ -16,20 +16,16 @@ export class askEstadoExtension extends BaseEntity {
     @PrimaryColumn()
     id_extension!: number
 
-    @Column({
-        nullable: true
-    })
+    @Column({ nullable: true })
     login_agente!: string
 
     @Column()
     estado!: number
 
-    @Column({
-        nullable: true
-    })
+    @Column({ nullable: true })
     numero_origen!: string
 
-    @Column({ nullable: false})
+    @Column({ nullable: false })
     fechahora_ultima_llamada!: Date
 
     @Column({ nullable: false})
@@ -41,9 +37,7 @@ export class askEstadoExtension extends BaseEntity {
     @Column()
     empresa!: string
 
-    @Column({
-        default: true
-    })
+    @Column({ default: true })
     active!: boolean
 
    

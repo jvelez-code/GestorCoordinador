@@ -84,7 +84,6 @@ export class EntranteSalienteComponent implements OnInit {
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
     this.reporteService.reporTmoEntranteSaliente(parametros).subscribe(data=>{
-    console.log(data);
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

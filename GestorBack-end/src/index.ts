@@ -1,16 +1,13 @@
-import "reflect-metadata"
-//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
 
-// [core]
-// 	repositoryformatversion = 0
-// 	   filemode = false
-// 	    bare = false
-// 	    logallrefupdates = true
-// 	    symlinks = false
-// 	    ignorecase = true
-// [remote "origin"]
-// 	url = https://github.com/jvelez-code/GestorBack-end.git
-// 	fetch = +refs/heads/*:refs/remotes/origin/*
+import "reflect-metadata"
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('src/helpvoz.key', 'utf8');
+var certificate = fs.readFileSync('src/helpvoz.com.cer', 'utf8');
+
+
+
 
 import app from './app';
 import { DataSourceGestor, DataSourceContact }  from  './db';
@@ -24,8 +21,24 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
           await DataSourceContact.initialize();
           console.log("Conexion ok Contact");
 
-          app.listen(3000)
-          console.log("Puertos", 3000)
+            var credentials = {key: privateKey, cert: certificate};
+
+            var httpServer = http.createServer(app);
+            var httpsServer = https.createServer(credentials, app);
+
+         
+          
+            httpServer.listen(3000, ()=>{
+                console.log("PuertosHttp", process.env.PORT)
+
+            });
+            httpsServer.listen(8484, ()=> {
+                console.log("PuertosHttps", process.env.PORTS)
+
+            });
+
+           
+           
 
      } catch (error) {
          console.log(error);

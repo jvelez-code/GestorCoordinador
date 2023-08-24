@@ -97,14 +97,6 @@ export class LoginService {
 
    }
 
-  //  estaLogueado(){
-
-  //   let token = sessionStorage.getItem(environment.TOKEN_NAME);
-  //   //this.reporteName= true;
-  //   console.log("Hola login", this.logedIn.value)
-  //   //return token != null;
-  //   return this.logedIn.value
-  //  }
 
    cerrarSesion(): void {
      localStorage.removeItem('token');

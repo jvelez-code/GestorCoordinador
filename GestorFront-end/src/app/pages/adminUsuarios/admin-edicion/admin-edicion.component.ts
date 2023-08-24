@@ -110,11 +110,8 @@ export class AdminEdicionComponent implements OnInit {
     else {
 
       this.usuarioService.crearUsuarios(authUsuario).pipe(switchMap(() => {
-        console.log('uno');
         return this.usuarioService.listarUsuarios();
-        console.log('dos');
       })).subscribe(data => {
-        console.log('tres');
         this.usuarioService.setUsuarioCambio(data);
         this.usuarioService.setMensajecambio('SE REGISTRÓ');
       });

@@ -48,6 +48,10 @@ import { LlamadasFueraHorarioComponent } from './pages/reporte/llamadas-fuera-ho
 import { LlamadasFueraHorarioEventualComponent } from './pages/reporte/llamadas-fuera-horario-eventual/llamadas-fuera-horario-eventual.component';
 import { LlamadasCalificadasGDEComponent } from './pages/reporte/llamadas-calificadas-gde/llamadas-calificadas-gde.component';
 import { FacturacionComponent } from './pages/reporte/facturacion/facturacion.component';
+import { CompromisoComercialComponent } from './pages/reporte/compromiso-comercial/compromiso-comercial.component';
+import { AsteriskComponent } from './pages/asterisk/asterisk.component';
+import { GestionComercialComponent } from './pages/reporte/gestion-comercial/gestion-comercial.component';
+import { ConsolCiclovidaComponent } from './pages/reporte/consol-ciclovida/consol-ciclovida.component';
 registerLocaleData(localeEs,'es');
 
 
@@ -89,7 +93,11 @@ registerLocaleData(localeEs,'es');
     LlamadasFueraHorarioComponent,
     LlamadasFueraHorarioEventualComponent,
     LlamadasCalificadasGDEComponent,
-    FacturacionComponent
+    FacturacionComponent,
+    CompromisoComercialComponent,
+    AsteriskComponent,
+    GestionComercialComponent,
+    ConsolCiclovidaComponent
   ],
   imports: [
     BrowserModule,
