@@ -29,7 +29,7 @@ export class ConsolCiclovidaComponent {
   idCampana !: number;
 
   form!: FormGroup;
-  reporteName : string ="CONSOLIDADO GESTIÓN "
+  reporteName : string ="CICLO DE VIDA"
 
   campaignOne!: FormGroup;
   campaignTwo!: FormGroup;

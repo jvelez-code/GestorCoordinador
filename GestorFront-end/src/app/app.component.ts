@@ -1,18 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from './_services/login.service';
+import { BnNgIdleService } from 'bn-ng-idle';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
-
-  reporteName : string ="TMO Entrante Saliente"
+export class AppComponent implements OnInit {
 
   constructor(
-    public loginService: LoginService
-  ){}
+    public loginService: LoginService,
+    private bnIdle: BnNgIdleService,
+    private router: Router
+  ){
+    this.bnIdle.startWatching(500).subscribe((res) => {
+      if(res) {
+        console.log("session expired");
+        this.router.navigate(['/login']);
+        loginService.cerrarSesion();
+      }
+    })
+  }
 
   ngOnInit(){
      

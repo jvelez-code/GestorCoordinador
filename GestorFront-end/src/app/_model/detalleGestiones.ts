@@ -1,5 +1,6 @@
 export interface DetalleGestion {
 
+    campana : string;
     nombrecampana : string;
     tipodocaportante : string;
     numdocaporta : string;
@@ -14,8 +15,13 @@ export interface DetalleGestion {
     empresa : string;
     padretipificacion : string;
     tipicacion : string;
+    subtipificacion : string;
     fechagestion : string;
     empleados : string;
+    devolucion : number;
+    intento : number;
+    cantidad : string;
+    porcentaje : string;
 
 
 }

@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 import "reflect-metadata"
 var fs = require('fs');
 var http = require('http');
@@ -9,12 +9,15 @@ var certificate = fs.readFileSync('src/helpvoz.com.cer', 'utf8');
 
 
 
+
 import app from './app';
 import { DataSourceGestor, DataSourceContact }  from  './db';
 
 
  async function main () {
      try {
+        
+console.log(process.env.PORT,'mundo')
           await DataSourceGestor.initialize();
           console.log("Conexion ok Gestor");
 

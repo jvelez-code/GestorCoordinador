@@ -22,8 +22,8 @@
     //Base de datos Gestor
     var config_bd_gc = { 
         user: 'pgsql',
-        host: '10.1.1.25',
-        database: 'gestorclientes090323_25',
+        host: '10.1.1.7',
+        database: 'gestorclientes',
         password: 'pgsql',
         port: 5432,
         toStr: () => `postgresql://${config_bd.user}:${config_bd.password}@${config_bd.host}:${config_bd.port}/${config_bd.database}`

@@ -52,7 +52,15 @@ import { CompromisoComercialComponent } from './pages/reporte/compromiso-comerci
 import { AsteriskComponent } from './pages/asterisk/asterisk.component';
 import { GestionComercialComponent } from './pages/reporte/gestion-comercial/gestion-comercial.component';
 import { ConsolCiclovidaComponent } from './pages/reporte/consol-ciclovida/consol-ciclovida.component';
+import { ControlVisitasComponent } from './pages/reporte/control-visitas/control-visitas.component';
+import { RegistrosNuevosComponent } from './pages/reporte/registros-nuevos/registros-nuevos.component';
+import { ReporteAgendaComponent } from './pages/reporte/reporte-agenda/reporte-agenda.component';
+import { ConsolidadoGestionesComponent } from './pages/reporte/consolidado-gestiones/consolidado-gestiones.component';
+import { LlamadasPerdidasComponent } from './pages/reporte/llamadas-perdidas/llamadas-perdidas.component';
+import { FiltradoSecretariaComponent } from './pages/reporte/filtrado-secretaria/filtrado-secretaria.component';
 registerLocaleData(localeEs,'es');
+import { BnNgIdleService } from 'bn-ng-idle';
+import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.component'; // import bn-ng-idle service
 
 
 // export function tokenGetter() {
@@ -97,7 +105,14 @@ registerLocaleData(localeEs,'es');
     CompromisoComercialComponent,
     AsteriskComponent,
     GestionComercialComponent,
-    ConsolCiclovidaComponent
+    ConsolCiclovidaComponent,
+    ControlVisitasComponent,
+    RegistrosNuevosComponent,
+    ReporteAgendaComponent,
+    ConsolidadoGestionesComponent,
+    LlamadasPerdidasComponent,
+    FiltradoSecretariaComponent,
+    PorcentajeComponent
   ],
   imports: [
     BrowserModule,
@@ -119,7 +134,8 @@ registerLocaleData(localeEs,'es');
     ],
   providers: [
     { provide:LOCALE_ID,useValue:'es' },
-    { provide :HTTP_INTERCEPTORS, useClass: AdminInterceptors, multi:true}
+    { provide :HTTP_INTERCEPTORS, useClass: AdminInterceptors, multi:true},
+    { provide :BnNgIdleService }
       ],
        bootstrap: [AppComponent]
     })

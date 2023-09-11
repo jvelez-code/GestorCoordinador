@@ -30,7 +30,7 @@ export class CompromisoComercialComponent {
   idCampana !: number;
 
   form!: FormGroup;
-  reporteName : string ="COMPROMISO COMERCIAL"
+  reporteName : string ="COMPROMISO"
 
   campaignOne!: FormGroup;
   campaignTwo!: FormGroup;

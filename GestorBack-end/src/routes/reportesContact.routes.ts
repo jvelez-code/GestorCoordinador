@@ -20,6 +20,8 @@ router.post('/SecretariaVirtual', ReporContact.postSecretariaVirtual );
 router.post('/llamadasporHora', ReporContact.postllamadasporHora);
 router.post('/duracionEstado', ReporContact.postDuracionEstados);
 router.post('/ivr', ReporContact.postIVR);
+router.post('/llamadasPerdidas', ReporContact.postLlamadasPerdidas);
+router.post('/filtradosSecretaria', ReporContact.postFiltradosSecretaria);
 
 //reportes asterisk_pagosgde
 

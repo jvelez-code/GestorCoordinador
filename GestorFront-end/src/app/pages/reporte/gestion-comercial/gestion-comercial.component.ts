@@ -28,7 +28,7 @@ export class GestionComercialComponent {
   idCampana !: number;
 
   form!: FormGroup;
-  reporteName : string ="CONSOLIDADO GESTIÓN "
+  reporteName : string ="DETALLADO GESTIÓN "
 
   campaignOne!: FormGroup;
   campaignTwo!: FormGroup;
