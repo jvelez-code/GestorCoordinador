@@ -1,6 +1,6 @@
-import { Request , Response } from 'express';
+import { Request, Response } from 'express';
 
-const { Pool }= require('pg');
+const { Pool } = require('pg');
 
 // const configes ={
 //     host: '10.1.1.7',
@@ -12,14 +12,14 @@ const { Pool }= require('pg');
 //     port: '5432'
 // }
 
-const configcont ={
-    //host: '10.1.1.7',
-    host: '10.1.1.25',
+const configcont = {
+    host: '10.1.1.7',
+    //host: '10.1.1.25',
     user: 'postgres',
-    password: '' ,
-    //database: 'contact_center',
+    password: '',
+    database: 'contact_center',
     //database: 'asterisk_pagosgde',
-    database: 'contact_center030523_no_la_danen25',
+    //database: 'contact_center030523_no_la_danen25',
     port: '5432'
 }
 
@@ -30,56 +30,87 @@ const poolcont = new Pool(configcont);
 class ReporContact {
 
 
-    static logins = async (req: Request, res: Response)=>{
+    static logins = async (req: Request, res: Response) => {
         res.send("Mundo")
     }
 
 
-    static inicio =((req: Request, res:Response ) => {
-    res.send('Hola mundo inicio');
-});
+    static inicio = ((req: Request, res: Response) => {
+        res.send('Hola mundo inicio');
+    });
 
 
 
-//BD CONTACT
+    //BD CONTACT
+
+    static postFiltradosSecretaria = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
+            const response = await poolcont.query(`WITH totalDevoluciones AS (
+            SELECT COUNT (DISTINCT (numero_documento)) as devolucion FROM  llamada_entrante 
+            WHERE fecha_hora_asterisk BETWEEN ($1) and ($2)
+            AND desea_devolucion  IS TRUE AND id_agente IS NULL  AND numero_de_intentos_fallidos = 0 
+            AND id_detalle_gestion IS NULL AND empresa=($3)),                  
+            totalIntentos as (        
+            SELECT COUNT(*) as intento FROM llamada_entrante dLlE 
+            WHERE fecha_hora_asterisk BETWEEN ($1) and ($2)
+            AND dLlE.empresa=($3) AND dLlE.desea_devolucion  IS TRUE 
+            AND dLlE.numero_de_intentos_fallidos  < 3 AND id_detalle_gestion = 0 )
+            SELECT devolucion, intento FROM totalDevoluciones CROSS JOIN totalIntentos`, [fechaini, fechafin, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
-static postIVR = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        
-        const response = await poolcont.query(`SELECT ivr_date::TEXT, ivr_hora,
+
+    static postIVR = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
+            const response = await poolcont.query(`SELECT ivr_date::TEXT, ivr_hora,
         ivr_ide, ivr_pin, ivr_per,
         ivr_tel, ivr_state
         from call_ivr where ivr_date between ($1)
-        AND ($2) ORDER BY ivr_date,ivr_hora `,[fechaini ,fechafin] );
+        AND ($2) ORDER BY ivr_date,ivr_hora `, [fechaini, fechafin]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
-static postDuracionEstados = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        
-        const response = await poolcont.query(`SELECT extensiones, agente, dias, total::time , hora_limite::time,(hora_limite-total)::time as diferencia, descripcion ,Hora FROM  (
+    static postDuracionEstados = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
+            const response = await poolcont.query(`SELECT extensiones, agente, dias, total::time , hora_limite::time,(hora_limite-total)::time as diferencia, descripcion ,Hora FROM  (
             SELECT  ale.id_extension AS extensiones,login_agente AS agente,count(*) AS dias ,sum(fecha_fin-fecha_ini) AS total,(time '01:02:00')*count(*) AS hora_limite,
             (sum(fecha_fin-fecha_ini))-((time '01:02:00')*count(*) ) AS diferencia,descripcion,time '01:02:00' AS Hora
             FROM ASk_log_estados ale,ASk_estado,ASk_estado_extension aee
@@ -92,56 +123,56 @@ static postDuracionEstados = async (req: Request, res:Response ) =>{
             where ale.estado=id_estado AND ale.id_extension=aee.id_extension AND fecha_ini between ($1) AND  ($2)
             AND  aee.empresa=($3) AND ale.estado in ('7','8')
             GROUP BY ale.id_extension,login_agente,descripcion) AS horarios
-            ORDER BY dias desc,agente,diferencia desc`,[fechaini ,fechafin, empresa] );
+            ORDER BY dias desc,agente,diferencia desc`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
 
-
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
-static postllamadasporHora = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        
-        const response = await poolcont.query(`SELECT hora_llamada, sum(contestadas)::int AS ANSWERED,
+
+
+    static postllamadasporHora = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
+            const response = await poolcont.query(`SELECT hora_llamada, sum(contestadas)::int AS ANSWERED,
         (count(hora_llamada)-sum(contestadas))::int AS NO_ANSWER,count(hora_llamada)::int AS TOTALES 
         FROM ( SELECT  date_part('hour',fecha_grabacion) as hora_llamada, CASE WHEN id_agente!='777777777' THEN 1 
         WHEN id_agente='777777777' THEN 0 END  contestadas from grabaciones_pila 
         where fecha_grabacion BETWEEN ($1) and ($2)  AND empresa=($3)
-        AND tipo_de_llamada='Entrante' ) as t group by hora_llamada ORDER BY 1`,[fechaini ,fechafin, empresa] );
+        AND tipo_de_llamada='Entrante' ) as t group by hora_llamada ORDER BY 1`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
-static postSecretariaVirtual = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        
-        const response = await poolcont.query(`SELECT fecha::TEXT, sum (total_dia) as total, SUM(cant_devueltas_dia) AS devueltas,
+    static postSecretariaVirtual = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
+            const response = await poolcont.query(`SELECT fecha::TEXT, sum (total_dia) as total, SUM(cant_devueltas_dia) AS devueltas,
         SUM(cant_pendientes_dia) as pendientes,
         telefono
          FROM (
@@ -157,26 +188,26 @@ static postSecretariaVirtual = async (req: Request, res:Response ) =>{
         GROUP BY to_date(to_char( fecha_hora, 'YYYY/MM/DD'), 'YYYY/MM/DD'), id_asterisk
         )AS t
         GROUP BY fecha,telefono
-        ORDER BY fecha,pendientes DESC `,[fechaini ,fechafin, empresa] );
+        ORDER BY fecha,pendientes DESC `, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
 
-static postTmoEntranteSaliente = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        const response = await poolcont.query(`with entrante as(
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    static postTmoEntranteSaliente = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolcont.query(`with entrante as(
             SELECT a.agenteE AS documento,a.agente AS agente,
             a.entrante As entrante,
             SUM(a.duracionE)::time AS duracione,
@@ -238,32 +269,32 @@ ORDER by promedio desc ))
             ON e.documento=s.id_agente
 			GROUP BY documento,id_agente,agente,usuario,entrante,cantidade,duracione,duracione,
 			cantidads,duracions
-			ORDER BY promedio DESC `,[fechaini ,fechafin, empresa] );
+			ORDER BY promedio DESC `, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
 
-
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
 
 
-static postLlamadasRecibidas = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        const response = await poolcont.query(`SELECT fecha_llamada::TEXT ,
+
+
+    static postLlamadasRecibidas = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolcont.query(`SELECT fecha_llamada::TEXT ,
         sum(COALESCE(llamadas,'0'))-sum(COALESCE(positiva,'0'))-sum(COALESCE(negativas,'0'))-sum(COALESCE(no_atendidas,'0')) AS no_calificadas,
         sum(COALESCE(positiva,'0')) AS calif_positiva,
         sum(COALESCE(negativas,'0')) AS calif_negativo,
@@ -278,26 +309,26 @@ static postLlamadasRecibidas = async (req: Request, res:Response ) =>{
         AND tipo_de_llamada='Entrante' AND id_agente!='777777777'
         AND empresa=($3) AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSF')) as t
         group by fecha_grabacion,calificacion,linea_servicio,id_agente) as y
-        group by fecha_llamada,TELEFONO`,[fechaini ,fechafin, empresa] );
+        group by fecha_llamada,TELEFONO`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
 
-static postCalificacionServicio = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        const response = await poolcont.query(`SELECT gp.uniqueid AS idASterisk,
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    static postCalificacionServicio = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolcont.query(`SELECT gp.uniqueid AS idASterisk,
         tp.tipo_doc AS tipo_doc,
         CASE WHEN gp.calificacion=1 THEN 'POSITIVA' WHEN  gp.calificacion=2 THEN 'NEGATIVA'
         WHEN gp.calificacion=0  THEN 'NO CALIFICADA'  END AS calificacion,
@@ -310,29 +341,29 @@ static postCalificacionServicio = async (req: Request, res:Response ) =>{
         INNER JOIN ask_estado_extension ask on ask.nro_documento=gp.id_Agente
         WHERE gp.fecha_grabacion BETWEEN  ($1) and ($2) AND gp.empresa= ($3)
         AND gp.id_agente!='777777777' AND tipo_de_llamada='Entrante' and activo=true
-        ORDER BY gp.fecha_grabacion`,[fechaini ,fechafin, empresa] );
+        ORDER BY gp.fecha_grabacion`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
-static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
+    static postReporteTmoSaliente = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
 
-        const response = await poolcont.query(`SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente AS agente
+            const response = await poolcont.query(`SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente AS agente
         ,usuario as login, count(fecha_inicio) as cantidad,sum(fecha_fin-fecha_inicio)::text as duracion,
         (sum(fecha_fin-fecha_inicio)/count(fecha_inicio))::text AS segundos
         FROM ac_llamadas_salientes a,grabaciones_pila g, usuario u
@@ -341,26 +372,26 @@ static postReporteTmoSaliente = async (req: Request, res:Response ) =>{
         AND  a.empresa=($3) AND  fecha_fin is not null 
         GROUP BY fecha,a.id_Agente,usuario
         ORDER by segundos desc `
-        ,[fechaini ,fechafin, empresa] );
+                , [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
 
-static postDevolucionFiltrada = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        const response = await poolcont.query(`SELECT  empresa,id_asterisk,ll.id_Detalle_gestion,tipo_documento as tipo_doc, numero_documento,  CASE WHEN fecha_devolucion IS NOT NULL THEN 'DEVUELTA' ELSE 'PENDIENTE' END TIPO_GESTION,
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    static postDevolucionFiltrada = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolcont.query(`SELECT  empresa,id_asterisk,ll.id_Detalle_gestion,tipo_documento as tipo_doc, numero_documento,  CASE WHEN fecha_devolucion IS NOT NULL THEN 'DEVUELTA' ELSE 'PENDIENTE' END TIPO_GESTION,
         numero_devolucion, numero_origen, fecha_hora, fecha_devolucion,numero_de_intentos_fallidos AS intentos,
         gd.usuario AS usuario,
         intento1,intento2,intento3
@@ -369,34 +400,34 @@ static postDevolucionFiltrada = async (req: Request, res:Response ) =>{
         WHERE desea_devolucion = 't'
         AND ll.empresa=($3)
         AND fecha_hora BETWEEN  ($1) AND ($2)
-        ORDER BY fecha_hora DESC`,[fechaini ,fechafin, empresa] );
+        ORDER BY fecha_hora DESC`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
-static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        let usuario=req.body.usuario
+    static postReporteTmoDetallado = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            let usuario = req.body.usuario
 
-        console.log( fechaini );
-        console.log( fechafin );
-        console.log( empresa );
-        console.log( usuario );
-        const response = await poolcont.query(`SELECT c.time::TEXT AS fechainicio ,c.callid AS id,
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(empresa);
+            console.log(usuario);
+            const response = await poolcont.query(`SELECT c.time::TEXT AS fechainicio ,c.callid AS id,
         login_agente AS agente ,numero_cliente AS telCliente,
         SUBSTRING((to_timestamp (t.time,'yyyy/mm/dd HH24:MI:ss')::time-to_timestamp (c.time,'yyyy/mm/dd HH24:MI:ss')::time)::TEXT,0,9) AS duracion
         FROM (
@@ -413,32 +444,32 @@ static postReporteTmoDetallado = async (req: Request, res:Response ) =>{
         WHERE uniqueid=callid AND event IN ('COMPLETEAGENT','COMPLETECALLER','BLINDTRANSFER','ATTENDEDTRANSFER')) AS t
         ON c.callid=t.callid AND c.agent=t.agent
         ORDER BY c.time::TEXT`
-        ,[fechaini ,fechafin, empresa] );
+                , [fechaini, fechafin, empresa]);
 
-        //AND login_agente=($4)
+            //AND login_agente=($4)
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
 
-static postReporteTmo = async (req: Request, res:Response ) =>{
-    try {
-        //parametro de header
-        //alt +96 `
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin   
-        let empresa=req.body.empresa
-        console.log( fechaini );
-        console.log( fechafin );
-        console.log( empresa );
-        const response = await poolcont.query(`SELECT fecha::text, documento, agente, duracionLlamadas, 
+    static postReporteTmo = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(empresa);
+            const response = await poolcont.query(`SELECT fecha::text, documento, agente, duracionLlamadas, 
         cantidadGrabaciones, segundos FROM (
         SELECT c.time::Date AS fecha ,
          c.agent AS documento,
@@ -459,58 +490,88 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
          INNER JOIN (SELECT DISTINCT(nro_documento), login_Agente
          FROM ask_estado_extension  WHERE activo=true GROUP BY  login_Agente,nro_documento) ask ON c.agent=nro_documento
          GROUP BY c.time::Date,c.agent,login_Agente
-         ORDER BY segundos DESC) AS tmo`,[fechaini , fechafin, empresa] );
+         ORDER BY segundos DESC) AS tmo`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
-};
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    static postLlamadasPerdidas = async (req: Request, res: Response) => {
+        try {
+            let now = new Date();
+            console.log('La fecha actual es', now);
+            console.log('UNIX time:', now.getTime());
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(empresa);
+            const response = await poolcont.query(`SELECT  * FROM  (SELECT l.fecha_hora AS fecha, l.numero_origen AS numero, 
+        l.ruta_entrante AS linea FROM queue_log,llamada_entrante l,grabaciones_pila gp WHERE callid=id_asterisk  
+        AND callid=uniqueid AND fecha_hora between '2023-09-04 01:00:00' AND '2023-09-04 20:00:00' AND event='ABANDON' 
+        AND gp.empresa='CONTACT' EXCEPT SELECT l.fecha_hora AS fecha, l.numero_origen AS numero, 
+        l.ruta_entrante AS linea  FROM queue_log,llamada_entrante l WHERE id_asterisk = callid 
+        AND fecha_hora between '2023-09-04 01:00:00' AND '2023-09-04 20:00:00' AND event='CONNECT') AS a ORDER BY fecha`);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+
     //Monitoreo
 
-    static potsMonitoreo = async (req: Request, res:Response ) =>{
-       // res.send('Hola mundo post final');
+    static potsMonitoreo = async (req: Request, res: Response) => {
+        // res.send('Hola mundo post final');
         try {
 
-            let empresa=req.body.empresa;  
+            let empresa = req.body.empresa;
 
             let date = new Date();
-            const formatDate = (date: Date)=>{
-                let formatted_date = date.getFullYear() + "-" + (date.getMonth() + 1) + 
-                "-" + date.getDate() ;
+            const formatDate = (date: Date) => {
+                let formatted_date = date.getFullYear() + "-" + (date.getMonth() + 1) +
+                    "-" + date.getDate();
                 return formatted_date;
             }
-            let fechaFinal=formatDate(date);
-        const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
+            let fechaFinal = formatDate(date);
+            const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
         numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
-        AND empresa=($2) ORDER BY ae.id_estado,5 `,[fechaFinal, empresa ]);
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }          
-        } 
+        AND empresa=($2) ORDER BY ae.id_estado,5 `, [fechaFinal, empresa]);
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+        }
         catch (error) {
-            console.log(error); 
-        } 
+            console.log(error);
+        }
     };
 
 
     //DB ASTERISK_PAGOSGDE
 
-    static postLlamadasFueradeHorario = async (req: Request, res:Response ) =>{
+    static postLlamadasFueradeHorario = async (req: Request, res: Response) => {
         try {
             //parametro de header
             //alt +96 `
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin   
-            let empresa=req.body.empresa
-            
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+
             const response = await poolcont.query(`SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_doc, numero_documento, numero_origen, date_part('dow',fecha_hora_asterisk) as dia, fuerahorario
             FROM (
             SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_documento, numero_documento, numero_origen, desea_devolucion, numero_devolucion, fecha_devolucion, date_part('dow',fecha_hora_asterisk),
@@ -528,29 +589,29 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
             ORDER BY fecha_hora_asterisk
             ) AS subReporte) AS reporteFinal
             INNER JOIN tipo_documento ON (tipo_documento = tipo_documento.id)
-            WHERE fuerahorario = 0`,[fechaini , fechafin, empresa] );
-    
-        if (res !== undefined) {
-            return res.json(response.rows);        
-          }
-          
-        } 
+            WHERE fuerahorario = 0`, [fechaini, fechafin, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
         catch (error) {
-            console.log(error); 
-        } 
+            console.log(error);
+        }
     };
 
-    static postLlamadasFueradeHorarioEventual = async (req: Request, res:Response ) =>{
+    static postLlamadasFueradeHorarioEventual = async (req: Request, res: Response) => {
         try {
             //parametro de header
             //alt +96 `
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin  
-            let empresa=req.body.empresa
-            let horaLista=req.body.horaEven
-            console.log( fechaini );
-            console.log( fechafin );
-            console.log( horaLista );
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            let horaLista = req.body.horaEven
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(horaLista);
             const response = await poolcont.query(`SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_doc, numero_documento, numero_origen, date_part('dow',fecha_hora_asterisk) as dia, fuerahorario
             FROM (
             SELECT id_asterisk, ruta_entrante, fecha_hora_asterisk, tipo_documento, numero_documento, numero_origen, desea_devolucion, numero_devolucion, fecha_devolucion, date_part('dow',fecha_hora_asterisk),
@@ -568,30 +629,30 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
             ORDER BY fecha_hora_asterisk
             ) AS subReporte) AS reporteFinal
             INNER JOIN tipo_documento ON (tipo_documento = tipo_documento.id)
-            WHERE fuerahorario = 0`,[fechaini , fechafin, empresa, horaLista ] );
-    
-        if (res !== undefined) {
-            return res.json(response.rows);        
-          }
-          
-        } 
+            WHERE fuerahorario = 0`, [fechaini, fechafin, empresa, horaLista]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
         catch (error) {
-            console.log(error); 
-        } 
+            console.log(error);
+        }
     };
 
 
-    static postLlamadasCalificadasGDE = async (req: Request, res:Response ) =>{
+    static postLlamadasCalificadasGDE = async (req: Request, res: Response) => {
         try {
             //parametro de header
             //alt +96 `
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin  
-            let empresa=req.body.empresa
-            let horaLista=req.body.horaLista
-            console.log( fechaini );
-            console.log( fechafin );
-            console.log( empresa );
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            let horaLista = req.body.horaLista
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(empresa);
             const response = await poolcont.query(`SELECT gp.fecha_grabacion AS fecha,
             cdr.uniqueid AS idASterisk,
             gp.ruta_grabacion AS ruta,
@@ -606,39 +667,39 @@ static postReporteTmo = async (req: Request, res:Response ) =>{
             AND gp.id_agente!='777777777' AND tipo_de_llamada='Entrante'
             and gp.empresa= ($3) and ask.login_agente!='JFERNANDEZ_GDE'
             AND cdr.lAStapp='Queue'
-            ORDER BY gp.fecha_grabacion`,[fechaini , fechafin, empresa ] );
-    
-        if (res !== undefined) {
-            return res.json(response.rows);        
-          }
-          
-        } 
+            ORDER BY gp.fecha_grabacion`, [fechaini, fechafin, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
         catch (error) {
-            console.log(error); 
-        } 
+            console.log(error);
+        }
     };
 
 
 
-//DB GESTOR
+    //DB GESTOR
 
 
 
-// static getReportesprueba = async (req: Request, res:Response ) =>{
-//     try {
-//         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-//         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
-//     if (res !== undefined) {
-//         return res.json(response.rows);
-//         pool.close();
-//       }
-      
-//     } 
-//     catch (error) {
-//         console.log(error); 
-//     } 
-//  }
+    // static getReportesprueba = async (req: Request, res:Response ) =>{
+    //     try {
+    //         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
+    //         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
+    //     if (res !== undefined) {
+    //         return res.json(response.rows);
+    //         pool.close();
+    //       }
+
+    //     } 
+    //     catch (error) {
+    //         console.log(error); 
+    //     } 
+    //  }
 
 
 }
- export default ReporContact;
+export default ReporContact;

@@ -38,16 +38,19 @@ export class ReporteService {
 
   //REPORTES CONTACT
 
+  reporLlamadasPerdidas(parametros: Parametros):Observable<any>{
+      
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(parametros);
+    return this.http.post<Parametros>(`${this.urlCon}/llamadasPerdidas`,body,{'headers':headers});
+   }
+
   reporCalificacionServicio(parametros: Parametros):Observable<any>{
       
     const headers = { 'content-type': 'application/json'}  
     const body=JSON.stringify(parametros);
     return this.http.post<Parametros>(`${this.urlCon}/calificacionServicio`,body,{'headers':headers});
    }
-
-
-
-
 
   reporTmoEntranteSaliente(parametros: Parametros):Observable<any>{
       
@@ -123,6 +126,14 @@ export class ReporteService {
     return this.http.post<Parametros>(`${this.urlCon}/llamadasCalificadasGDE`,body,{'headers':headers});
    }
 
+   reporfiltradosSecretaria(parametros: Parametros) {  
+      
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(parametros);
+    return this.http.post<DetalleGestion[]>(`${this.urlCon}/filtradosSecretaria`,body,{'headers':headers});
+   }
+
+
 
 
  
@@ -187,6 +198,13 @@ export class ReporteService {
       return this.http.post<DetalleGestion[]>(`${this.urlGes}/compromisos`,body,{'headers':headers});
      }
 
+     reporPorcentaje(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/porcentaje`,body,{'headers':headers});
+     }
+
      reporConsolidadoGestionComercial(parametros: Parametros) {  
       
       const headers = { 'content-type': 'application/json'}  
@@ -200,7 +218,29 @@ export class ReporteService {
       const body=JSON.stringify(parametros);
       return this.http.post<DetalleGestion[]>(`${this.urlGes}/ConsolidadodeCicloVida`,body,{'headers':headers});
      }
- 
+
+     reporReporteAgenda(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/ReporteAgenda`,body,{'headers':headers});
+     }
+
+     reporControlVisitas(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/ControlVisitas`,body,{'headers':headers});
+     }
+
+     reporRegistrosnuevos(parametros: Parametros) {  
+      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametros);
+      return this.http.post<DetalleGestion[]>(`${this.urlGes}/registrosnuevos`,body,{'headers':headers});
+     }
+
+  
 
     //USUARIO
     usuariosXEmpresa(parametros: Parametros):Observable<any>{

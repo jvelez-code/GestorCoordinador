@@ -27,6 +27,13 @@ import { FacturacionComponent } from './pages/reporte/facturacion/facturacion.co
 import { CompromisoComercialComponent } from './pages/reporte/compromiso-comercial/compromiso-comercial.component';
 import { GestionComercialComponent } from './pages/reporte/gestion-comercial/gestion-comercial.component';
 import { ConsolCiclovidaComponent } from './pages/reporte/consol-ciclovida/consol-ciclovida.component';
+import { ControlVisitasComponent } from './pages/reporte/control-visitas/control-visitas.component';
+import { RegistrosNuevosComponent } from './pages/reporte/registros-nuevos/registros-nuevos.component';
+import { ReporteAgendaComponent } from './pages/reporte/reporte-agenda/reporte-agenda.component';
+import { ConsolidadoGestionesComponent } from './pages/reporte/consolidado-gestiones/consolidado-gestiones.component';
+import { LlamadasPerdidasComponent } from './pages/reporte/llamadas-perdidas/llamadas-perdidas.component';
+import { FiltradoSecretariaComponent } from './pages/reporte/filtrado-secretaria/filtrado-secretaria.component';
+import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -48,8 +55,15 @@ const routes: Routes = [
     { path: 'LlamadasFueraHorarioEventual', component: LlamadasFueraHorarioEventualComponent },
     { path: 'FacturacionGde', component: FacturacionComponent },
     { path: 'compromisoscomerciales', component: CompromisoComercialComponent },
-    { path: 'ConsolidadoGestiones2', component: GestionComercialComponent },
+    { path: 'DetalladoGestionesComercial', component: GestionComercialComponent },
     { path: 'ConsolidadodeCicloVida', component: ConsolCiclovidaComponent },
+    { path: 'ReporteAgenda', component: ReporteAgendaComponent },
+    { path: 'ControlVisitas', component: ControlVisitasComponent },
+    { path: 'registrosnuevos', component: RegistrosNuevosComponent },
+    { path: 'ConsolidadoGestiones2', component: ConsolidadoGestionesComponent },
+    { path: 'LlamadasPerdidas', component: LlamadasPerdidasComponent },
+    { path: 'DevolucionFiltrada', component: FiltradoSecretariaComponent },
+    { path: 'PorcentajeXTipificacion', component: PorcentajeComponent },
     
   ]},
   { path: 'grafico', component: GraficoComponent },
