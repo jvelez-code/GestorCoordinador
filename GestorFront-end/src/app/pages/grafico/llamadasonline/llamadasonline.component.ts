@@ -105,6 +105,7 @@ export class LlamadasonlineComponent implements OnInit {
     
     this.graficosService.llamadasporHora(parametros).subscribe(data =>{
     this.dataSource = new MatTableDataSource(data);
+    console.log(data);
  
 
     
@@ -209,7 +210,7 @@ descargar(){
     
 
   this.graficosService.llamadasporHora(parametros).subscribe(data =>{
-    this._excelServiceService.dowloadExcel(data);
+    this._excelServiceService.dowloadExcel(data,parametros);
   });
 
 }

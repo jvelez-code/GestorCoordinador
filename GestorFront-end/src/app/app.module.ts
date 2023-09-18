@@ -58,14 +58,15 @@ import { ReporteAgendaComponent } from './pages/reporte/reporte-agenda/reporte-a
 import { ConsolidadoGestionesComponent } from './pages/reporte/consolidado-gestiones/consolidado-gestiones.component';
 import { LlamadasPerdidasComponent } from './pages/reporte/llamadas-perdidas/llamadas-perdidas.component';
 import { FiltradoSecretariaComponent } from './pages/reporte/filtrado-secretaria/filtrado-secretaria.component';
+import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.component'; // import bn-ng-idle service
 registerLocaleData(localeEs,'es');
 import { BnNgIdleService } from 'bn-ng-idle';
-import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.component'; // import bn-ng-idle service
+import { NgHcaptchaModule } from 'ng-hcaptcha';
 
 
-// export function tokenGetter() {
-//   return localStorage.getItem(environment.TOKEN_NAME);
-// }
+export function tokenGetter() {
+  return localStorage.getItem(environment.TOKEN_NAME);
+}
 
 
 
@@ -124,13 +125,19 @@ import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.compo
     FormsModule,
     MatInputModule,
     NoopAnimationsModule,
-    // JwtModule.forRoot({
-    //   config: {
-    //     tokenGetter: tokenGetter,
-    //     allowedDomains: [environment.HOST.substring(7)],
-    //     disallowedRoutes: [`http://${environment.HOST.substring(7)}/login/enviarCorreo`],
-    //   },
-    // }),
+    NgHcaptchaModule.forRoot(      {
+      siteKey: '53b9bb7e-49a4-428f-ab81-5935daec8a8a',
+      languageCode: 'es', 
+      //theme: 'dark' // añade esta opción para el tema oscuro
+    }
+  ),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [environment.HOST.substring(7)],
+        disallowedRoutes: [`http://${environment.HOST.substring(7)}/login/enviarCorreo`],
+      },
+    }),
     ],
   providers: [
     { provide:LOCALE_ID,useValue:'es' },

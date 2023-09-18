@@ -18,7 +18,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   clave !: string;
   mensaje !: string;
   error !: string;
-
+  mensajecaptcha!: string;
+  captchaVerified: boolean = false;
+  captchaactivo: boolean = true;
 
 
   public aFormGroup!: FormGroup;
@@ -38,6 +40,23 @@ export class LoginComponent implements OnInit, OnDestroy {
     })
   }
 
+  onVerify(token: string) {
+    console.log("El captcha es valido");
+    this.captchaVerified = true;
+  }
+
+  onExpired(response: any) {
+    console.log("se expiro el captcha");
+  }
+
+  onError(error: any) {
+    console.log("ocurrio un error con el captcha");
+  }
+
+  setMensajeInformativo(mensaje: string) {
+    this.mensajecaptcha = mensaje;
+  }
+
 
   ngOnDestroy(): void {
      this.subscripcion.unsubscribe();
@@ -46,18 +65,46 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   iniciarSesion(){
+
+
     const user= {usuario:this.usuario, clave:this.clave }
-    this.subscripcion = this.loginService.login(user).subscribe(data=>{
-      localStorage.setItem(environment.TOKEN_NAME,data.token );
-       this.router.navigate(['reporte']);
-    })
+   if(this.captchaVerified || !this.captchaactivo){
+      this.subscripcion = this.loginService.login(user).subscribe(data=>{
+        localStorage.setItem(environment.TOKEN_NAME,data.token );
+         this.router.navigate(['reporte']);
+      })
+    }else{
+      this.setMensajeInformativo("Por favor, complete el captcha.");
+    }
+    
     
     }
 
   
 
   ngAfterViewInit() {
+    
+    
+    const randomNumber = Math.floor(Math.random() * 13) + 1;
+    const bodyElement = document.getElementById("bodylogin");
+    const backgroundImage = `url('assets/fondos/fondo${randomNumber}.jpg')`;
+    //const backgroundImage = `url('assets/fondos/fondo12.jpg')`;
+    if (bodyElement) {
+      bodyElement.style.backgroundImage = backgroundImage;
+      bodyElement.style.backgroundRepeat = "no-repeat";
+      bodyElement.style.backgroundSize = "cover";
+     
+    }
+    
+    // Usar una media query para ajustar la imagen en pantallas pequeñas
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      if (bodyElement) {
+        bodyElement.style.backgroundSize = "contain"; // Otra opción para imágenes más pequeñas
+      }
+    }
+
     (window as any).initialize();
+
   }
 
 }

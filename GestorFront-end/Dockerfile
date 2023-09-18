@@ -1,10 +1,13 @@
 #Primera Etapa
-FROM node:18.12.1 as node
+FROM node:18.17.1 as node
 WORKDIR /app
 
 COPY package.json /app
 
 RUN npm install --force
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/America/Bogota /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata
 
 COPY . /app
 

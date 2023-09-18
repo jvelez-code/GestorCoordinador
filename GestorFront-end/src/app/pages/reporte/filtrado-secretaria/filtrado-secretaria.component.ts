@@ -80,7 +80,7 @@ export class FiltradoSecretariaComponent {
      //parametros son los paramatros que enviamos y node.js los toma en el header
      
       this.reporteService.reporfiltradosSecretaria(parametros).subscribe(data=>{
-        console.log(data[0].devolucion)
+        console.log(data[0].devolucion,'HOLA')
         this.regDevolver= data[0].devolucion;
         this.regPendientes= data[0].intento;
         
