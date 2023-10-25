@@ -3,6 +3,9 @@ import { Usuario } from "./entitie/usuario";
 import { askEstadoExtension } from "./entitie/ask_estado_extension";
 import { AuthUsuario } from "./entitie/auth_usuario"
 import { Empresa } from "./entitie/empresa";
+import { Usuarios } from "./entitie/usuariosMigra";
+import { UsuariosRol } from "./entitie/usuario_rolMigra";
+import { UsuariosGestor } from "./entitie/usuariosGestor";
 
 export const DataSourceGestor = new DataSource({
 
@@ -14,7 +17,7 @@ export const DataSourceGestor = new DataSource({
     database: "gestorclientes090323_25",
     synchronize: false,
     logging: true,
-    entities: [Usuario, AuthUsuario, Empresa ],
+    entities: [ Usuario, AuthUsuario, Empresa, Usuarios, UsuariosRol, UsuariosGestor ],
     subscribers: [],
     migrations: []
     // type: "postgres",

@@ -1,9 +1,12 @@
-FROM node:18.12.1
+FROM node:18.17.1
 WORKDIR /app
 
 #intalacion de dependencias
 COPY package*.json ./
 RUN npm install --save --force
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/America/Bogota /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata
 
 COPY . .
 

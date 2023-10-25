@@ -22,6 +22,7 @@ router.post('/duracionEstado', ReporContact.postDuracionEstados);
 router.post('/ivr', ReporContact.postIVR);
 router.post('/llamadasPerdidas', ReporContact.postLlamadasPerdidas);
 router.post('/filtradosSecretaria', ReporContact.postFiltradosSecretaria);
+router.post('/grabacionesPila', ReporContact.postGrabacionesPila);
 
 //reportes asterisk_pagosgde
 

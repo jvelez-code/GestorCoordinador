@@ -22,6 +22,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter } from '@angular/mate
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 
@@ -64,7 +65,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatExpansionModule,
     MatListModule,
     BrowserAnimationsModule,
-    NgChartsModule
+    NgChartsModule,
+    ScrollingModule
+    
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: MatPaginatorImpl },

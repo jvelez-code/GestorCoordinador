@@ -16,7 +16,7 @@ const { Pool }= require('pg');
 
 
     /// conexiones a las bases de datos
-    const pool = new Pool(c.config_bd_gc);
+    const pool = new Pool(c.config_bd_r);
     //const pool = new Pool(configes);
 
 

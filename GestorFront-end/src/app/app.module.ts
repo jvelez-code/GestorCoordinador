@@ -62,6 +62,7 @@ import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.compo
 registerLocaleData(localeEs,'es');
 import { BnNgIdleService } from 'bn-ng-idle';
 import { NgHcaptchaModule } from 'ng-hcaptcha';
+import { GrabacionesComponent } from './pages/grabaciones/grabaciones.component';
 
 
 export function tokenGetter() {
@@ -113,7 +114,8 @@ export function tokenGetter() {
     ConsolidadoGestionesComponent,
     LlamadasPerdidasComponent,
     FiltradoSecretariaComponent,
-    PorcentajeComponent
+    PorcentajeComponent,
+    GrabacionesComponent
   ],
   imports: [
     BrowserModule,

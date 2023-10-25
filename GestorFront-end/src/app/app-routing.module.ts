@@ -34,6 +34,7 @@ import { ConsolidadoGestionesComponent } from './pages/reporte/consolidado-gesti
 import { LlamadasPerdidasComponent } from './pages/reporte/llamadas-perdidas/llamadas-perdidas.component';
 import { FiltradoSecretariaComponent } from './pages/reporte/filtrado-secretaria/filtrado-secretaria.component';
 import { PorcentajeComponent } from './pages/reporte/porcentaje/porcentaje.component';
+import { GrabacionesComponent } from './pages/grabaciones/grabaciones.component';
 
 const routes: Routes = [
   { path: 'reporte', component: ReporteComponent, children: [
@@ -77,6 +78,7 @@ const routes: Routes = [
     { path: 'llamadaHora', component: LlamadasonlineComponent }
   ]},
   { path: 'empresas', component: EmpresasComponent },
+  { path: 'grabaciones', component: GrabacionesComponent },
   { path: '', redirectTo:'login', pathMatch: 'full' },
 ];
 

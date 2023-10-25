@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+
+const c = require('../config/configBd');
 const { Pool } = require('pg');
 
 // const configes ={
@@ -12,20 +14,11 @@ const { Pool } = require('pg');
 //     port: '5432'
 // }
 
-const configcont = {
-    host: '10.1.1.7',
-    //host: '10.1.1.25',
-    user: 'postgres',
-    password: '',
-    database: 'contact_center',
-    //database: 'asterisk_pagosgde',
-    //database: 'contact_center030523_no_la_danen25',
-    port: '5432'
-}
 
 /// conexiones a las bases de datos
-//const pool = new Pool(configes);
-const poolcont = new Pool(configcont);
+//const poolcont = new Pool(configcont);
+const poolcont = new Pool(c.config_bd_r);
+
 
 class ReporContact {
 
@@ -42,6 +35,30 @@ class ReporContact {
 
 
     //BD CONTACT
+
+    static postGrabacionesPila = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolcont.query(`select * from grabaciones_pila gp  
+            where tipo_de_llamada ='Entrante'
+            order by 1 desc limit 100 `);
+            //order by 1 limit 100 `, [fechaini, fechafin, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    
 
     static postFiltradosSecretaria = async (req: Request, res: Response) => {
         try {

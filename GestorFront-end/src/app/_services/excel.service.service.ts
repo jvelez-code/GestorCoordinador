@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { PatternValidator } from "@angular/forms";
-import { index, range, sum } from "d3";
 import { ImagePosition, Workbook } from "exceljs";
 import * as fs from "file-saver";
 import { type } from "os";
