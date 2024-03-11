@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class MonitoreoService {
 
+  parametroDTO !: Parametros
+
   private url:string = `${environment.HOST}`;
 
 

@@ -1,10 +1,9 @@
-require('dotenv').config();
 import "reflect-metadata"
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
-var privateKey  = fs.readFileSync('src/helpvoz.key', 'utf8');
-var certificate = fs.readFileSync('src/helpvoz.com.cer', 'utf8');
+var privateKey  = fs.readFileSync('src/web_enlace.key', 'utf8');
+var certificate = fs.readFileSync('src/web_enlace.cer', 'utf8');
 
 
 
@@ -16,8 +15,7 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
 
  async function main () {
      try {
-        
-console.log(process.env.PORT,'mundo')
+       
           await DataSourceGestor.initialize();
           console.log("Conexion ok Gestor");
 
@@ -31,11 +29,11 @@ console.log(process.env.PORT,'mundo')
 
          
           
-            httpServer.listen(3000, ()=>{
+            httpServer.listen(process.env.PORT, ()=>{
                 console.log("PuertosHttp", process.env.PORT)
 
             });
-            httpsServer.listen(8484, ()=> {
+            httpsServer.listen(process.env.PORTS, ()=> {
                 console.log("PuertosHttps", process.env.PORTS)
 
             });

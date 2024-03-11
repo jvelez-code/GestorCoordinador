@@ -27,6 +27,14 @@
   </form>
 </div>
 
+<div>
+
+<mat-form-field appearance="fill">
+  <mat-label >Buscar</mat-label>
+  <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+</mat-form-field>
+</div>
+
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
     <ng-container matColumnDef="nombrecampana">

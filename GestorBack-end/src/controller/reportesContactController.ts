@@ -43,7 +43,7 @@ class ReporContact {
             let fechaini = req.body.fechaini
             let fechafin = req.body.fechafin
             let empresa = req.body.empresa
-            const response = await poolcont.query(`select * from grabaciones_pila gp  
+            const response = await poolcont.query(`select fecha_grabacion, uniqueid, concat('/p_wrk2',ruta_grabacion,nombre_grabacion) as ruta_grabacion from grabaciones_pila gp  
             where tipo_de_llamada ='Entrante'
             order by 1 desc limit 100 `);
             //order by 1 limit 100 `, [fechaini, fechafin, empresa]);
@@ -553,25 +553,25 @@ ORDER by promedio desc ))
     static potsMonitoreo = async (req: Request, res: Response) => {
         // res.send('Hola mundo post final');
         try {
-
             let empresa = req.body.empresa;
 
             let date = new Date();
+            date.setDate(date.getDate() - 5);
             const formatDate = (date: Date) => {
                 let formatted_date = date.getFullYear() + "-" + (date.getMonth() + 1) +
                     "-" + date.getDate();
                 return formatted_date;
             }
             let fechaFinal = formatDate(date);
+            console.log(empresa, fechaFinal, 'ok')
             const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
         numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
-        WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)=($1)
+        WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)>=($1)
         AND empresa=($2) ORDER BY ae.id_estado,5 `, [fechaFinal, empresa]);
             if (res !== undefined) {
                 return res.json(response.rows);
-
-            }
+   }
         }
         catch (error) {
             console.log(error);

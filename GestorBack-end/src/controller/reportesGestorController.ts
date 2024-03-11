@@ -16,7 +16,7 @@ const { Pool }= require('pg');
 
 
     /// conexiones a las bases de datos
-    const pool = new Pool(c.config_bd_r);
+    const pool = new Pool(c.config_bd_gc);
     //const pool = new Pool(configes);
 
 
@@ -181,7 +181,7 @@ class reporGestor {
     LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
     LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
     LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
-    WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND pseudonimo=($3) 
+    WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND c.grupo_rol=($3) 
     ORDER BY dg.fecha_gestion`,[fechaini , fechafin, empresa ]);
 
     if (res !== undefined) {

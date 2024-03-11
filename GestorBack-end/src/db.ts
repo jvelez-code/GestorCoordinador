@@ -10,11 +10,14 @@ import { UsuariosGestor } from "./entitie/usuariosGestor";
 export const DataSourceGestor = new DataSource({
 
     type: "postgres",
-    host: "10.1.1.25",
+    
     port: 5432,
-    username: "postgres",
-    password: "",
-    database: "gestorclientes090323_25",
+    password: "pgsql",
+    username: "postgres", 
+    // host: "10.1.1.7", 
+    // database: "gestorclientes",
+    host: "10.1.1.25",
+    database: "gestorclientes210224",
     synchronize: false,
     logging: true,
     entities: [ Usuario, AuthUsuario, Empresa, Usuarios, UsuariosRol, UsuariosGestor ],
@@ -37,11 +40,15 @@ export const DataSourceGestor = new DataSource({
 export const DataSourceContact = new DataSource({
 
     type: "postgres",
+    
     host: "10.1.1.25",
+    database: "contact_center210224",
+    //host: "10.1.1.7",
+    //database: "contact_center",
     port: 5432,
     username: "postgres",
-    password: "",
-    database: "contact_center030523_no_la_danen25",
+    password: "pgsql",
+    
     synchronize: false,
     logging: true,
     entities: [ askEstadoExtension ],

@@ -108,6 +108,7 @@ export class TmoComponent implements OnInit {
       console.log(parametros)
     });
   }
+  
   exportarFiltro(): void {
     this.reporteService.exportar(this.dataSource.filteredData, "my_export");
   }

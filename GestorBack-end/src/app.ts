@@ -1,11 +1,8 @@
 require('dotenv').config();
+
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-
-console.log(process.env.PORT,'sadsa')
-
-
 
 
 import router from './routes/index.routes';
@@ -20,6 +17,21 @@ app.use(express.json());
 //     usuarioRouter,
 //     askEstadoExtensionRouter,    
 //     authUsuarioRouter);
+
+// Configurar CORS
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://127.0.0.1:4200', 'https://127.0.0.1:9443',
+  'https://gestorcoordinador.enlace-apb.com:9443','https://gestorcoordinador.jaimetorres.net:9443', 'http://10.10.11.198:4200'];
+  //const allowedOrigins = ['http://127.0.0.1:4200', 'https://10.1.1.58:443'];
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+  
  app.use(router)
 
 

@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
     const user= {usuario:this.usuario, clave:this.clave }
+    console.log(user,'credenciales')
    if(this.captchaVerified || !this.captchaactivo){
       this.subscripcion = this.loginService.login(user).subscribe(data=>{
         localStorage.setItem(environment.TOKEN_NAME,data.token );

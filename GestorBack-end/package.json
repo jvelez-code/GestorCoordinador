@@ -22,6 +22,7 @@
     "nodemon": "^3.0.1",
     "nvm": "^0.0.4",
     "pg": "^8.7.3",
+    "pg-pool": "^3.6.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.6"
   },
