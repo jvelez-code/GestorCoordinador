@@ -5,7 +5,9 @@ import { AuthUsuario } from "../_model/auth_usuario";
 import { LoginService } from "../_services/login.service";
 
 @Injectable()
-export class AdminInterceptors implements HttpInterceptor{
+export class AdminInterceptors implements HttpInterceptor {
+
+    
     constructor(private loginService: LoginService ){}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
