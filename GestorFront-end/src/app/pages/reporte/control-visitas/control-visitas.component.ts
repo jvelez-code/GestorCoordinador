@@ -16,7 +16,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-control-visitas',
   templateUrl: './control-visitas.component.html',
-  styleUrls: ['./control-visitas.component.css']
+  styleUrls: ['./control-visitas.component.scss']
 })
 export class ControlVisitasComponent {
   fechaInicio : Date = new Date;

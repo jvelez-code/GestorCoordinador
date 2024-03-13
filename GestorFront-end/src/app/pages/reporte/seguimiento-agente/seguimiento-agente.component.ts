@@ -21,7 +21,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-seguimiento-agente',
   templateUrl: './seguimiento-agente.component.html',
-  styleUrls: ['./seguimiento-agente.component.css']
+  styleUrls: ['./seguimiento-agente.component.scss']
 })
 export class SeguimientoAgenteComponent implements OnInit {
   fechaInicio : Date = new Date;

@@ -28,7 +28,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-tmo-detallado',
   templateUrl: './tmo-detallado.component.html',
-  styleUrls: ['./tmo-detallado.component.css']
+  styleUrls: ['./tmo-detallado.component.scss']
 })
 export class TmoDetalladoComponent implements OnInit {
  

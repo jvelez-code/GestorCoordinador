@@ -15,7 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-registros-nuevos',
   templateUrl: './registros-nuevos.component.html',
-  styleUrls: ['./registros-nuevos.component.css']
+  styleUrls: ['./registros-nuevos.component.scss']
 })
 export class RegistrosNuevosComponent {
 

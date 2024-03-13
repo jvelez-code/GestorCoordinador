@@ -21,7 +21,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-llamadas-calificadas',
   templateUrl: './llamadas-calificadas.component.html',
-  styleUrls: ['./llamadas-calificadas.component.css']
+  styleUrls: ['./llamadas-calificadas.component.scss']
 })
 export class LlamadasCalificadasComponent implements OnInit {
 

@@ -11,7 +11,7 @@ import { AuthUsuario } from 'src/app/_model/auth_usuario';
 @Component({
   selector: 'app-admin-edicion',
   templateUrl: './admin-edicion.component.html',
-  styleUrls: ['./admin-edicion.component.css']
+  styleUrls: ['./admin-edicion.component.scss']
 })
 export class AdminEdicionComponent implements OnInit {
 

@@ -16,7 +16,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-gestion-comercial',
   templateUrl: './gestion-comercial.component.html',
-  styleUrls: ['./gestion-comercial.component.css']
+  styleUrls: ['./gestion-comercial.component.scss']
 })
 export class GestionComercialComponent {
   fechaInicio : Date = new Date;

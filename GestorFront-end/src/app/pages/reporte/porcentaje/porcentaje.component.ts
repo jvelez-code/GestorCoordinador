@@ -16,7 +16,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-porcentaje',
   templateUrl: './porcentaje.component.html',
-  styleUrls: ['./porcentaje.component.css']
+  styleUrls: ['./porcentaje.component.scss']
 })
 export class PorcentajeComponent {
 

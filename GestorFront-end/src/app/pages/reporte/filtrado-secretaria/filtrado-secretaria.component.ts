@@ -16,7 +16,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-filtrado-secretaria',
   templateUrl: './filtrado-secretaria.component.html',
-  styleUrls: ['./filtrado-secretaria.component.css']
+  styleUrls: ['./filtrado-secretaria.component.scss']
 })
 export class FiltradoSecretariaComponent {
 

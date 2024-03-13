@@ -15,7 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-devolucion-filtrada',
   templateUrl: './devolucion-filtrada.component.html',
-  styleUrls: ['./devolucion-filtrada.component.css']
+  styleUrls: ['./devolucion-filtrada.component.scss']
 })
 export class DevolucionFiltradaComponent implements OnInit {
 

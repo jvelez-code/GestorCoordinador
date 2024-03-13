@@ -15,7 +15,7 @@ import { ExcelServiceService } from "src/app/_services/excel.service.service";
 @Component({
   selector: "app-tmo",
   templateUrl: "./tmo.component.html",
-  styleUrls: ["./tmo.component.css"],
+  styleUrls: ["./tmo.component.scss"],
 })
 export class TmoComponent implements OnInit {
   fechaInicio: Date = new Date();

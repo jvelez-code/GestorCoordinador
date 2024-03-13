@@ -22,7 +22,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-entrante-saliente',
   templateUrl: './entrante-saliente.component.html',
-  styleUrls: ['./entrante-saliente.component.css']
+  styleUrls: ['./entrante-saliente.component.scss']
 })
 export class EntranteSalienteComponent implements OnInit {
 

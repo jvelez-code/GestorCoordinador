@@ -16,7 +16,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-consol-ciclovida',
   templateUrl: './consol-ciclovida.component.html',
-  styleUrls: ['./consol-ciclovida.component.css']
+  styleUrls: ['./consol-ciclovida.component.scss']
 })
 export class ConsolCiclovidaComponent {
 

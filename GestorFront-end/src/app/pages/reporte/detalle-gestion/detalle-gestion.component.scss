@@ -1,0 +1,61 @@
+table {
+  border: none;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td { 
+  padding: 5px 10px;
+  text-align: center;
+  border: 1px solid #999;
+}
+
+
+ /*CARD*/
+
+ .example-card-cli {
+  max-width: 1200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.example-card-fil {
+  max-width: 300px;
+  display: block;
+  margin-right: auto;
+  text-align: left;
+  margin-top: 3rem;
+}
+
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  text-align: center;
+}
+
+
+.mat-card-header{
+  background-color: #bbbbd6 ;
+  padding:5px ;
+}
+
+ .mat-card{
+  padding:0 ;
+}
+
+.mat-card-content{
+  padding:5px ;
+}
+
+.mat-mdc-form-field + .mat-mdc-form-field {
+  margin-left: 8px;
+}
+
+
+

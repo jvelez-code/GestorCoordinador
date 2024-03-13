@@ -22,7 +22,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-secretaria-virtual',
   templateUrl: './secretaria-virtual.component.html',
-  styleUrls: ['./secretaria-virtual.component.css']
+  styleUrls: ['./secretaria-virtual.component.scss']
 })
 export class SecretariaVirtualComponent implements OnInit {
   fechaInicio : Date = new Date;

@@ -1,10 +1,11 @@
-      
-<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>
-  <router-outlet></router-outlet>
-  
- <div class="example-containe mat-elevation-z8">
-   <form method="POST">
-     
+<router-outlet></router-outlet>
+<mat-card class="example-card-cli">  
+  <mat-card-header>
+    <div class="center">
+    <mat-card-title>REPORTE {{reporteName}}</mat-card-title>
+    <mat-card-subtitle>{{empresaparametro}}</mat-card-subtitle></div>
+  </mat-card-header>
+   <form method="POST">     
 <div>
     <mat-form-field class="example-form-field" appearance="fill">
       <mat-label>Selecccione las fechas</mat-label>
@@ -25,15 +26,14 @@
     <button mat-raised-button color="primary" (click)="aceptar()">Aceptar</button>
   </div>
   </form>
-</div>
+</mat-card>
 
-<div>
-
+<mat-card class="example-card-fil">
 <mat-form-field appearance="fill">
-  <mat-label >Buscar</mat-label>
-  <input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+  <mat-label >Filtro</mat-label>
+  <input matInput (keyup)="filtro($event)" placeholder="Usuario" #input>
 </mat-form-field>
-</div>
+</mat-card>
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 

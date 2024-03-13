@@ -14,7 +14,7 @@ import { ReporteService } from 'src/app/_services/reporte.service';
 @Component({
   selector: 'app-llamadas-fuera-horario-eventual',
   templateUrl: './llamadas-fuera-horario-eventual.component.html',
-  styleUrls: ['./llamadas-fuera-horario-eventual.component.css']
+  styleUrls: ['./llamadas-fuera-horario-eventual.component.scss']
 })
 
 

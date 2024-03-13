@@ -15,7 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-compromiso-comercial',
   templateUrl: './compromiso-comercial.component.html',
-  styleUrls: ['./compromiso-comercial.component.css']
+  styleUrls: ['./compromiso-comercial.component.scss']
 })
 export class CompromisoComercialComponent {
 

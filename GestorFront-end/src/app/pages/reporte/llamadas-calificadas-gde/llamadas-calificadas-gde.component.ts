@@ -12,7 +12,7 @@ import { LoginService } from 'src/app/_services/login.service';
 @Component({
   selector: 'app-llamadas-calificadas-gde',
   templateUrl: './llamadas-calificadas-gde.component.html',
-  styleUrls: ['./llamadas-calificadas-gde.component.css']
+  styleUrls: ['./llamadas-calificadas-gde.component.scss']
 })
 export class LlamadasCalificadasGDEComponent implements OnInit {
 

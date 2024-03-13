@@ -14,7 +14,7 @@ import { LoginService } from 'src/app/_services/login.service';
 @Component({
   selector: 'app-tmo-saliente',
   templateUrl: './tmo-saliente.component.html',
-  styleUrls: ['./tmo-saliente.component.css']
+  styleUrls: ['./tmo-saliente.component.scss']
 })
 export class TmoSalienteComponent implements OnInit {
 

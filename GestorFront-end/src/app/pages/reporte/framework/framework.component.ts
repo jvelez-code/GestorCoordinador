@@ -4,7 +4,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 @Component({
   selector: 'app-framework',
   templateUrl: './framework.component.html',
-  styleUrls: ['./framework.component.css']
+  styleUrls: ['./framework.component.scss']
 })
 export class FrameworkComponent implements OnInit {
 

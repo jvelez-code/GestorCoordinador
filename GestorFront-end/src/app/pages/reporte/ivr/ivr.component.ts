@@ -14,7 +14,7 @@ import { LoginService } from 'src/app/_services/login.service';
 @Component({
   selector: 'app-ivr',
   templateUrl: './ivr.component.html',
-  styleUrls: ['./ivr.component.css']
+  styleUrls: ['./ivr.component.scss']
 })
 export class IvrComponent implements OnInit {
 

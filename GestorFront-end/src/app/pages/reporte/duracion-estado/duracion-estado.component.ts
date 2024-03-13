@@ -13,7 +13,7 @@ import { DuracionEstadoI } from 'src/app/_model/duracionEstado';
 @Component({
   selector: 'app-duracion-estado',
   templateUrl: './duracion-estado.component.html',
-  styleUrls: ['./duracion-estado.component.css']
+  styleUrls: ['./duracion-estado.component.scss']
 })
 export class DuracionEstadoComponent implements OnInit {
   fechaInicio : Date = new Date;

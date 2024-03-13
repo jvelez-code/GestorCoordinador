@@ -13,7 +13,7 @@ import { MonitoreoService } from '../../../_services/monitoreo.service'
 @Component({
   selector: 'app-monitoreo',
   templateUrl: './monitoreo.component.html',
-  styleUrls: ['./monitoreo.component.css']
+  styleUrls: ['./monitoreo.component.scss']
 })
 export class MonitoreoComponent implements OnInit , OnDestroy{
   

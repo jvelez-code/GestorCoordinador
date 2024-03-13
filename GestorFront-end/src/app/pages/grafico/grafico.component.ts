@@ -5,7 +5,7 @@ import { multi } from '../../_model/data'
 @Component({
   selector: 'app-grafico',
   templateUrl: './grafico.component.html',
-  styleUrls: ['./grafico.component.css']
+  styleUrls: ['./grafico.component.scss']
 })
 export class GraficoComponent {
 

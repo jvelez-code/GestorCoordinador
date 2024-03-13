@@ -21,7 +21,7 @@ const EXCEL_EXT = '.xlsx';
 @Component({
   selector: 'app-llamadas-recibidas',
   templateUrl: './llamadas-recibidas.component.html',
-  styleUrls: ['./llamadas-recibidas.component.css']
+  styleUrls: ['./llamadas-recibidas.component.scss']
 })
 export class LlamadasRecibidasComponent implements OnInit {
 

@@ -13,7 +13,7 @@ import { LoginService } from 'src/app/_services/login.service';
 @Component({
   selector: 'app-monitoreo-llamadas',
   templateUrl: './monitoreo-llamadas.component.html',
-  styleUrls: ['./monitoreo-llamadas.component.css']
+  styleUrls: ['./monitoreo-llamadas.component.scss']
 })
 export class MonitoreoLlamadasComponent implements OnInit {
 

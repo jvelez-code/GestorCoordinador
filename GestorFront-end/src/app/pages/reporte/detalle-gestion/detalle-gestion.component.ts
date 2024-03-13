@@ -6,7 +6,7 @@ import { DetalleGestion } from 'src/app/_model/detalleGestiones';
 import { MatTableDataSource } from '@angular/material/table';
 import { CityI } from '../../../_model/cityI';
 import { Parametros } from 'src/app/_model/parametros';
-import * as moment from 'moment';
+
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -14,12 +14,13 @@ import { LoginService } from 'src/app/_services/login.service';
 import { Observable } from 'rxjs';
 import { CampanaI } from 'src/app/_model/campanaI';
 import { Empresa } from 'src/app/_model/empresa';
+import * as moment from 'moment';
 
 
 @Component({
   selector: 'app-detalle-gestion',
   templateUrl: './detalle-gestion.component.html',
-  styleUrls: ['./detalle-gestion.component.css']
+  styleUrls: ['./detalle-gestion.component.scss']
 })
 export class DetalleGestionComponent implements OnInit {
 

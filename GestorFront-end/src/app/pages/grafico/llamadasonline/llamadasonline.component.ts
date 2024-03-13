@@ -18,7 +18,7 @@ import { ContentObserver } from '@angular/cdk/observers';
 @Component({
   selector: 'app-llamadasonline',
   templateUrl: './llamadasonline.component.html',
-  styleUrls: ['./llamadasonline.component.css']
+  styleUrls: ['./llamadasonline.component.scss']
 })
 
 

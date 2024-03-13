@@ -15,7 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-reporte-agenda',
   templateUrl: './reporte-agenda.component.html',
-  styleUrls: ['./reporte-agenda.component.css']
+  styleUrls: ['./reporte-agenda.component.scss']
 })
 export class ReporteAgendaComponent {
 

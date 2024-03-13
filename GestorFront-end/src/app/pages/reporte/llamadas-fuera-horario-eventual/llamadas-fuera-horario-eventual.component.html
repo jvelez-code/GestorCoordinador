@@ -1,39 +1,41 @@
-<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>  
- <div class="example-containe mat-elevation-z8">
-   <form method="POST">
-     
-<div>
-    <mat-form-field class="example-form-field" appearance="fill">
-      <mat-label>Selecccione las fechas</mat-label>
-      <mat-date-range-input
-        [formGroup]="campaignOne"
-        [rangePicker]="campaignOnePicker"
-        [comparisonStart]="campaignTwo.value.start"
-        [comparisonEnd]="campaignTwo.value.end">
-        <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
-        <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
-      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
-    </mat-form-field>
+<mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>
+<div class="example-containe mat-elevation-z8">
+  <form method="POST">
 
-    <h2></h2>
-  <mat-form-field appearance="fill">
-    <mat-label>Hora Eventual</mat-label>
-    <mat-select [(ngModel)]="selectHoraEventual" name="horaEventual">
-      <mat-option *ngFor="let horaEventual of horaEventuales" [value]="horaEventual.ValorhoraEventual">
-        {{horaEventual.horaEventual}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <div>
+      <mat-form-field class="example-form-field" appearance="fill">
+        <mat-label>Selecccione las fechas</mat-label>
+        <mat-date-range-input
+          [formGroup]="campaignOne"
+          [rangePicker]="campaignOnePicker"
+          [comparisonStart]="campaignTwo.value.start"
+          [comparisonEnd]="campaignTwo.value.end">
+          <input matStartDate placeholder="Start date" formControlName="start" [(ngModel)]="fechaInicio">
+          <input matEndDate placeholder="End date" formControlName="end" [(ngModel)]="fechaFin">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+      </mat-form-field>
 
-  </div>
+      <h2></h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Hora Eventual</mat-label>
+        <mat-select [(ngModel)]="selectHoraEventual" name="horaEventual">
+          @for (horaEventual of horaEventuales; track horaEventual) {
+            <mat-option [value]="horaEventual.ValorhoraEventual">
+              {{horaEventual.horaEventual}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-  <div>
-    <button mat-raised-button color="primary" (click)="aceptar()">Consultar
-      <mat-icon>trending_up</mat-icon>
-    </button>
-  </div>
+    </div>
+
+    <div>
+      <button mat-raised-button color="primary" (click)="aceptar()">Consultar
+        <mat-icon>trending_up</mat-icon>
+      </button>
+    </div>
   </form>
 </div>
 
@@ -45,60 +47,60 @@
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-     
-    <!-- Name Column -->
-    <ng-container matColumnDef="gestion">
-      <th mat-header-cell *matHeaderCellDef> TIPO GESTION </th>
-      <td mat-cell *matCellDef="let element"> Entrada de Llamada </td>
-    </ng-container>  
 
-    <ng-container matColumnDef="ruta_entrante">
-      <th mat-header-cell *matHeaderCellDef> LINEA INGRESO </th>
-      <td mat-cell *matCellDef="let element"> {{element.ruta_entrante}} </td>
-    </ng-container>     
-   
+  <!-- Name Column -->
+  <ng-container matColumnDef="gestion">
+    <th mat-header-cell *matHeaderCellDef> TIPO GESTION </th>
+    <td mat-cell *matCellDef="let element"> Entrada de Llamada </td>
+  </ng-container>
 
-    <ng-container matColumnDef="tipo_doc">
-      <th mat-header-cell *matHeaderCellDef> TIPO </th>
-      <td mat-cell *matCellDef="let element"> {{element.tipo_doc}} </td>
-    </ng-container>
+  <ng-container matColumnDef="ruta_entrante">
+    <th mat-header-cell *matHeaderCellDef> LINEA INGRESO </th>
+    <td mat-cell *matCellDef="let element"> {{element.ruta_entrante}} </td>
+  </ng-container>
 
-    <ng-container matColumnDef="numero_documento">
-      <th mat-header-cell *matHeaderCellDef> NÚMERO </th>
-      <td mat-cell *matCellDef="let element"> {{element.numero_documento}} </td>
-    </ng-container>
 
-    <ng-container matColumnDef="numero_origen">
-      <th mat-header-cell *matHeaderCellDef> TELEFONO INGRESO </th>
-      <td mat-cell *matCellDef="let element"> {{element.numero_origen}} </td>
-    </ng-container>
-  
+  <ng-container matColumnDef="tipo_doc">
+    <th mat-header-cell *matHeaderCellDef> TIPO </th>
+    <td mat-cell *matCellDef="let element"> {{element.tipo_doc}} </td>
+  </ng-container>
 
-    <ng-container matColumnDef="fecha_asterisk">
-      <th mat-header-cell *matHeaderCellDef> FECHA </th>
-      <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:"longDate" }} </td>
-    </ng-container>
+  <ng-container matColumnDef="numero_documento">
+    <th mat-header-cell *matHeaderCellDef> NÚMERO </th>
+    <td mat-cell *matCellDef="let element"> {{element.numero_documento}} </td>
+  </ng-container>
 
-    <ng-container matColumnDef="hora_asterisk">
-      <th mat-header-cell *matHeaderCellDef> HORA </th>
-      <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:'h:mm:ss a' }} </td>
-    </ng-container>
-    
-   
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
-  </table>
+  <ng-container matColumnDef="numero_origen">
+    <th mat-header-cell *matHeaderCellDef> TELEFONO INGRESO </th>
+    <td mat-cell *matCellDef="let element"> {{element.numero_origen}} </td>
+  </ng-container>
 
-  <div>
-    <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
-      <mat-icon>laptop</mat-icon>
-    </button>
-    <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
-      <mat-icon>phone_android</mat-icon>
-    </button>
-  
-  </div>
+
+  <ng-container matColumnDef="fecha_asterisk">
+    <th mat-header-cell *matHeaderCellDef> FECHA </th>
+    <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:"longDate" }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="hora_asterisk">
+    <th mat-header-cell *matHeaderCellDef> HORA </th>
+    <td mat-cell *matCellDef="let element"> {{element.fecha_hora_asterisk |date:'h:mm:ss a' }} </td>
+  </ng-container>
+
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<div>
+  <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+    <mat-icon>laptop</mat-icon>
+  </button>
+  <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+    <mat-icon>phone_android</mat-icon>
+  </button>
+
+</div>
 
 
 <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>

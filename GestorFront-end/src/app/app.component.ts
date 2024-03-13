@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
 
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
     private bnIdle: BnNgIdleService,
     private router: Router
   ){
-    this.bnIdle.startWatching(500).subscribe((res) => {
+    this.bnIdle.startWatching(30000).subscribe((res) => {
       if(res) {
         console.log("session expired");
         this.router.navigate(['/login']);

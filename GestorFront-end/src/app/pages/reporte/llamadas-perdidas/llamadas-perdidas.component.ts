@@ -15,7 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 @Component({
   selector: 'app-llamadas-perdidas',
   templateUrl: './llamadas-perdidas.component.html',
-  styleUrls: ['./llamadas-perdidas.component.css']
+  styleUrls: ['./llamadas-perdidas.component.scss']
 })
 export class LlamadasPerdidasComponent {
 

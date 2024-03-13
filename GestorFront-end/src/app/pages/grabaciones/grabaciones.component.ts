@@ -9,7 +9,7 @@ import { GrabacionesPilaService } from 'src/app/_services/grabaciones-pila.servi
 @Component({
   selector: 'app-grabaciones',
   templateUrl: './grabaciones.component.html',
-  styleUrls: ['./grabaciones.component.css']
+  styleUrls: ['./grabaciones.component.scss']
 })
 export class GrabacionesComponent {
 

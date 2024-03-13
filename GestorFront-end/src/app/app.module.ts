@@ -63,6 +63,7 @@ registerLocaleData(localeEs,'es');
 import { BnNgIdleService } from 'bn-ng-idle';
 import { NgHcaptchaModule } from 'ng-hcaptcha';
 import { GrabacionesComponent } from './pages/grabaciones/grabaciones.component';
+import { SpinnerComponent } from './pages/spinner/spinner.component';
 
 
 export function tokenGetter() {
@@ -115,7 +116,8 @@ export function tokenGetter() {
     LlamadasPerdidasComponent,
     FiltradoSecretariaComponent,
     PorcentajeComponent,
-    GrabacionesComponent
+    GrabacionesComponent,
+    
   ],
   imports: [
     BrowserModule,

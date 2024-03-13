@@ -12,7 +12,7 @@ import { ReporteService } from 'src/app/_services/reporte.service';
 @Component({
   selector: 'app-llamadas-fuera-horario',
   templateUrl: './llamadas-fuera-horario.component.html',
-  styleUrls: ['./llamadas-fuera-horario.component.css']
+  styleUrls: ['./llamadas-fuera-horario.component.scss']
 })
 export class LlamadasFueraHorarioComponent implements OnInit {
 
