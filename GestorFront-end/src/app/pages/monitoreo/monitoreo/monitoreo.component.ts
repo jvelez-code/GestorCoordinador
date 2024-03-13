@@ -7,18 +7,23 @@ import { BehaviorSubject, interval, Subject, Subscription } from 'rxjs';
 import { AskEstadoExtension } from 'src/app/_model/askEstadoExtension';
 import { LoginService } from 'src/app/_services/login.service';
 import { MonitoreoService } from '../../../_services/monitoreo.service'
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
 @Component({
   selector: 'app-monitoreo',
   templateUrl: './monitoreo.component.html',
-  styleUrls: ['./monitoreo.component.css']
+  styleUrls: ['./monitoreo.component.css'],
 })
 export class MonitoreoComponent implements OnInit , OnDestroy{
   
   empresaparametro !:  string;
   loading : Boolean;
+  mostrarCodigoCuadros: boolean = true; 
+  mostrarCodigolista: boolean = false; 
+
+
 
   private subscripcion : Subscription = new Subscription();
 

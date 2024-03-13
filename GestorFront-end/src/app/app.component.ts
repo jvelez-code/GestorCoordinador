@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
     private bnIdle: BnNgIdleService,
     private router: Router
   ){
-    this.bnIdle.startWatching(500).subscribe((res) => {
+    this.bnIdle.startWatching(50000).subscribe((res) => {
       if(res) {
         console.log("session expired");
         this.router.navigate(['/login']);

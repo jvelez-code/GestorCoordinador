@@ -14,6 +14,7 @@ import { LoginService } from 'src/app/_services/login.service';
 import { Observable } from 'rxjs';
 import { CampanaI } from 'src/app/_model/campanaI';
 import { Empresa } from 'src/app/_model/empresa';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -23,7 +24,7 @@ import { Empresa } from 'src/app/_model/empresa';
 })
 export class DetalleGestionComponent implements OnInit {
 
-
+  aceptarHabilitado: boolean = false; 
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
   empresaparametro !:  string;
@@ -59,7 +60,8 @@ export class DetalleGestionComponent implements OnInit {
   constructor( private reporteService : ReporteService, 
                private route: ActivatedRoute,
                private loginService: LoginService,
-               private router: Router) 
+               private router: Router,
+               private snackBar: MatSnackBar,) 
                { 
                 const today = new Date();
                 const month = today.getMonth();
@@ -97,6 +99,7 @@ export class DetalleGestionComponent implements OnInit {
     }
 
     aceptar(){    
+      this.aceptarHabilitado = true;
       this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
       this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
   
@@ -106,9 +109,18 @@ export class DetalleGestionComponent implements OnInit {
      //parametros son los paramatros que enviamos y node.js los toma en el header
      
       this.reporteService.reporDetalleGestion(parametros).subscribe(data=>{
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+        if(data && data.length > 0){
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.aceptarHabilitado = false;
+        } else {
+          this.snackBar.open('NO HAY DATOS EN LAS FECHAS', 'Aviso', {
+            duration: 3000, 
+          });
+          this.aceptarHabilitado = false;
+        
+        }      
   
     });  
 
