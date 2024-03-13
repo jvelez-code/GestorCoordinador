@@ -10,7 +10,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "^17.2.3",
     "@angular-devkit/core": "^17.2.3",
     "@angular/animations": "~16.2.4",
     "@angular/cdk": "^16.2.9",
