@@ -23,7 +23,7 @@ const { Pool }= require('pg');
 class reporGestor {
 
 
-        static logins = async (req: Request, res: Response)=>{
+    static logins = async (req: Request, res: Response)=>{
             res.send("Mundo")
     }
 
@@ -31,14 +31,6 @@ class reporGestor {
     static inicio =((req: Request, res:Response ) => {
     res.send('Hola mundo inicio');
      });
-
-
-
-    //BD CONTACT
-
-
-
-
 
 
     //DB GESTOR

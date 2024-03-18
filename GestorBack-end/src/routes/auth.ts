@@ -8,7 +8,10 @@ router.post('/login', AuthController.login );
 router.get('/', AuthController.logins );
 
 //Cambio de contraseña
-router.post('/cambio-contrasena', [checkJwt] ,AuthController.cambioContrasena)
+router.post('/cambio-contrasena', [checkJwt] ,AuthController.cambioContrasena);
+
+//Menu
+router.post('/menuUsuario', AuthController.menuUsuario)
 
 
 export default router; 

@@ -12,6 +12,8 @@ import reporGestor from "./reportesGestor.routes";
 
 const router = Router();
 
+
+//Rutas Principales
 router.use('/auth', auth)
 router.use('/authUsuario', authUsuario);
 router.use('/askEstadoExtension', askEstadoExtension);

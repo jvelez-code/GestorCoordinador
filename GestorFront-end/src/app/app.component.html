@@ -1,82 +1,93 @@
 <div class="example-container">
-    <!-- libreria idle  monitor npm-->
-  <mat-toolbar color="primary" class="example-toolbar"  *ngIf="loginService.isLogged | async ">
+  <!-- libreria idle  monitor npm-->
+  @if (loginService.isLogged | async ) {
+    <mat-toolbar color="primary" class="example-toolbar" >
       <button mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
-          <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+        @if (!sidenav.opened) {
+          <mat-icon>menu</mat-icon>
+        }
+        @if (sidenav.opened) {
+          <mat-icon>close</mat-icon>
+        }
       </button>
-
       <h1 class="example-app-name">Gestor Clientes</h1>
-
       <span class="example-spacer"></span>
-
       <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
+        <mat-icon>more_vert</mat-icon>
       </button>
-
       <mat-menu #menu="matMenu">
-          <button mat-menu-item routerLink="/perfil">
-              <mat-icon>account_box</mat-icon>
-              <span>Mi Perfil</span>
-          </button>
-          <button mat-menu-item (click)="sidenav.opened = false" (click)="loginService.cerrarSesion()" >
-              <mat-icon>exit_to_app</mat-icon>
-              <span>Cerrar Sesión</span>
-          </button>
+        <button mat-menu-item routerLink="/perfil">
+          <mat-icon>account_box</mat-icon>
+          <span>Mi Perfil</span>
+        </button>
+        <button mat-menu-item (click)="sidenav.opened = false" (click)="loginService.cerrarSesion()" >
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
       </mat-menu>
-  </mat-toolbar>
+    </mat-toolbar>
+  }
 
   <mat-sidenav-container class="example-sidenav-container">
-      <mat-sidenav #sidenav style="width: 200px" mode="push">
-          <img src="assets/jaimetorres.jpeg" width="128" style="margin-left: 20px">
-          
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
-              <mat-icon>search</mat-icon>
-              <span>Buscar</span>
-          </button>
+    <mat-sidenav #sidenav style="width: 200px" mode="push">
+      <img src="assets/jaimetorres.jpeg" width="128" style="margin-left: 20px">
 
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/monitoreo" style="cursor: pointer">
-              <mat-icon>explore</mat-icon>
-              <span>Monitoreo</span>
-          </button>
-  
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/grafico" style="cursor: pointer">
-              <mat-icon>addchart</mat-icon>
-              <span>Graficos</span>
-          </button>
-         
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
-              <mat-icon>assessment</mat-icon>
-              <span>Reportes</span>
-          </button>        
+      <div *ngFor="let m of menus">
+        <button mat-menu-item (click)="sidenav.toggle()" routerLink="{{m.url}}" style="cursor: pointer" >
+            <mat-icon>{{m.icono}}</mat-icon>
+            <span>{{m.nombre}}</span>
+        </button>
+        <mat-divider></mat-divider>
+    </div> 
 
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/empresas" style="cursor: pointer">
-              <mat-icon>attach_file</mat-icon>
-              <span>Empresas</span>
-          </button>        
+      <!--
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
+        <mat-icon>search</mat-icon>
+        <span>Buscar</span>
+      </button>
+
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/monitoreo" style="cursor: pointer">
+        <mat-icon>explore</mat-icon>
+        <span>Monitoreo</span>
+      </button>
+
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/grafico" style="cursor: pointer">
+        <mat-icon>addchart</mat-icon>
+        <span>Graficos</span>
+      </button>
+
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
+        <mat-icon>assessment</mat-icon>
+        <span>Reportes</span>
+      </button>
+
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/empresas" style="cursor: pointer">
+        <mat-icon>attach_file</mat-icon>
+        <span>Empresas</span>
+      </button>
 
 
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/adminUsuario" style="cursor: pointer">
-              <mat-icon>accessibility</mat-icon>
-              <span>AdminUsuarios</span>
-          </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/adminUsuario" style="cursor: pointer">
+        <mat-icon>accessibility</mat-icon>
+        <span>AdminUsuarios</span>
+      </button>
 
 
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/grabaciones" style="cursor: pointer">
-              <mat-icon>accessibility</mat-icon>
-              <span>Grabaciones</span>
-          </button>
-      </mat-sidenav>
-      
-      <mat-sidenav-content>
-          <router-outlet></router-outlet>
-      </mat-sidenav-content>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/grabaciones" style="cursor: pointer">
+        <mat-icon>accessibility</mat-icon>
+        <span>Grabaciones</span>
+      </button>-->
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
 
   </mat-sidenav-container>
 

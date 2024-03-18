@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
 import { environment } from 'src/environments/environment';
 import '../../../assets/login-animation.js';
+import { ParametrosDTO } from 'src/app/_model/parametrosDTO';
+import { MenuService } from 'src/app/_services/menu.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,7 @@ import '../../../assets/login-animation.js';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
+  parametroDTO !: ParametrosDTO;
   hide !: false;
   usuario !: string;
   clave !: string;
@@ -30,6 +33,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor( 
     private loginService: LoginService,
+    private menuService : MenuService,
     private router: Router,
     private formBuilder: FormBuilder ) { }
 
@@ -68,12 +72,22 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
     const user= {usuario:this.usuario, clave:this.clave }
-    console.log(user,'credenciales')
+    const parametroDTO = { loginAgente: this.usuario}
+
+
    if(this.captchaVerified || !this.captchaactivo){
+
       this.subscripcion = this.loginService.login(user).subscribe(data=>{
-        localStorage.setItem(environment.TOKEN_NAME,data.token );
-         this.router.navigate(['reporte']);
-      })
+      localStorage.setItem(environment.TOKEN_NAME,data.token );
+      this.router.navigate(['reporte']);
+      });
+
+      this.menuService.listarPorUsuario(parametroDTO).subscribe(data =>{
+        this.loginService.setMenuCambio(data);
+        console.log(data)
+      });
+
+      
     }else{
       this.setMensajeInformativo("Por favor, complete el captcha.");
     }

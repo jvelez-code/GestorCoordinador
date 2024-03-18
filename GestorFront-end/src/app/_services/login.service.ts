@@ -8,6 +8,7 @@ import { User, UserResponse } from '../_model/userLogin';
 import { Token } from '@angular/compiler';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Empresa } from '../_model/empresa';
+import { Menu } from '../_model/menu';
 
 
 const helper = new JwtHelperService();
@@ -18,6 +19,7 @@ const helper = new JwtHelperService();
 })
 export class LoginService {
 
+  private menuCambio = new Subject<Menu[]>();
   private logedIn = new BehaviorSubject<boolean>(false);
   private logeoEmpresa=  new BehaviorSubject<string>('--SIN EMPRESA--');
   private userToken=  new BehaviorSubject<string>('null') ;
@@ -40,6 +42,19 @@ export class LoginService {
     ) { 
       this.checktoken();
     }
+
+
+
+    //////// get, set ///////////////////
+    
+    getMenuCambio() {
+      return this.menuCambio.asObservable();
+    }
+
+    setMenuCambio(menus: Menu[]) {
+      this.menuCambio.next(menus);
+    } 
+
 
     getEmpresaCambio(){
       return this.empresaCambio.asObservable();

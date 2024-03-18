@@ -1,11 +1,13 @@
 
-<app-loading *ngIf="loading"></app-loading>
+@if (loading) {
+  <app-loading></app-loading>
+}
 
 
 
 <mat-toolbar>
   <mat-toolbar-row>
-      <span class="span">MONITOREO {{empresaparametro}}</span>
+    <span class="span">MONITOREO {{empresaparametro}}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -25,86 +27,78 @@
 <br>
 
 
-<div *ngIf="mostrarCodigoCuadros">
-  
-  <mat-card class="example-card-cli">
-    <mat-card-content >
-      <div class="animated fadeIn m-5 mosaico-container" >
-        <div *ngFor="let element of dataSource.data" class="mosaico-item">
-          <div class="item-header">
-            <ng-container matColumnDef="serial" >
-              <div>{{element.login_agente}}</div>
-        </ng-container>
+  @if (mostrarCodigoCuadros) {
+    <div>
+      <mat-card class="example-card-cli">
+        <mat-card-content >
+          <div class="animated fadeIn m-5 mosaico-container" >
+            @for (element of dataSource.data; track element) {
+              <div class="mosaico-item">
+                <div class="item-header">
+                  <ng-container matColumnDef="serial" >
+                    <div>{{element.login_agente}}</div>
+                  </ng-container>
+                </div>
+                <div class="item-content" [ngClass]="element.descripcion">
+                  <div><strong>Ext:</strong> {{element.id_extension}}</div>
+                  <div><strong>Estado:</strong> {{element.descripcion}}</div>
+                  <div><strong>Número:</strong> {{element.numero_origen}}</div>
+                  <div><strong>Inicio:</strong> {{element.fechahora_inicio_estado |   date:'medium' }}</div>
+                  <div><strong>Tiempo:</strong> {{element.total}}</div>
+                </div>
+              </div>
+            }
           </div>
-          <div class="item-content" [ngClass]="element.descripcion">
-            <div><strong>Ext:</strong> {{element.id_extension}}</div>
-            <div><strong>Estado:</strong> {{element.descripcion}}</div>
-            <div><strong>Número:</strong> {{element.numero_origen}}</div>
-            <div><strong>Inicio:</strong> {{element.fechahora_inicio_estado |   date:'medium' }}</div>
-            <div><strong>Tiempo:</strong> {{element.total}}</div>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-
-<br>
-<mat-card class="example-card-cli">
-
-<div *ngIf="mostrarCodigolista">
-  <mat-card class="example-card-cli">
-    <div class="animated fadeIn m-5">
-      <table mat-table [dataSource]="dataSource"  matSort  class="mat-elevation-z8">
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
-    
-          <ng-container matColumnDef="serial" >
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center"> <h4>#</h4> </th>
-                <td mat-cell *matCellDef="let i = index"  scope="row">{{i+1}}</td>
-          </ng-container>
-    
-        <!-- Position Column -->
-        <ng-container matColumnDef="extension" class="cabecera">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center"> EXTENSION </th>
-          <td mat-cell *matCellDef="let element"  [ngClass]="element.descripcion"> {{element.id_extension }} </td>
-        </ng-container>
-    
-      
-        <ng-container matColumnDef="login">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center" > USUARIO </th>
-          <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.login_agente }} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="fecha">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center" > FECHA </th>
-          <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.fechahora_inicio_estado |  date:'yyyy-MM-dd HH:mm:ss'  }} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="descripcion">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center" > ESTADO </th>
-          <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.descripcion  }} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="numero_origen">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center" > NÚMERO </th>
-          <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.numero_origen  }} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="total">
-          <th mat-header-cell *matHeaderCellDef style="text-align: center" > TOTAL </th>
-          <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.total }}</td>
-        </ng-container>
-    
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    
-      <mat-paginator [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </mat-card-content>
+      </mat-card>
     </div>
-  </mat-card>
-  
-</div>
+  }
+
+
+  <br>
+    <mat-card class="example-card-cli">
+
+      @if (mostrarCodigolista) {
+        <div>
+          <mat-card class="example-card-cli">
+            <div class="animated fadeIn m-5">
+              <table mat-table [dataSource]="dataSource"  matSort  class="mat-elevation-z8">
+                <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
+                <ng-container matColumnDef="serial" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center"> <h4>#</h4> </th>
+                  <td mat-cell *matCellDef="let i = index"  scope="row">{{i+1}}</td>
+                </ng-container>
+                <!-- Position Column -->
+                <ng-container matColumnDef="extension" class="cabecera">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center"> EXTENSION </th>
+                  <td mat-cell *matCellDef="let element"  [ngClass]="element.descripcion"> {{element.id_extension }} </td>
+                </ng-container>
+                <ng-container matColumnDef="login">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center" > USUARIO </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.login_agente }} </td>
+                </ng-container>
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center" > FECHA </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.fechahora_inicio_estado |  date:'yyyy-MM-dd HH:mm:ss'  }} </td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center" > ESTADO </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.descripcion  }} </td>
+                </ng-container>
+                <ng-container matColumnDef="numero_origen">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center" > NÚMERO </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.numero_origen  }} </td>
+                </ng-container>
+                <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center" > TOTAL </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="element.descripcion"> {{element.total }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+          </mat-card>
+        </div>
+      }

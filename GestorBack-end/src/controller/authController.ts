@@ -7,6 +7,11 @@ import config from '../config/config'
 import { validate } from 'class-validator';
 import { UsuariosRol } from '../entitie/usuario_rolMigra';
 import { UsuariosGestor } from '../entitie/usuariosGestor';
+import { Console } from 'console';
+
+const c = require('../config/configBd');
+const { Pool }= require('pg');
+const pool = new Pool(c.config_bd_gc);
 
 
 
@@ -155,6 +160,7 @@ class AuthController{
     
     } 
 
+    //Cambio Contraseña
     static cambioContrasena= async (req:Request ,  res: Response )=>{
 
         //const {id } = res.locals.jwtPayload
@@ -198,6 +204,30 @@ class AuthController{
         AuthUsuario.save(authUsuario);
 
         res.json({message: 'Csontraseña cambiada con exito'});
+    }
+
+    //Menu
+    static menuUsuario = async (req:Request, res: Response) =>{
+        try {
+         
+            let usuario=req.body.loginAgente
+
+            const response = await pool.query(`select m.* 
+			from menu_rol mr 
+    		inner join usuario_rol ur on ur.id_rol = mr.id_rol 
+			inner join menu m on m.idmenu = mr.id_menu 
+			inner join usuarios u on u.idusuario = ur.id_usuario 
+			where u.nombre = ($1) and m.app='2'`,[usuario]);
+        
+            if (res !== undefined) {
+                return res.json(response.rows);
+                
+              }
+            
+            } catch (error) {
+            console.log(error); 
+            }
+
     }
 
 
