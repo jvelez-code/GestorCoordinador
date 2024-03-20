@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { LoginService } from 'src/app/_services/login.service';
+import { ExcelTmoEntranteSalienteService } from 'src/app/_services/excel.tmo.entrante.saliente.service';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -49,7 +50,8 @@ export class EntranteSalienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor( private reporteService : ReporteService,
-    private loginService: LoginService  ) { 
+    private loginService: LoginService ,
+    private excelTmoEntranteSalienteService : ExcelTmoEntranteSalienteService ) { 
 
     const today = new Date();
     const month = today.getMonth();
@@ -108,7 +110,18 @@ private saveExcel(buffer:any, fileName:string): void {
 }
 
 exportarTodo(): void {
-  this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  const parametros = {
+    fechaini: this.fechaparametro1,
+    fechafin: this.fechaparametro2,
+    empresa: this.empresaparametro,
+  };
+  
+  this.reporteService.reporTmoEntranteSaliente(parametros).subscribe((data) => {
+    this.excelTmoEntranteSalienteService.tmoEntranteSaliente(data,parametros);
+    console.log(parametros)
+    console.log(data)
+  });
 
 }
 exportarFiltro(): void{

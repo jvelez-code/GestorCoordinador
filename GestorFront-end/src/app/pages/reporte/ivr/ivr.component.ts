@@ -9,6 +9,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ReporteService } from 'src/app/_services/reporte.service';
 import * as moment from 'moment';
 import { LoginService } from 'src/app/_services/login.service';
+import { log } from 'console';
+import { ExcelIvrService } from 'src/app/_services/excel.ivr.service';
 
 
 @Component({
@@ -41,7 +43,8 @@ export class IvrComponent implements OnInit {
 
   constructor( 
     private reporteService : ReporteService,
-    private loginService: LoginService ) { 
+    private loginService: LoginService, 
+    private excelIvrService: ExcelIvrService ) { 
 
    
     const today = new Date();
@@ -86,7 +89,20 @@ export class IvrComponent implements OnInit {
  
 
 exportarTodo(): void {
-  this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+
+  const parametros = {
+    fechaini: this.fechaparametro1,
+    fechafin: this.fechaparametro2,
+    empresa: this.empresaparametro,
+  };
+  
+  this.reporteService.reporIvr(parametros).subscribe((data) => {
+    this.excelIvrService.ivr(data,parametros);
+    console.log(parametros)
+    console.log(data)
+  });
+
 
 }
 exportarFiltro(): void{

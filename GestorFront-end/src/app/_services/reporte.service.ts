@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { Empresa } from '../_model/empresa';
 import { CampanaI } from '../_model/campanaI';
 import { DetalleGestion } from '../_model/detalleGestiones';
+import { ReportesGeneral } from '../_model/reportesgeneral';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -202,7 +203,7 @@ export class ReporteService {
       
       const headers = { 'content-type': 'application/json'}  
       const body=JSON.stringify(parametros);
-      return this.http.post<DetalleGestion[]>(`${this.urlGes}/porcentaje`,body,{'headers':headers});
+      return this.http.post<ReportesGeneral[]>(`${this.urlGes}/porcentaje`,body,{'headers':headers});
      }
 
      reporConsolidadoGestionComercial(parametros: Parametros) {  

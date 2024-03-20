@@ -15,6 +15,7 @@ import { Usuario } from 'src/app/_model/usuario';
 import { Observable } from 'rxjs';
 import { LoginService } from 'src/app/_services/login.service';
 import { ActivatedRoute } from '@angular/router';
+import { ExcelTmoDetalladoService } from 'src/app/_services/excel.tmo.detallado.service';
 
 
 
@@ -62,7 +63,8 @@ export class TmoDetalladoComponent implements OnInit {
   constructor( 
     private reporteService : ReporteService,
     private loginService :LoginService,
-    public route: ActivatedRoute, ) { 
+    public route: ActivatedRoute, 
+    private excelTmoDetalladoService :ExcelTmoDetalladoService) { 
 
     const today = new Date();
     const month = today.getMonth();
@@ -135,7 +137,18 @@ private saveExcel(buffer:any, fileName:string): void {
 }
 
 exportarTodo(): void {
-  this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  const parametros = {
+    fechaini: this.fechaparametro1,
+    fechafin: this.fechaparametro2,
+    empresa: this.empresaparametro,
+  };
+  
+  this.reporteService.reporTmoDetallado(parametros).subscribe((data) => {
+    this.excelTmoDetalladoService.tmoDetallado(data,parametros);
+    console.log(parametros)
+    console.log(data)
+  });
 
 }
 exportarFiltro(): void{

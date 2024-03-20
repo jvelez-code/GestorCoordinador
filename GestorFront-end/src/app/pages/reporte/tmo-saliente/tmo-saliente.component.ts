@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ReporteService } from 'src/app/_services/reporte.service';
 import * as moment from 'moment';
 import { LoginService } from 'src/app/_services/login.service';
+import { ExcelTmoSalienteService } from 'src/app/_services/excel.tmo.saliente.service';
 
 
 @Injectable()
@@ -39,7 +40,8 @@ export class TmoSalienteComponent implements OnInit {
 
   
   constructor( private reporteService : ReporteService,
-    private loginService: LoginService ) { 
+    private loginService: LoginService,
+    private excelTmoSalienteService : ExcelTmoSalienteService ) { 
 
     const today = new Date();
     const month = today.getMonth();
@@ -84,7 +86,18 @@ export class TmoSalienteComponent implements OnInit {
  
 
 exportarTodo(): void {
-  this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  const parametros = {
+    fechaini: this.fechaparametro1,
+    fechafin: this.fechaparametro2,
+    empresa: this.empresaparametro,
+  };
+  
+  this.reporteService.reporTmoSaliente(parametros).subscribe((data) => {
+    this.excelTmoSalienteService.tmoSaliente(data,parametros);
+    console.log(parametros)
+    console.log(data)
+  });
 
 }
 exportarFiltro(): void{

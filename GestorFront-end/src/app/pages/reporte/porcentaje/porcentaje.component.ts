@@ -11,6 +11,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { LoginService } from 'src/app/_services/login.service';
 import { Observable } from 'rxjs';
 import { CampanaI } from 'src/app/_model/campanaI';
+import { ExcelPorcentajeDeTipificacionService } from 'src/app/_services/excel.porcentaje.de.tipificacion.service';
+import { ReportesGeneral } from 'src/app/_model/reportesgeneral';
 
 
 @Component({
@@ -41,7 +43,7 @@ export class PorcentajeComponent {
   displayedColumns: string[] = ['campana', 'nombrecampana', 'tipificacion', 'suma_total',
                                 'subtipificacion', 'cantidad', 'porcentaje'];
 
-  dataSource!: MatTableDataSource<DetalleGestion>;
+  dataSource!: MatTableDataSource<ReportesGeneral>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -54,7 +56,8 @@ export class PorcentajeComponent {
   constructor( private reporteService : ReporteService, 
                private route: ActivatedRoute,
                private loginService: LoginService,
-               private router: Router) 
+               private router: Router,
+               private excelPorcentajeDeTipificacionService :ExcelPorcentajeDeTipificacionService )  
                { 
                 const today = new Date();
                 const month = today.getMonth();
@@ -82,7 +85,7 @@ export class PorcentajeComponent {
     aceptar(){    
       this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
       this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-   
+      
       const parametros= { fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro,
                           campana:this.idCampana}
      //parametros son los paramatros que enviamos y node.js los toma en el header
@@ -97,11 +100,23 @@ export class PorcentajeComponent {
   
   
   exportarTodo(): void {
-    this.reporteService.exportar(this.dataSource.data,this.reporteName);
-  
+    //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+    
+    const parametros = {
+      fechaini: this.fechaparametro1,
+      fechafin: this.fechaparametro2,
+      empresa: this.empresaparametro,
+    };
+    
+    this.reporteService.reporPorcentaje(parametros).subscribe((data) => {
+      this.excelPorcentajeDeTipificacionService.porcentajeportipificacion(data,parametros);
+      console.log(parametros)
+      console.log(data)
+    });
   }
   exportarFiltro(): void{
     this.reporteService.exportar(this.dataSource.filteredData,'my_export');
+
   
   }
   

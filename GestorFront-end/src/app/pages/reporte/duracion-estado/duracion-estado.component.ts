@@ -9,6 +9,7 @@ import { ReporteService } from 'src/app/_services/reporte.service';
 import * as moment from 'moment';
 import { LoginService } from 'src/app/_services/login.service';
 import { DuracionEstadoI } from 'src/app/_model/duracionEstado';
+import { DuracionEstadoService } from 'src/app/_services/excel-duracion-estado.service';
 
 @Component({
   selector: 'app-duracion-estado',
@@ -40,7 +41,10 @@ export class DuracionEstadoComponent implements OnInit {
 
   constructor( 
     private reporteService : ReporteService,
-    private loginService: LoginService ) { 
+    private loginService: LoginService,
+    private duracionEstadoService: DuracionEstadoService,
+    ) { 
+    
 
     this.loginService.isLogged.subscribe(data=>{
     })
@@ -72,8 +76,8 @@ export class DuracionEstadoComponent implements OnInit {
   aceptar(){    
     this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
     this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
-
- 
+    
+     
     const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
    //parametros son los paramatros que enviamos y node.js los toma en el header
    
@@ -86,8 +90,19 @@ export class DuracionEstadoComponent implements OnInit {
 
 
 exportarTodo(): void {
-  this.reporteService.exportar(this.dataSource.data,this.reporteName);
-
+  //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+  const parametros = {
+    fechaini: this.fechaparametro1,
+    fechafin: this.fechaparametro2,
+    empresa: this.empresaparametro,
+  };
+  
+  this.reporteService.reporDuracionEstado(parametros).subscribe((data) => {
+    this.duracionEstadoService.duracionEstado(data,parametros);
+    console.log(parametros)
+    console.log(data)
+  });
+  
 }
 exportarFiltro(): void{
   this.reporteService.exportar(this.dataSource.filteredData,'my_export');

@@ -14,6 +14,7 @@ import { LoginService } from 'src/app/_services/login.service';
 import { Observable } from 'rxjs';
 import { CampanaI } from 'src/app/_model/campanaI';
 import { Empresa } from 'src/app/_model/empresa';
+import { ExelDetalladoGestionesService } from 'src/app/_services/exel.detallado.gestiones.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
@@ -61,7 +62,8 @@ export class DetalleGestionComponent implements OnInit {
                private route: ActivatedRoute,
                private loginService: LoginService,
                private router: Router,
-               private snackBar: MatSnackBar,) 
+	       private exelDetalladoGestionesService: ExelDetalladoGestionesService,
+               private snackBar: MatSnackBar) 
                { 
                 const today = new Date();
                 const month = today.getMonth();
@@ -132,9 +134,20 @@ export class DetalleGestionComponent implements OnInit {
   
   
   exportarTodo(): void {
-    this.reporteService.exportar(this.dataSource.data,this.reporteName);
-  
+    //this.reporteService.exportar(this.dataSource.data,this.reporteName);
+    const parametros = {
+      fechaini: this.fechaparametro1,
+      fechafin: this.fechaparametro2,
+      empresa: this.empresaparametro,
+    };
+    
+    this.reporteService.reporDetalleGestion(parametros).subscribe((data) => {
+      this.exelDetalladoGestionesService.detalladoGestion(data,parametros);
+      console.log(parametros)
+      console.log(data)
+    });
   }
+  
   exportarFiltro(): void{
     this.reporteService.exportar(this.dataSource.filteredData,'my_export');
   

@@ -10,6 +10,7 @@ import * as moment from "moment";
 import { LoginService } from "src/app/_services/login.service";
 import { GraficosService } from "src/app/_services/graficos.service";
 import { ExcelServiceService } from "src/app/_services/excel.service.service";
+import { ExcelTmoService } from "src/app/_services/excel.tmo.service";
 
 @Injectable()
 @Component({
@@ -47,7 +48,8 @@ export class TmoComponent implements OnInit {
   constructor(
     private reporteService: ReporteService,
     private loginService: LoginService,
-    private _excelServiceService: ExcelServiceService
+    private _excelServiceService: ExcelServiceService,
+    private excelTmoService :ExcelTmoService
   ) {
     // this.loginService.isLogged.subscribe(data=>{
     //   console.log('pruebaObservable',data)
