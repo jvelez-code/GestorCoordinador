@@ -22,10 +22,10 @@ export class MonitoreoService {
   }
 
 
-  monitoreoEmpresa(parametros: Parametros):Observable<any>{
+  monitoreoEmpresa(parametros: Parametros) {
       
     const headers = { 'content-type': 'application/json'}  
     const body=JSON.stringify(parametros);
-    return this.http.post<Parametros>(`${this.url}/reporContact/monitoreo`,body,{'headers':headers});
+    return this.http.post<AskEstadoExtension[]>(`${this.url}/reporContact/monitoreo`,body,{'headers':headers});
    }
 }

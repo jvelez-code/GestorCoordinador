@@ -3,12 +3,12 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 var privateKey  = fs.readFileSync('src/web_enlace.key', 'utf8');
-var certificate = fs.readFileSync('src/web_enlace.cer', 'utf8');
+var certificate = fs.readFileSync('src/SSL_wc.enlace-apb.com.cer', 'utf8');
 
 
 
 
-
+const { ejemploEncriptacion } = require('./config/configBd');
 import app from './app';
 import { DataSourceGestor, DataSourceContact }  from  './db';
 
@@ -38,8 +38,7 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
 
             });
 
-           
-           
+            ejemploEncriptacion();
 
      } catch (error) {
          console.log(error);

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { ReporteService } from '../../../_services/reporte.service';
-import { ActivatedRoute,  Router } from '@angular/router';
 import { Gestion } from '../../../_model/gestion';
 import { DetalleGestion } from 'src/app/_model/detalleGestiones';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +15,7 @@ import { CampanaI } from 'src/app/_model/campanaI';
 import { Empresa } from 'src/app/_model/empresa';
 import { ExelDetalladoGestionesService } from 'src/app/_services/exel.detallado.gestiones.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -88,17 +88,7 @@ export class DetalleGestionComponent implements OnInit {
     });
 
     const parametros = {empresa:this.empresaparametro}
-
-    //this.campana$=this.reporteService.listarCampanas(parametros);
-    //console.log('333',parametros)
-    
-  //   this.reporteService.listarCampanas(parametros).subscribe(data =>{
-  //     console.log('333',parametros)
-  //     console.log(data)
-  //  });
-
-     
-    }
+  }
 
     aceptar(){    
       this.aceptarHabilitado = true;
@@ -111,6 +101,7 @@ export class DetalleGestionComponent implements OnInit {
      //parametros son los paramatros que enviamos y node.js los toma en el header
      
       this.reporteService.reporDetalleGestion(parametros).subscribe(data=>{
+        console.log(data,'detallado')
         if(data && data.length > 0){
           this.dataSource = new MatTableDataSource(data);
           this.dataSource.sort = this.sort;

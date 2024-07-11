@@ -7,6 +7,7 @@ import config from '../config/config'
 import { validate } from 'class-validator';
 import { UsuariosRol } from '../entitie/usuario_rolMigra';
 import { UsuariosGestor } from '../entitie/usuariosGestor';
+import { Console } from 'console';
 
 
 
@@ -83,11 +84,13 @@ class AuthController{
                 where: {
                     usuario: usuario,
                 },
-            })        
+            })     
+             
         } catch (error) {
             return res.status(400).json({message: 'Usuario Gestor  no valida'})
             
         }
+        
     let empresa = new Empresa();
     const idEmpresa = usuarioG.empresa;
     try {
@@ -95,12 +98,16 @@ class AuthController{
             where: {
                 id_empresa: idEmpresa,
             },
-        })        
+        })  
+             
     } catch (error) {
         return res.status(400).json({message: 'Empresa no valida'})
         
     }
 
+    console.log(usuarios,'usuarios') 
+    console.log(usuarioG,'usuarioG')  
+    console.log(empresa,'empresa') ;  
     let usuarioLog=usuarios.nombre;
     let rolLog=rol.id_rol;
     let id_empresa=empresa.pseudonimo;

@@ -55,7 +55,7 @@ export class ExcelPorcentajeDeTipificacionService {
     let logoempresa;
 
     //Creamos una nueva hoja
-    const sheet = this._worbook.addWorksheet(`REPORTE LPORCENTAJE POR TIPIFICACIÓN ${empresa}`);
+    const sheet = this._worbook.addWorksheet(`REPORTE PORCENTAJE POR TIPIFICACIÓN ${empresa}`);
 
     //Seteamos la informaciòn del reporte
     sheet.getCell("A3").value = `EMPRESA`;
@@ -66,7 +66,7 @@ export class ExcelPorcentajeDeTipificacionService {
     sheet.getCell("B5").value = `${fechafin}`;
 
     //Estilos a las columnas
-    ["A", "B", "C", "D", "E", "F","G"].forEach((columkey) => {
+    ["A", "B", "C", "D", "E"].forEach((columkey) => {
       //itera sobre las columnas que se indiquen
       sheet.getColumn(columkey).width = 30; //ancho de las columnas
       sheet.getColumn(columkey).border = {
@@ -131,10 +131,10 @@ export class ExcelPorcentajeDeTipificacionService {
     sheet.addImage(logohelpvoz, "A2:A2");
     sheet.addImage(logoempresa, "B2:B2");
     sheet.addImage(logoidjaime, "E8:B16");
-    sheet.addImage(logojtcnegro, "F2:D5");
+    sheet.addImage(logojtcnegro, "E2:C5");
 
     //Combinar celdas titulo
-    sheet.mergeCells("A1:G1");
+    sheet.mergeCells("A1:E1");
     //Darle estilos al titulo
     sheet.getCell("A1").alignment = {
       horizontal: "center",
@@ -142,12 +142,12 @@ export class ExcelPorcentajeDeTipificacionService {
     };
     //Negrilla al titulo
     sheet.getCell("A1").font = { bold: true };
-    sheet.mergeCells(`A10000:G${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
-    sheet.mergeCells("H10000:BD1"); //combina las celdas para dejar el espacio blanco a la derecha
+    //sheet.mergeCells(`A10000:G${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
+    sheet.mergeCells("F10000:BD1"); //combina las celdas para dejar el espacio blanco a la derecha
 
     //Nombre visible del reporte
     sheet.getCell("A1").value = `REPORTE LLAMADAS RECIBIDAS ${empresa}`;
-    sheet.mergeCells("C2:G5"); //combinar celdas para logo jtc negro
+    sheet.mergeCells("C2:E5"); //combinar celdas para logo jtc negro
 
     sheet.columns.forEach((column) => {
       column.alignment = {
@@ -160,8 +160,6 @@ export class ExcelPorcentajeDeTipificacionService {
 
     const encabezado = sheet.getRow(6); //Lo que va a tener el encabezado y desde que fila empieza
     encabezado.values = [
-      "CAMPAÑA",
-      "NOMBRE CAMPAÑA",
       "TIPIFICACIÓN",
       "TOTAL",
       "SUBTIPIFICACIÓN",
@@ -191,8 +189,6 @@ export class ExcelPorcentajeDeTipificacionService {
      
 
       row.values = [
-        itemData.campana,
-        itemData.nombrecampana,
         itemData.tipificacion,
         itemData.suma_total,
         itemData.subtipificacion,
@@ -201,7 +197,7 @@ export class ExcelPorcentajeDeTipificacionService {
       ];
     }
 
-    //Todas las casillas que tienen colorcito verde y son titulos o reultados
+    //Todas las casillas que tienen colorcito verde y son titulos o resultados
     [
       "A1",
       "A6",
@@ -209,15 +205,11 @@ export class ExcelPorcentajeDeTipificacionService {
       "C6",
       "D6",
       "E6",
-      "F6",
-      "G6",
       `A${cf}`,
       `B${cf}`,
       `C${cf}`,
       `D${cf}`,
       `E${cf}`,
-      `F${cf}`,
-      `G${cf}`,
     ].forEach((celdas) => {
       sheet.getCell(celdas).fill = {
         type: "pattern",

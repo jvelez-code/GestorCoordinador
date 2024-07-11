@@ -1,3 +1,100 @@
 table {
-    width: 100%;
+  border: none;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td { 
+  padding: 5px 10px;
+  text-align: center;
+  border: 1px solid #999;
+}
+
+
+
+/*Bonotes*/
+section {
+  display: table;
   }
+  
+  .example-label {
+  display: table-cell;
+  font-size: 14px;
+  margin-left: 8px;
+  min-width: 120px;
+  }
+  
+  .example-button-row {
+  display: table-cell;
+  max-width: 600px;
+  }
+  
+  .example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+  }
+  
+  /*DataPinker*/
+  mat-form-field {
+  margin-right: 12px;
+  }
+
+  
+/*CARD*/
+
+.example-card-cli {
+  max-width: 1000px; /* Ajustar el tamaño máximo de la tarjeta */
+  margin: 3rem auto; /* Centrar la tarjeta horizontalmente y darle un margen superior e inferior */
+  text-align: center; /* Centrar el contenido de la tarjeta */
+  padding: 1rem; /* Agregar un poco de espacio alrededor del contenido de la tarjeta */
+}
+
+.table-container {
+  overflow-x: auto; /* Agregar desbordamiento horizontal al contenedor de la tabla */
+  margin: 0 auto; /* Centrar la tabla dentro de la tarjeta */
+}
+
+.center {
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 100%;
+text-align: center;
+}
+
+.mat-card-header{
+background-color: #bbbbd6 ;
+padding:5px ;
+}
+
+.mat-card{
+padding:0 ;
+}
+
+.mat-card-content{
+padding:5px ;
+}
+
+
+
+.error-message {
+color: red;
+font-size: small;
+}
+
+
+  
+/*CARD*/
+
+.card-cli-form {
+  max-width: 600px; /* Ajustar el tamaño máximo de la tarjeta */
+  overflow-x: auto; /* Agregar desbordamiento horizontal a la tarjeta si es necesario */
+  margin-top: 3rem;
+}
+
+.example-container {
+  padding: 16px; /* Agregar un poco de espacio alrededor del contenido */
+}
+
+
+
+

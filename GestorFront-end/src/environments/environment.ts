@@ -5,7 +5,7 @@
 export const environment = {
   //sudo kill $(sudo lsof -t -i:4200)
   production: false,
-  HOST: 'http://localhost:3000',
+  HOST: 'http://10.1.1.159:3000',
   //HOST: 'https://gestorcoordinador.enlace-apb.com:3000',
   TOKEN_NAME: 'auth'
 

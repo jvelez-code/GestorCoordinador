@@ -136,7 +136,7 @@ export class ExcelTmoService {
     };
     //Negrilla al titulo
     sheet.getCell("A1").font = { bold: true };
-    sheet.mergeCells(`A1000:F${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
+    //sheet.mergeCells(`A1000:F${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
     sheet.mergeCells("G1000:AH1"); //combina las celdas para dejar el espacio blanco a la derecha
 
     //Nombre visible del reporte

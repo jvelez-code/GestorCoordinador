@@ -140,7 +140,7 @@ export class ExcelIvrService {
     };
     //Negrilla al titulo
     sheet.getCell("A1").font = { bold: true };
-    sheet.mergeCells(`A10000:G${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
+    //sheet.mergeCells(`A10000:G${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
    sheet.mergeCells("H10000:BD1"); //combina las celdas para dejar el espacio blanco a la derecha
 
     //Nombre visible del reporte

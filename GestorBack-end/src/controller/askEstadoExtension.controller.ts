@@ -5,9 +5,9 @@ import { askEstadoExtension } from '../entitie/ask_estado_extension'
 
 
 export const selectUsuarios = async ( req: Request,res:Response)=>{
+    
     const usuario= await Usuario.find()
-    console.log("holaaa")
-return res.json(usuario);
+    return res.json(usuario);
 }
 
 

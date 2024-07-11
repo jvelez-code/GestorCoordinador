@@ -20,6 +20,8 @@ router.post('/ReporteAgenda', ReporGestor.postAgendaComercial);
 router.post('/ControlVisitas', ReporGestor.postVisitaComercial);
 router.post('/registrosnuevos', ReporGestor.postFidelizacionComercial);
 router.post('/porcentaje', ReporGestor.postPorcentajeTipificacion);
+router.post('/menus', ReporGestor.postMenus);
+router.post('/seguimiento', ReporGestor.postSeguimientoAgente);
 
 
 

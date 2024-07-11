@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  Cnodereportes:
+    build:
+      context: ./GestorBack-end
+    container_name: Cnodereportes
+    ports:
+      - "3000:3000"
+      - "8484:8484"
+    networks:
+      - app-network
+    environment:
+      - NODE_ENV=development
+    image: inodegestor
+
+  Cangularreportes:
+    build:
+      context: ./GestorFront-end
+    container_name: Cangularreportes
+    ports:
+      - "80:80"
+      - "9443:9443"
+    networks:
+      - app-network
+    image: iangulargestor
+
+networks:
+  app-network:
+    driver: bridge
+

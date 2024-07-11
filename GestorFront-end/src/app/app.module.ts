@@ -65,6 +65,7 @@ import { NgHcaptchaModule } from 'ng-hcaptcha';
 import { GrabacionesComponent } from './pages/grabaciones/grabaciones.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 
 
@@ -135,6 +136,7 @@ export function tokenGetter() {
     NoopAnimationsModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
+    NgxUiLoaderModule,
     NgHcaptchaModule.forRoot(      {
       siteKey: '53b9bb7e-49a4-428f-ab81-5935daec8a8a',
       languageCode: 'es', 

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { ReporteService } from '../../../_services/reporte.service';
-import { ActivatedRoute,  Router } from '@angular/router';
 import { DetalleGestion } from 'src/app/_model/detalleGestiones';
 import { MatTableDataSource } from '@angular/material/table';
 import { Parametros } from 'src/app/_model/parametros';
@@ -13,6 +12,7 @@ import { Observable } from 'rxjs';
 import { CampanaI } from 'src/app/_model/campanaI';
 import { ExcelPorcentajeDeTipificacionService } from 'src/app/_services/excel.porcentaje.de.tipificacion.service';
 import { ReportesGeneral } from 'src/app/_model/reportesgeneral';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -40,8 +40,7 @@ export class PorcentajeComponent {
   detalleGestion !: DetalleGestion[];
   parametros !: Parametros;
 
-  displayedColumns: string[] = ['campana', 'nombrecampana', 'tipificacion', 'suma_total',
-                                'subtipificacion', 'cantidad', 'porcentaje'];
+  displayedColumns: string[] = ['tipificacion', 'suma_total', 'subtipificacion', 'cantidad','porcentaje'];
 
   dataSource!: MatTableDataSource<ReportesGeneral>;
   @ViewChild(MatSort) sort!: MatSort;
@@ -86,11 +85,11 @@ export class PorcentajeComponent {
       this.fechaparametro1 = moment(this.fechaInicio).format('YYYY-MM-DD 00:00:01');
       this.fechaparametro2 = moment(this.fechaFin).format('YYYY-MM-DD 23:59:59');
       
-      const parametros= { fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro,
+      const ParametrosDTO= { fechaInicial : this.fechaparametro1, fechaFinal : this.fechaparametro2 , empresa:this.empresaparametro,
                           campana:this.idCampana}
      //parametros son los paramatros que enviamos y node.js los toma en el header
      
-      this.reporteService.reporPorcentaje(parametros).subscribe(data=>{
+      this.reporteService.reporPorcentaje(ParametrosDTO).subscribe(data=>{
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -107,11 +106,14 @@ export class PorcentajeComponent {
       fechafin: this.fechaparametro2,
       empresa: this.empresaparametro,
     };
+
+    const ParametrosDTO= { fechaInicial : this.fechaparametro1, fechaFinal : this.fechaparametro2 , empresa:this.empresaparametro,
+      campana:this.idCampana}
     
-    this.reporteService.reporPorcentaje(parametros).subscribe((data) => {
+    this.reporteService.reporPorcentaje(ParametrosDTO).subscribe((data) => {
       this.excelPorcentajeDeTipificacionService.porcentajeportipificacion(data,parametros);
-      console.log(parametros)
-      console.log(data)
+      // console.log(parametros)
+      // console.log(data)
     });
   }
   exportarFiltro(): void{

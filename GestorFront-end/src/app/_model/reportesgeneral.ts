@@ -56,7 +56,6 @@ export class ReportesGeneral {
     fecha_llamada !: string;
     no_calificadas !: string;
     total_llamadas !: string;
-    campana !: number;
     cantidad !: string;
     porcentaje !: string;
     subtipificacion !: string;
@@ -78,6 +77,13 @@ export class ReportesGeneral {
     entrante !: string;
     promedio !: string;
     saliente !: string;
+    campana !: number;
+    idcampana !: number;
+    efectiva !: string;
+    no_efectiva !: string;
+    total_gestiones !: string;
     
 }
 
+
+let reportesGeneral : ReportesGeneral;

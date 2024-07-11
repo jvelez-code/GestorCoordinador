@@ -14,6 +14,7 @@ import { Empresa } from '../_model/empresa';
 import { CampanaI } from '../_model/campanaI';
 import { DetalleGestion } from '../_model/detalleGestiones';
 import { ReportesGeneral } from '../_model/reportesgeneral';
+import { ParametrosDTO } from '../_dto/ParametrosDTO';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -152,8 +153,14 @@ export class ReporteService {
 
     }
 
-    reporEmpresa(parametros: Parametros):Observable<any>{
-      
+
+    reporSeguimiento(parametrosDTO: ParametrosDTO):Observable<ReportesGeneral[]>{      
+      const headers = { 'content-type': 'application/json'}  
+      const body=JSON.stringify(parametrosDTO);
+      return this.http.post<ReportesGeneral[]>(`${this.urlGes}/seguimiento`,body,{'headers':headers});
+     }
+
+    reporEmpresa(parametros: Parametros):Observable<any>{      
       const headers = { 'content-type': 'application/json'}  
       const body=JSON.stringify(parametros);
       return this.http.post<Parametros>(`${this.urlGes}/reportes`,body,{'headers':headers});
@@ -199,10 +206,9 @@ export class ReporteService {
       return this.http.post<DetalleGestion[]>(`${this.urlGes}/compromisos`,body,{'headers':headers});
      }
 
-     reporPorcentaje(parametros: Parametros) {  
-      
+     reporPorcentaje(parametrosDTO: ParametrosDTO):Observable<ReportesGeneral[]> {        
       const headers = { 'content-type': 'application/json'}  
-      const body=JSON.stringify(parametros);
+      const body=JSON.stringify(parametrosDTO);
       return this.http.post<ReportesGeneral[]>(`${this.urlGes}/porcentaje`,body,{'headers':headers});
      }
 

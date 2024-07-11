@@ -58,6 +58,7 @@ export class ReporteComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.isEmpresa.subscribe(data=>{
+      console.log('prueba', data)
       this.empresaparametro=data;
     })
 

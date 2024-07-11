@@ -377,7 +377,7 @@ ORDER by promedio desc ))
             //parametro de header
             //alt +96 `
             let fechaini = req.body.fechaini
-            let fechafin = req.body.fechafin
+            let fechafin = req.body.fechaFinal
             let empresa = req.body.empresa
 
             const response = await poolcont.query(`SELECT TO_CHAR(fecha_inicio,'YYYY-MM-DD')::TEXT AS fecha, a.id_Agente AS agente
@@ -563,7 +563,6 @@ ORDER by promedio desc ))
                 return formatted_date;
             }
             let fechaFinal = formatDate(date);
-            console.log(empresa, fechaFinal, 'ok')
             const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
         numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae

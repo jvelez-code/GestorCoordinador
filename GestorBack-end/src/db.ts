@@ -17,23 +17,12 @@ export const DataSourceGestor = new DataSource({
     // host: "10.1.1.7", 
     // database: "gestorclientes",
     host: "10.1.1.25",
-    database: "gestorclientes210224",
+    database: "gestorclientes_200524",
     synchronize: false,
     logging: true,
     entities: [ Usuario, AuthUsuario, Empresa, Usuarios, UsuariosRol, UsuariosGestor ],
     subscribers: [],
     migrations: []
-    // type: "postgres",
-    // host: "localhost",
-    // port: 5432,
-    // username: "postgres",
-    // password: "",
-    // database: "desarrolloPrueba",
-    // synchronize: true,
-    // logging: true,
-    // entities: [Usuario ],
-    // subscribers: [],
-    // migrations: [],
 })
 
 
@@ -42,9 +31,9 @@ export const DataSourceContact = new DataSource({
     type: "postgres",
     
     host: "10.1.1.25",
-    database: "contact_center210224",
-    //host: "10.1.1.7",
-    //database: "contact_center",
+    database: "contact_center",
+    // host: "10.1.1.7",
+    // database: "contact_center",
     port: 5432,
     username: "postgres",
     password: "pgsql",

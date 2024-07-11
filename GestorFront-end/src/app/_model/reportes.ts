@@ -7,3 +7,5 @@ export class Reportes{
     aplica_bd_asterisk !:  boolean;
     empresas !:  string
 }
+
+let reportes : Reportes;

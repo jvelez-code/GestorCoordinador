@@ -16,14 +16,17 @@ const { Pool }= require('pg');
 
 
     /// conexiones a las bases de datos
-    const pool = new Pool(c.config_bd_gc);
+    const pool = new Pool(c.config_bd_gc_r);
     //const pool = new Pool(configes);
 
+    const moment = require('moment-timezone');
 
 class reporGestor {
 
+    
 
-        static logins = async (req: Request, res: Response)=>{
+
+    static logins = async (req: Request, res: Response)=>{
             res.send("Mundo")
     }
 
@@ -31,14 +34,6 @@ class reporGestor {
     static inicio =((req: Request, res:Response ) => {
     res.send('Hola mundo inicio');
      });
-
-
-
-    //BD CONTACT
-
-
-
-
 
 
     //DB GESTOR
@@ -59,20 +54,54 @@ class reporGestor {
     } 
     };
 
+    static postSeguimientoAgente= async (req: Request, res:Response ) =>{
+        try {
+         
+        let fechaInicial=req.body.fechaInicial
+        let fechaFinal=req.body.fechaFinal
+        let empresa=req.body.empresa
+
+        /*console.log(fechaInicial);
+        console.log(fechaFinal);
+        console.log( empresa );*/
+
+        const response = await pool.query(`SELECT fecha,campana,idcampana,usuario,
+       SUM(COALESCE(CASE WHEN efectiva='t' THEN 1 END ,0)) AS efectiva,
+       SUM(COALESCE(CASE WHEN efectiva='f' THEN 1 END ,0)) AS no_efectiva,
+       SUM(COALESCE(CASE WHEN efectiva='t' THEN 1 END ,0)+COALESCE(CASE WHEN efectiva='f' THEN 1 END ,0)) AS total_gestiones
+       FROM (
+       select to_char(g.fecha_gestion,'YYYY-MM-DD') AS fecha,u.usuario AS usuario,
+       c.nombre AS campana,c.id_campana AS idcampana ,eg.es_efectiva AS efectiva
+       from gestion g ,detalle_gestion dg,campana c,estado_gestion eg, usuario u
+       where g.id_gestion=dg.id_gestion and g.id_campana=c.id_campana
+       AND  dg.id_estado_gestion=eg.id_estado_gestion and u.id_usuario=g.id_agente
+       AND g.fecha_gestion between ($1) and ($2) AND c.grupo_rol = ($3) ) AS t
+       GROUP BY  fecha,campana,idcampana,usuario
+       ORDER BY  fecha,campana,idcampana,usuario`,[fechaInicial , fechaFinal, empresa ]);
+    
+        if (res !== undefined) {
+            return res.json(response.rows);
+            
+          }
+        
+        } catch (error) {
+        console.log(error); 
+        }
+        }
+    
+
+
+
 
     static postPorcentajeTipificacion= async (req: Request, res:Response ) =>{
         try {
          
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin
-        let empresa=req.body.empresa
-
-        console.log(fechaini);
-        console.log(fechafin);
-        console.log( empresa );
+            let fechaInicial=req.body.fechaInicial
+            let fechaFinal=req.body.fechaFinal
+            let empresa=req.body.empresa
 
         const response = await pool.query(`WITH gestiones AS ( 
-            SELECT g.id_campana as campana ,dg.id_estado_gestion  ,eg.nombre as tipificacion,
+            SELECT g.id_estado_gestion,eg.nombre as tipificacion,
             egs.nombre as subtipificacion,count(eg.nombre) AS cantidad
             FROM gestion g,detalle_gestion dg , campana c ,estado_gestion eg, estado_gestion egs, tipo_campana tc 
             WHERE g.id_gestion=dg.id_gestion AND g.id_campana =c.id_campana and g.id_estado_gestion =eg.id_estado_gestion 
@@ -80,22 +109,21 @@ class reporGestor {
             AND c.id_tipo_campana=tc.id_tipo_campana
             AND g.fecha_gestion BETWEEN ($1) AND ($2)
             AND c.grupo_rol=($3)
-            GROUP  BY  g.id_campana ,dg.id_estado_gestion,eg.nombre,egs.nombre
-            ORDER BY g.id_campana ,dg.id_estado_gestion,eg.nombre,egs.nombre ),
+            GROUP  BY  g.id_estado_gestion,eg.nombre,egs.nombre
+            ORDER BY g.id_estado_gestion,eg.nombre,egs.nombre ),
             totalGestiones as (
-            SELECT g.id_campana,c.nombre, count(*) AS suma_total from gestion g ,campana c
+            SELECT g.id_estado_gestion , count(*) AS suma_total 
+            from gestion g ,campana c
             WHERE g.id_campana =c.id_campana 
-            AND g.fecha_gestion BETWEEN ($1) AND ($2)
+            AND g.fecha_gestion BETWEEN  ($1) AND ($2)
             AND c.grupo_rol=($3)
-            GROUP BY g.id_campana,c.nombre
-            ORDER BY g.id_campana)
-            
-            SELECT  g.campana,t.nombre AS nombrecampana,g.tipificacion,t.suma_total,g.subtipificacion,g.cantidad,
+            GROUP BY g.id_estado_gestion
+            ORDER BY g.id_estado_gestion)            
+            SELECT g.tipificacion,t.suma_total,g.subtipificacion,g.cantidad,
             (ROUND((cantidad::NUMERIC / t.suma_total) * 100, 2)::text || '%') AS porcentaje 
             FROM gestiones g, totalGestiones t
-            WHERE g.campana=t.id_campana 
-            GROUP BY g.campana, t.nombre, g.tipificacion,t.suma_total,g.subtipificacion,g.cantidad
-            ORDER BY g.campana, g.tipificacion,g.cantidad  DESC`,[fechaini , fechafin, empresa ]);
+            WHERE g.id_estado_gestion =t.id_estado_gestion
+            order by g.tipificacion,porcentaje `,[fechaInicial , fechaFinal, empresa ]);
     
         if (res !== undefined) {
             return res.json(response.rows);
@@ -141,11 +169,14 @@ class reporGestor {
 
     static postDetalleGestiones= async (req: Request, res:Response ) =>{
     try {
+        const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
+        console.log('Fecha y hora actual en Colombia:', fechaActual);
      
     let fechaini=req.body.fechaini
     let fechafin=req.body.fechafin
     let empresa=req.body.empresa
     let campana=req.body.campana
+
 
     console.log(fechaini);
     console.log(fechafin);
@@ -166,7 +197,7 @@ class reporGestor {
     emp.descripcion as empresa,
     egpdg.nombre as padreTipificacion,
     egdg.nombre as tipicacion,
-    dg.fecha_gestion as fechaGestion,
+    TO_CHAR((dg.fecha_gestion AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
     c.id_campana as numeroCampana,
     replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
     cont.nro_empleado as empleados
@@ -232,7 +263,7 @@ class reporGestor {
         console.log(fechafin);
         const response = await pool.query(`select area_comercial as areaComercial,
         u.usuario as funcionario,
-        g.fecha_gestion as fechagestion,
+        TO_CHAR((g.fecha_gestion  AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
         eg.nombre as motivo,
         tipo_id as tipo,
         nit as documento,
@@ -294,7 +325,7 @@ class reporGestor {
             emp.descripcion as empresa,
             egpdg.nombre as padreTipificacion,
             egdg.nombre as tipificacion,
-            dg.fecha_gestion as fechaGestion,
+            TO_CHAR((dg.fecha_gestion  AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
             c.id_campana as numeroCampana,
             replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
             g.id_gestion as idGestion
@@ -517,6 +548,29 @@ class reporGestor {
         }
         }
 
+        static postMenus= async (req: Request, res:Response ) =>{
+            try {
+                 
+                let nombre=req.body.nombre
+
+                console.log(nombre,'llega ');
+                const response = await pool.query(`SELECT  m.* 
+                FROM menu_rol mr 
+                INNER join usuario_rol ur on ur.id_rol = mr.id_rol 
+                INNER join menu m on m.idmenu = mr.id_menu 
+                INNER join usuarios u on u.idusuario = ur.id_usuario 
+                WHERE u.nombre = ($1) AND m.app='2' `,[nombre]);
+        
+                if (res !== undefined) {
+                    return res.json(response.rows);
+                    }
+                
+            } catch (error) {
+                console.log(error); 
+            }
+            }
+    
+
 
 
 
@@ -636,6 +690,7 @@ class reporGestor {
 
     static getReportes = async (req: Request, res:Response ) =>{
     try {
+        
         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
         '12','19','48','49','11') ORDER BY  nombre_reporte`);

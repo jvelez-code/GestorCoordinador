@@ -140,7 +140,7 @@ export class DuracionEstadoService {
     };
     //Negrilla al titulo
     sheet.getCell("A1").font = { bold: true };
-    sheet.mergeCells(`A10000:H${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
+    //sheet.mergeCells(`A10000:H${cf + 1}`); //combina las celdas para dejar el espacio blanco abajo
    sheet.mergeCells("I10000:BD1"); //combina las celdas para dejar el espacio blanco a la derecha
 
     //Nombre visible del reporte

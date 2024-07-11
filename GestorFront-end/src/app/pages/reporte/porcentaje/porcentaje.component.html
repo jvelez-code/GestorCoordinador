@@ -2,9 +2,9 @@
 <mat-toolbar>REPORTE {{reporteName}} {{empresaparametro}}</mat-toolbar>
 <router-outlet></router-outlet>
 
-<div class="example-containe mat-elevation-z8">
- <form method="POST">
-   
+<mat-card class="card-cli-form">
+  <div class="example-container mat-elevation-z8">
+ <form method="POST">   
 <div>
   <mat-form-field class="example-form-field" appearance="fill">
     <mat-label>Selecccione las fechas</mat-label>
@@ -19,73 +19,75 @@
     <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
     <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
   </mat-form-field>
-</div>
 
+</div>  
 <div>
-  <button mat-raised-button color="primary" (click)="aceptar()">Aceptar</button>
+  <button mat-raised-button color="primary" (click)="aceptar()" >Aceptar</button>
 </div>
 </form>
 </div>
+<mat-form-field appearance="fill">
+<mat-label >Buscar</mat-label>
+<input matInput (keyup)="filtro($event)" placeholder="Reportes" #input>
+</mat-form-field>
+</mat-card>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-  <ng-container matColumnDef="campana">
-    <th mat-header-cell *matHeaderCellDef> CAMPAÑA </th>
-    <td mat-cell *matCellDef="let element"> {{element.campana}} </td>
-  </ng-container>
+<mat-card class="example-card-cli">
+<mat-card-header class="center">
+<mat-card-title>{{reporteName}}</mat-card-title>
+<mat-card-subtitle>{{empresaparametro}}</mat-card-subtitle>
+</mat-card-header>
+<mat-card-actions>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="nombrecampana">
-    <th mat-header-cell *matHeaderCellDef>NOMBRE CAM.</th>
-    <td mat-cell *matCellDef="let element"> {{element.nombrecampana}} </td>
-  </ng-container>
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" >
 
-  <!-- Weight Column -->
   <ng-container matColumnDef="tipificacion">
     <th mat-header-cell *matHeaderCellDef> TIPIFICACIÓN </th>
     <td mat-cell *matCellDef="let element"> {{element.tipificacion}} </td>
   </ng-container>
 
-  <!-- Weight Column -->
+  <!-- Name Column -->
   <ng-container matColumnDef="suma_total">
-    <th mat-header-cell *matHeaderCellDef> TOTAL </th>
+    <th mat-header-cell *matHeaderCellDef>SUMA</th>
     <td mat-cell *matCellDef="let element"> {{element.suma_total}} </td>
   </ng-container>
 
-  <!-- Symbol Column -->
+  <!-- Weight Column -->
   <ng-container matColumnDef="subtipificacion">
     <th mat-header-cell *matHeaderCellDef> SUBTIPIFICACIÓN </th>
     <td mat-cell *matCellDef="let element"> {{element.subtipificacion}} </td>
   </ng-container>
-  
+
+  <!-- Weight Column -->
   <ng-container matColumnDef="cantidad">
     <th mat-header-cell *matHeaderCellDef> CANTIDAD </th>
     <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
   </ng-container>
 
+  <!-- Symbol Column -->
   <ng-container matColumnDef="porcentaje">
     <th mat-header-cell *matHeaderCellDef> PORCENTAJE </th>
     <td mat-cell *matCellDef="let element"> {{element.porcentaje}} </td>
   </ng-container>
-
-  
+    
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
 </table>
-
-<div>
-  <button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
-    <mat-icon>laptop</mat-icon>
-  </button>
-  <button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
-    <mat-icon>phone_android</mat-icon>
-  </button>
-
 </div>
-
-
-
-
+</mat-card-actions>
 
 <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+</mat-card>
+
+<div>
+<button mat-raised-button color="accent" (click)="exportarTodo()">Descarga
+  <mat-icon>laptop</mat-icon>
+</button>
+<button mat-raised-button color="warn" (click)="exportarFiltro()">Filtro
+  <mat-icon>phone_android</mat-icon>
+</button>
+
+</div>
 

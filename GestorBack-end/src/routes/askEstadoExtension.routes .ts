@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { 
-    postMonitoreo,
-    selectUsuarios } from '../controller/askEstadoExtension.controller'
+import { postMonitoreo, selectUsuarios } from '../controller/askEstadoExtension.controller';
+
 
 
 const router = Router();

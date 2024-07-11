@@ -1,5 +1,5 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup} from '@angular/forms';
 import { Parametros } from 'src/app/_model/parametros';
 import { Tmo } from 'src/app/_model/tmo';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { LoginService } from 'src/app/_services/login.service';
+import { ReportesGeneral } from 'src/app/_model/reportesgeneral';
 //import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 const EXCEL_TYPE =
 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
@@ -26,20 +27,20 @@ const EXCEL_EXT = '.xlsx';
 export class SeguimientoAgenteComponent implements OnInit {
   fechaInicio : Date = new Date;
   fechaFin : Date = new Date;
-  form!: UntypedFormGroup;
-  reporteName : string ="TMO"
+  form!: FormGroup;
+  reporteName : string ="Seguimiento de Agentes"
 
-  campaignOne!: UntypedFormGroup;
-  campaignTwo!: UntypedFormGroup;
+  campaignOne!: FormGroup;
+  campaignTwo!: FormGroup;
 
   fechaparametro1 !:  string;
   fechaparametro2 !:  string;
   empresaparametro !:  string;
 
-  tmo !: Tmo[];
+  ReportesGeneral !: ReportesGeneral[];
   parametros !: Parametros;
-  displayedColumns: string[] = ['fecha', 'documento', 'agente', 'cantidadgrabaciones', 'duracionllamadas','segundos'];
-  dataSource!: MatTableDataSource<Tmo>;
+  displayedColumns: string[] = ['fecha', 'campana', 'idcampana', 'usuario', 'efectiva','no_efectiva','total_gestiones'];
+  dataSource!: MatTableDataSource<ReportesGeneral>;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -50,15 +51,15 @@ export class SeguimientoAgenteComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new UntypedFormGroup({
-      start: new UntypedFormControl(new Date(year, month, 13)),
-      end: new UntypedFormControl(new Date(year, month, 16)),
+    this.campaignOne = new FormGroup({
+      start: new FormControl(new Date(year, month, 13)),
+      end: new FormControl(new Date(year, month, 16)),
 
     });
 
-      this.campaignTwo = new UntypedFormGroup({
-        start: new UntypedFormControl(new Date(year, month, 15)),
-        end: new UntypedFormControl(new Date(year, month, 19)),
+      this.campaignTwo = new FormGroup({
+        start: new FormControl(new Date(year, month, 15)),
+        end: new FormControl(new Date(year, month, 19)),
       });
 
   }
@@ -76,9 +77,10 @@ export class SeguimientoAgenteComponent implements OnInit {
     //this.empresaparametro = 'ASISTIDA'
 
  
-    const parametros= {fechaini:this.fechaparametro1, fechafin:this.fechaparametro2,empresa:this.empresaparametro }
-   //parametros son los paramatros que enviamos y node.js los toma en el header
-    this.reporteService.reporTmo(parametros).subscribe(data=>{
+    const parametrosDTO= { fechaInicial : this.fechaparametro1, fechaFinal : this.fechaparametro2, 
+                           empresa : this.empresaparametro }
+   // parametrosDTO que enviamos y node.js los toma en el header
+    this.reporteService.reporSeguimiento(parametrosDTO).subscribe(data=>{
     console.log(data);
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;

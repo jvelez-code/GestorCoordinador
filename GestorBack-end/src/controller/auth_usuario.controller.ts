@@ -46,7 +46,7 @@ export const selectAuthUsuarioId = async ( req: Request,res:Response)=>{
 export const insertAuthUsuario = async (req: Request , res: Response )=>{
    
    try {
-     console.log("Hola Inser", req.body);
+     
      const { usuario , clave, nombre,
              apellido, documento, estado, 
              correo, id_empresa, id_rol} = req.body

@@ -29,8 +29,16 @@
   <mat-sidenav-container class="example-sidenav-container">
       <mat-sidenav #sidenav style="width: 200px" mode="push">
           <img src="assets/jaimetorres.jpeg" width="128" style="margin-left: 20px">
+
+          <div *ngFor="let m of menus">
+            <button mat-menu-item (click)="sidenav.toggle()" routerLink="{{m.url}}" style="cursor: pointer" >
+                <mat-icon>{{m.icono}}</mat-icon>
+                <span>{{m.nombre}}</span>
+            </button>
+            <mat-divider></mat-divider>
+        </div> 
           
-          <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
+          <!-- <button mat-menu-item (click)="sidenav.toggle()" routerLink="/reporte" style="cursor: pointer">
               <mat-icon>search</mat-icon>
               <span>Buscar</span>
           </button>
@@ -71,7 +79,8 @@
           <button mat-menu-item (click)="sidenav.toggle()" routerLink="/grabaciones" style="cursor: pointer">
               <mat-icon>accessibility</mat-icon>
               <span>Grabaciones</span>
-          </button>
+          </button>-->
+
       </mat-sidenav>
       
       <mat-sidenav-content>
@@ -81,3 +90,24 @@
   </mat-sidenav-container>
 
 </div>
+<ngx-ui-loader
+  bgsColor='red'
+  bgsPosition="bottom-right"
+  bgsType="square-jelly-box"
+  blur="5"
+  delay="0"
+  fastFadeOut="true"
+  fgsColor=#3f4db5
+  fgsPosition="center-center"
+  fgsType="ball-spin-clockwise"
+  logoPosition="center-center"
+  logoUrl=""
+  masterLoaderId="master"
+  overlayBorderRadius="0"
+  overlayColor="rgba(40, 40, 40, 0.8)"
+  pbColor="red"
+  pbDirection="ltr"
+  text=""
+  textColor="#FFFFFF"
+  textPosition="center-center"
+ ></ngx-ui-loader>
