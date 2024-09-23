@@ -1,7 +1,7 @@
-import { Request , Response } from 'express';
+import { Request, Response } from 'express';
 
 const c = require('../config/configBd');
-const { Pool }= require('pg');
+const { Pool } = require('pg');
 
 // const configes ={
 //     host: '10.1.1.7',
@@ -15,92 +15,96 @@ const { Pool }= require('pg');
 
 
 
-    /// conexiones a las bases de datos
-    const pool = new Pool(c.config_bd_gc_r);
-    //const pool = new Pool(configes);
+/// conexiones a las bases de datos
+const pool = new Pool(c.config_bd_gc_r);
+//const pool = new Pool(configes);
 
-    const moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
 class reporGestor {
 
-    
 
 
-    static logins = async (req: Request, res: Response)=>{
-            res.send("Mundo")
+
+    static logins = async (req: Request, res: Response) => {
+        res.send("Mundo")
     }
 
 
-    static inicio =((req: Request, res:Response ) => {
-    res.send('Hola mundo inicio');
-     });
+    static inicio = ((req: Request, res: Response) => {
+        res.send('Hola mundo inicio');
+    });
 
 
     //DB GESTOR
 
-    static getEmpresas = async (req: Request, res:Response ) =>{
-    try {
-        
-        const response = await pool.query(`SELECT * FROM empresa WHERE id_empresa >0  ORDER BY id_empresa`);
-          
+    static getEmpresas = async (req: Request, res: Response) => {
+        try {
 
-    if (res !== undefined) {
-        return res.json(response.rows);        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
+            const response = await pool.query(`SELECT * FROM empresa WHERE id_empresa >0  ORDER BY id_empresa`);
+
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
-    static postSeguimientoAgente= async (req: Request, res:Response ) =>{
+    static postSeguimientoAgente = async (req: Request, res: Response) => {
         try {
          
         let fechaInicial=req.body.fechaInicial
         let fechaFinal=req.body.fechaFinal
         let empresa=req.body.empresa
 
-        /*console.log(fechaInicial);
-        console.log(fechaFinal);
-        console.log( empresa );*/
 
-        const response = await pool.query(`SELECT fecha,campana,idcampana,usuario,
-       SUM(COALESCE(CASE WHEN efectiva='t' THEN 1 END ,0)) AS efectiva,
-       SUM(COALESCE(CASE WHEN efectiva='f' THEN 1 END ,0)) AS no_efectiva,
-       SUM(COALESCE(CASE WHEN efectiva='t' THEN 1 END ,0)+COALESCE(CASE WHEN efectiva='f' THEN 1 END ,0)) AS total_gestiones
-       FROM (
-       select to_char(g.fecha_gestion,'YYYY-MM-DD') AS fecha,u.usuario AS usuario,
-       c.nombre AS campana,c.id_campana AS idcampana ,eg.es_efectiva AS efectiva
-       from gestion g ,detalle_gestion dg,campana c,estado_gestion eg, usuario u
-       where g.id_gestion=dg.id_gestion and g.id_campana=c.id_campana
-       AND  dg.id_estado_gestion=eg.id_estado_gestion and u.id_usuario=g.id_agente
-       AND g.fecha_gestion between ($1) and ($2) AND c.grupo_rol = ($3) ) AS t
-       GROUP BY  fecha,campana,idcampana,usuario
-       ORDER BY  fecha,campana,idcampana,usuario`,[fechaInicial , fechaFinal, empresa ]);
-    
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }
-        
+            /*console.log(fechaInicial);
+            console.log(fechaFinal);
+            console.log( empresa );*/
+
+            const response = await pool.query(`select n.*, (Ent_efectiva+Ent_no_efectiva+Sal_efectiva+Sal_no_efectiva+Sec_efectiva+Sec_no_efectiva) as total from (
+                select g.fecha_gestion::date,u.id_usuario, concat(u.primer_nombre, ' ',u.segundo_nombre, ' ',u.primer_apellido, ' ',u.segundo_apellido ) as nombre ,u.nro_documento,
+                sum(CASE when egs.es_efectiva = true and eg.tipo_llamada = 0 THEN 1 ELSE 0 end) AS Ent_efectiva,
+                sum(CASE when egs.es_efectiva = false and eg.tipo_llamada = 0 THEN 1 ELSE 0 end) AS Ent_no_efectiva,
+                sum(CASE WHEN egs.es_efectiva = true and eg.tipo_llamada = 1 THEN 1 ELSE 0 end) AS Sal_efectiva,
+                sum(CASE WHEN egs.es_efectiva = false and eg.tipo_llamada = 1 THEN 1 ELSE 0 end) AS Sal_no_efectiva,
+                sum(CASE WHEN egs.es_efectiva = true and eg.tipo_llamada = 2 THEN 1 ELSE 0 end) AS Sec_efectiva,
+                sum(CASE WHEN egs.es_efectiva = false and eg.tipo_llamada = 2 THEN 1 ELSE 0 end) AS Sec_no_efectiva
+                from gestion g, detalle_gestion dg, estado_gestion eg,  estado_gestion egs , usuario u, campana c
+                where g.id_gestion =dg.id_gestion and  g.id_campana = c.id_campana  and u.id_usuario  = dg.id_agente 
+                and g.id_estado_gestion =eg.id_estado_gestion 
+                and dg.id_estado_gestion =egs.id_estado_gestion 
+                and g.fecha_gestion between  ($1)  and ($2)
+                and c.grupo_rol = ($3)
+                group by g.fecha_gestion::date, u.id_usuario, u.usuario,concat(u.primer_nombre, ' ',u.segundo_nombre, ' ',u.primer_apellido, ' ',u.segundo_apellido ),
+                u.nro_documento) as n `, [fechaInicial, fechaFinal, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
         } catch (error) {
-        console.log(error); 
+            console.log(error);
         }
-        }
-    
+    }
 
 
 
 
-    static postPorcentajeTipificacion= async (req: Request, res:Response ) =>{
+
+    static postPorcentajeTipificacion = async (req: Request, res: Response) => {
         try {
-         
-            let fechaInicial=req.body.fechaInicial
-            let fechaFinal=req.body.fechaFinal
-            let empresa=req.body.empresa
 
-        const response = await pool.query(`WITH gestiones AS ( 
+            let fechaInicial = req.body.fechaInicial
+            let fechaFinal = req.body.fechaFinal
+            let empresa = req.body.empresa
+
+            const response = await pool.query(`WITH gestiones AS ( 
             SELECT g.id_estado_gestion,eg.nombre as tipificacion,
             egs.nombre as subtipificacion,count(eg.nombre) AS cantidad
             FROM gestion g,detalle_gestion dg , campana c ,estado_gestion eg, estado_gestion egs, tipo_campana tc 
@@ -123,66 +127,66 @@ class reporGestor {
             (ROUND((cantidad::NUMERIC / t.suma_total) * 100, 2)::text || '%') AS porcentaje 
             FROM gestiones g, totalGestiones t
             WHERE g.id_estado_gestion =t.id_estado_gestion
-            order by g.tipificacion,porcentaje `,[fechaInicial , fechaFinal, empresa ]);
-    
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }
-        
+            order by g.tipificacion,porcentaje `, [fechaInicial, fechaFinal, empresa]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
         } catch (error) {
-        console.log(error); 
+            console.log(error);
         }
-        }
-    
+    }
 
 
-    static postMonitoreoLlamadas= async (req: Request, res:Response ) =>{
-    try {
-         
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin
-    
-        console.log(fechaini);
-        console.log(fechafin);
-        const response = await pool.query(`SELECT m.fecha_monitoreo as fecha , monitoreo_calidad as calidad , u.usuario as usuario,pseudonimo as empresa, monitoreo_cliente as cliente,
+
+    static postMonitoreoLlamadas = async (req: Request, res: Response) => {
+        try {
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
+            console.log(fechaini);
+            console.log(fechafin);
+            const response = await pool.query(`SELECT m.fecha_monitoreo as fecha , monitoreo_calidad as calidad , u.usuario as usuario,pseudonimo as empresa, monitoreo_cliente as cliente,
         plandeaccion as plan,canal_comunicacion as canal,monitoreo_observacion as observacion,calificacion_total as calificacion
         FROM monitoreo_grabaciones m,usuario u,monitoteo_plandeaccion mp, empresa e
         WHERE  m.monitoreo_usuario=u.id_usuario::text AND m.plan_accion=mp.id_plan::text AND u.empresa=e.id_empresa
         AND m.fecha_monitoreo BETWEEN   ($1) AND ($2)
-        ORDER BY m.fecha_monitoreo`,[fechaini , fechafin]);
-        //,[fechaini , fechafin]
-    
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }
-        
-    } catch (error) {
-        /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
-        
-        console.log(error); 
+        ORDER BY m.fecha_monitoreo`, [fechaini, fechafin]);
+            //,[fechaini , fechafin]
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        } catch (error) {
+            /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
+
+            console.log(error);
+        }
     }
-    }
-    
 
 
-    static postDetalleGestiones= async (req: Request, res:Response ) =>{
-    try {
-        const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
-        console.log('Fecha y hora actual en Colombia:', fechaActual);
-     
-    let fechaini=req.body.fechaini
-    let fechafin=req.body.fechafin
-    let empresa=req.body.empresa
-    let campana=req.body.campana
+
+    static postDetalleGestiones = async (req: Request, res: Response) => {
+        try {
+            const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
+            console.log('Fecha y hora actual en Colombia:', fechaActual);
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            let campana = req.body.campana
 
 
-    console.log(fechaini);
-    console.log(fechafin);
-    console.log( empresa );
-    console.log( campana );
-    const response = await pool.query(`SELECT
+            console.log(fechaini);
+            console.log(fechafin);
+            console.log(empresa);
+            console.log(campana);
+            const response = await pool.query(`SELECT
     CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
     clte.tipo_documento as tipoDocAportante,
     clte.nro_documento as numDocAporta,
@@ -213,55 +217,55 @@ class reporGestor {
     LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
     LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
     WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND c.grupo_rol=($3) 
-    ORDER BY dg.fecha_gestion`,[fechaini , fechafin, empresa ]);
+    ORDER BY dg.fecha_gestion`, [fechaini, fechafin, empresa]);
 
-    if (res !== undefined) {
-        return res.json(response.rows);
-        
-      }
-    
-    } catch (error) {
-    /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
-    
-    console.log(error); 
-    }
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        } catch (error) {
+            /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
+
+            console.log(error);
+        }
     }
 
-    static postReportesGestion = async (req: Request, res:Response ) =>{
-    try {
-         
-        //parametro de url
-        //let fecha1=req.query.fecha;
-        //console.log(req.query.fecha);
-        
-        //parametro de header
-        //alt +96 `
-        let fecha2=req.body.fecha   
-        console.log(req.body.fecha);
-        const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
-        FROM gestion WHERE fecha_gestion>=$1 ORDER BY fecha_gestion `,[fecha2] );
-    if (res !== undefined) {
-        return res.json(response.rows);
-        
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
+    static postReportesGestion = async (req: Request, res: Response) => {
+        try {
+
+            //parametro de url
+            //let fecha1=req.query.fecha;
+            //console.log(req.query.fecha);
+
+            //parametro de header
+            //alt +96 `
+            let fecha2 = req.body.fecha
+            console.log(req.body.fecha);
+            const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
+        FROM gestion WHERE fecha_gestion>=$1 ORDER BY fecha_gestion `, [fecha2]);
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
     // CCOMERCIAL registro de compromisos 45
 
-    static postCompromisos= async (req: Request, res:Response ) =>{
-    try {
-         
-        let fechaini=req.body.fechaini
-        let fechafin=req.body.fechafin
-    
-        console.log(fechaini);
-        console.log(fechafin);
-        const response = await pool.query(`select area_comercial as areaComercial,
+    static postCompromisos = async (req: Request, res: Response) => {
+        try {
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
+            console.log(fechaini);
+            console.log(fechafin);
+            const response = await pool.query(`select area_comercial as areaComercial,
         u.usuario as funcionario,
         TO_CHAR((g.fecha_gestion  AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
         eg.nombre as motivo,
@@ -289,25 +293,25 @@ class reporGestor {
          WHERE cg.id_gestion=g.id_gestion and g.id_gestion=dg.id_gestion and g.id_agente=u.id_usuario
          and g.id_estado_gestion=eg.id_estado_gestion and g.id_cliente=cl.id_cliente
          and cl.id_zona=dv.id_zona and dv.id_zona_padre=dvs.id_zona and
-        g.fecha_gestion between ($1) and ($2) `,[fechaini , fechafin ]);
+        g.fecha_gestion between ($1) and ($2) `, [fechaini, fechafin]);
 
-        if (res !== undefined) {
-            return res.json(response.rows);
+            if (res !== undefined) {
+                return res.json(response.rows);
             }
-        
-    } catch (error) {
-        console.log(error); 
-    }
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     // COMERCIAL registro de compromisos 51
 
-    static postGestionComercial= async (req: Request, res:Response ) =>{
+    static postGestionComercial = async (req: Request, res: Response) => {
         try {
-             
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin
-        
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(`SELECT
@@ -340,25 +344,25 @@ class reporGestor {
             LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
             LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
             INNER JOIN empresa emp ON ag.empresa=emp.id_empresa AND emp.pseudonimo='COMERCIAL'
-            WHERE g.fecha_gestion  BETWEEN  ($1) and ($2) ORDER BY g.fecha_gestion  `,[fechaini , fechafin ]);
-    
+            WHERE g.fecha_gestion  BETWEEN  ($1) and ($2) ORDER BY g.fecha_gestion  `, [fechaini, fechafin]);
+
             if (res !== undefined) {
                 return res.json(response.rows);
-                }
-            
+            }
+
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
-        }
+    }
 
     // COMERCIAL registro de compromisos 33
 
-    static postConsolidadoCicloVida= async (req: Request, res:Response ) =>{
+    static postConsolidadoCicloVida = async (req: Request, res: Response) => {
         try {
-             
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin
-        
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(`SELECT agen.usuario as usuario,
@@ -398,25 +402,25 @@ class reporGestor {
             INNER JOIN seguimiento_ciclo_vida scv on scv.id_detalle_gestion_comercial=dgc.id_detalle_gestion_comercial
             LEFT JOIN  ciclo_de_vida cv on      cv.id_ciclo=scv.ciclo
             WHERE  g.fecha_gestion between ($1) and ($2)
-            ORDER BY fechaGestion DESC NULLS last`,[fechaini , fechafin ]);
-    
+            ORDER BY fechaGestion DESC NULLS last`, [fechaini, fechafin]);
+
             if (res !== undefined) {
                 return res.json(response.rows);
-                }
-            
+            }
+
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
-        }
+    }
 
     // COMERCIAL Agenda 32
 
-    static postAgendaComercial= async (req: Request, res:Response ) =>{
+    static postAgendaComercial = async (req: Request, res: Response) => {
         try {
-             
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin
-        
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(`SELECT g.id_campana,
@@ -437,25 +441,25 @@ class reporGestor {
             inner join campana cam on g.id_campana=cam.id_campana
             left join detalle_gestion dt2 on dt2.id_gestion=g.id_gestion
             WHERE g.fecha_hora_sis between ($1) and ($2) and cam.id_tipo_campana='7'
-            ORDER BY g.fecha_hora_sis `,[fechaini , fechafin ]);
-    
+            ORDER BY g.fecha_hora_sis `, [fechaini, fechafin]);
+
             if (res !== undefined) {
                 return res.json(response.rows);
-                }
-            
+            }
+
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
-        }
+    }
 
-     // COMERCIAL Visita 27
+    // COMERCIAL Visita 27
 
-    static postVisitaComercial= async (req: Request, res:Response ) =>{
+    static postVisitaComercial = async (req: Request, res: Response) => {
         try {
-             
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin
-        
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(` SELECT
@@ -507,28 +511,28 @@ class reporGestor {
             INNER JOIN usuario USU ON SC.id_agente = USU.id_usuario
             INNER JOIN divipola MUN ON CL.id_zona = MUN.id_zona
             INNER JOIN divipola DEP ON MUN.id_zona_padre = DEP.id_zona
-       WHERE SC.fecha_gestion_seguimiento BETWEEN ($1) and ($2)`,[fechaini , fechafin ]);
-    
+       WHERE SC.fecha_gestion_seguimiento BETWEEN ($1) and ($2)`, [fechaini, fechafin]);
+
             if (res !== undefined) {
                 return res.json(response.rows);
-                }
-            
+            }
+
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
-        }
-        
+    }
 
 
 
-         // COMERCIAL Registro nuevos fidelizacion 26
 
-    static postFidelizacionComercial= async (req: Request, res:Response ) =>{
+    // COMERCIAL Registro nuevos fidelizacion 26
+
+    static postFidelizacionComercial = async (req: Request, res: Response) => {
         try {
-             
-            let fechaini=req.body.fechaini
-            let fechafin=req.body.fechafin
-        
+
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(`SELECT USU.usuario, FID.cod_caja, CLI.tipo_documento, CLI.nro_documento, CLI.razon_social, FID.sucursal, FID.registros_nuevos,
@@ -537,59 +541,59 @@ class reporGestor {
             INNER JOIN cliente CLI on (FID.id_cliente = CLI.id_cliente)
             INNER JOIN usuario USU on (FID.id_agente = USU.id_usuario)
             WHERE FID.fecha_gestion BETWEEN ($1) and ($2)
-            ORDER BY FID.fecha_gestion`,[fechaini , fechafin ]);
-    
+            ORDER BY FID.fecha_gestion`, [fechaini, fechafin]);
+
             if (res !== undefined) {
                 return res.json(response.rows);
-                }
-            
+            }
+
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
-        }
+    }
 
-        static postMenus= async (req: Request, res:Response ) =>{
-            try {
-                 
-                let nombre=req.body.nombre
+    static postMenus = async (req: Request, res: Response) => {
+        try {
 
-                console.log(nombre,'llega ');
-                const response = await pool.query(`SELECT  m.* 
+            let nombre = req.body.nombre
+
+            console.log(nombre, 'llega ');
+            const response = await pool.query(`SELECT  m.* 
                 FROM menu_rol mr 
                 INNER join usuario_rol ur on ur.id_rol = mr.id_rol 
                 INNER join menu m on m.idmenu = mr.id_menu 
                 INNER join usuarios u on u.idusuario = ur.id_usuario 
-                WHERE u.nombre = ($1) AND m.app='2' `,[nombre]);
-        
-                if (res !== undefined) {
-                    return res.json(response.rows);
-                    }
-                
-            } catch (error) {
-                console.log(error); 
+                WHERE u.nombre = ($1) AND m.app='2' `, [nombre]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
             }
-            }
-    
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
 
 
 
 
-    
 
-    static getReportesGestion = async (req: Request, res:Response ) =>{
-    try {
-        const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
+
+
+    static getReportesGestion = async (req: Request, res: Response) => {
+        try {
+            const response = await pool.query(`SELECT id_gestion,id_campana,id_agente,fecha_gestion 
         FROM gestion WHERE fecha_gestion is not null ORDER BY fecha_gestion limit 5 `);
-    if (res !== undefined) {
-        return res.json(response.rows);
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
 
@@ -600,134 +604,134 @@ class reporGestor {
 
 
 
-    static postUsuariosXempresa = async (req: Request, res:Response ) =>{
-        try {   
-        
-            let empresa=req.body.empresa
+    static postUsuariosXempresa = async (req: Request, res: Response) => {
+        try {
+
+            let empresa = req.body.empresa
             const response = await pool.query(`SELECT id_usuario, usuario, nro_documento,primer_nombre, primer_apellido, 
             id_empresa, pseudonimo from usuario u,empresa e 
-            where u.empresa=e.id_empresa AND pseudonimo=($1) and estado<5 ORDER BY usuario`,[empresa] );
+            where u.empresa=e.id_empresa AND pseudonimo=($1) and estado<5 ORDER BY usuario`, [empresa]);
 
             if (res !== undefined) {
-            return res.json(response.rows);
-        
-      }
-      
-        } 
-            catch (error) {
-            console.log('UsuariosXempresa',error); 
-    } 
+                return res.json(response.rows);
+
+            }
+
+        }
+        catch (error) {
+            console.log('UsuariosXempresa', error);
+        }
     };
 
 
-    static postReportesEmpresa= async (req: Request, res:Response ) =>{
-    try {
-         
-        let empresa=req.body.empresa;
-        console.log(empresa);
-        //const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
-        //'12','19','48','49','11',
-        //'36','38','40','56','45','33','51')     
-        const response = await pool.query(`SELECT * FROM reportes WHERE estado is true
-        AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `,[empresa]);
-        //,[fechaini , fechafin]
-    
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }
-        
-    } catch (error) {
-        /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
-        
-        console.log(error); 
+    static postReportesEmpresa = async (req: Request, res: Response) => {
+        try {
+
+            let empresa = req.body.empresa;
+            console.log(empresa);
+            //const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
+            //'12','19','48','49','11',
+            //'36','38','40','56','45','33','51')     
+            const response = await pool.query(`SELECT * FROM reportes WHERE estado is true
+        AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `, [empresa]);
+            //,[fechaini , fechafin]
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        } catch (error) {
+            /**WHERE g.fecha_gestion  BETWEEN $1 AND $2/ */
+
+            console.log(error);
+        }
     }
+
+
+
+    static getReportesprueba = async (req: Request, res: Response) => {
+        try {
+            //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
+            const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54','12')`);
+            if (res !== undefined) {
+                return res.json(response.rows);
+                pool.close();
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
-    
 
+    static getReportesid = async (req: Request, res: Response) => {
+        //console.log(req.params.id);
+        //res.end();
+        //El parametro viaja desde la url en el get
 
-    static getReportesprueba = async (req: Request, res:Response ) =>{
-    try {
-        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54','12')`);
-    if (res !== undefined) {
-        return res.json(response.rows);
-        pool.close();
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
- }
-
-    static getReportesid = async (req: Request, res:Response ) => {
-    //console.log(req.params.id);
-    //res.end();
-    //El parametro viaja desde la url en el get
- 
         const id = req.params.id;
         try {
             const response = await pool.query
-            ("SELECT * FROM reportes WHERE id = $1 ORDER BY 2 ", [id]);
-        if (res !== undefined) {
-            return res.json(response.rows);
-          }
-          pool.close();
-        } 
+                ("SELECT * FROM reportes WHERE id = $1 ORDER BY 2 ", [id]);
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+            pool.close();
+        }
         catch (error) {
-            console.log(error); 
-        } 
-    } 
+            console.log(error);
+        }
+    }
 
-    static postReportesNuevo =async (req: Request, res:Response) => {
-    const {id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas} = req.body;
-    const response = await pool.query('insert into reportes values ($1, $2, $3, $4, $5, $6, $7 )', [id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas] );
-   
-    res.send('Hola mundo post final');
-    pool.close();
-    };
+    static postReportesNuevo = async (req: Request, res: Response) => {
+        const { id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas } = req.body;
+        const response = await pool.query('insert into reportes values ($1, $2, $3, $4, $5, $6, $7 )', [id, nombre_reporte, nombre_jasper, nombre_descarga, estado, aplica_bd_asterisk, empresas]);
 
-    static getReportes = async (req: Request, res:Response ) =>{
-    try {
-        
-        //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-        const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
-        '12','19','48','49','11') ORDER BY  nombre_reporte`);
-    if (res !== undefined) {
-        return res.json(response.rows);
+        res.send('Hola mundo post final');
         pool.close();
-      }
-      
-    } 
-    catch (error) {
-        console.log(error); 
-    } 
     };
-    static postCampanas= async (req: Request, res:Response ) =>{
+
+    static getReportes = async (req: Request, res: Response) => {
         try {
-         
-        let empresa=req.body.empresa;
-        console.log('PRUEBA',empresa);
-        const response = await pool.query(`SELECT  * FROM campana WHERE grupo_rol= ($1) ORDER BY 1 DESC LIMIT 20`, [empresa]);
-        //const response = await pool.query(`SELECT  * FROM campana  ORDER BY 1 DESC LIMIT 20`);    
-    
-        if (res !== undefined) {
-            return res.json(response.rows);
-            
-          }
-        
-    } catch (error) {
-         
-        console.log(error); 
-    }
+
+            //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
+            const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('25','10','30','31','50','54',
+        '12','19','48','49','11') ORDER BY  nombre_reporte`);
+            if (res !== undefined) {
+                return res.json(response.rows);
+                pool.close();
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+    static postCampanas = async (req: Request, res: Response) => {
+        try {
+
+            let empresa = req.body.empresa;
+            console.log('PRUEBA', empresa);
+            const response = await pool.query(`SELECT  * FROM campana WHERE grupo_rol= ($1) ORDER BY 1 DESC LIMIT 20`, [empresa]);
+            //const response = await pool.query(`SELECT  * FROM campana  ORDER BY 1 DESC LIMIT 20`);    
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        } catch (error) {
+
+            console.log(error);
+        }
 
     }
-    
+
 
 
 
 
 
 }
- export default reporGestor;
+export default reporGestor;

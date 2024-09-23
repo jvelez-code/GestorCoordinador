@@ -1,7 +1,6 @@
 import { Router } from "express";
 import ReporContact  from "../controller/reportesContactController";
 import AuthController from "../controller/authController";
-import { checkJwt } from "../middewares/jwt";
 const router =  Router();
 
 router.post('/monitoreo',ReporContact.potsMonitoreo );
@@ -23,12 +22,15 @@ router.post('/ivr', ReporContact.postIVR);
 router.post('/llamadasPerdidas', ReporContact.postLlamadasPerdidas);
 router.post('/filtradosSecretaria', ReporContact.postFiltradosSecretaria);
 router.post('/grabacionesPila', ReporContact.postGrabacionesPila);
+router.post('/seguimientoAgentes', ReporContact.postSeguimientoAgentes);
 
 //reportes asterisk_pagosgde
-
 router.post('/llamadasFueradeHorario', ReporContact.postLlamadasFueradeHorario);
 router.post('/llamadasFueradeHorarioEventual', ReporContact.postLlamadasFueradeHorarioEventual);
 router.post('/llamadasCalificadasGDE', ReporContact.postLlamadasCalificadasGDE);
+
+//reportes EMBARGOS
+router.post('/detalleEstadosEmb', ReporContact.postDetalleEstadosEmb);
 
 export default router;
  

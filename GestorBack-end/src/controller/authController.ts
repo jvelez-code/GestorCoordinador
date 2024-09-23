@@ -18,7 +18,7 @@ class AuthController{
     }
     
 
-    //Ruta para logueo
+    //RUTA LOGUEO
 
     static login = async (req: Request, res: Response)=>{
 

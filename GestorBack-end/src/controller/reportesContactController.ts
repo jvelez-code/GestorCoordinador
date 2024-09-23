@@ -18,6 +18,7 @@ const { Pool } = require('pg');
 /// conexiones a las bases de datos
 //const poolcont = new Pool(configcont);
 const poolcont = new Pool(c.config_bd_r);
+const poolprod = new Pool(c.config_bd);
 
 
 class ReporContact {
@@ -33,8 +34,59 @@ class ReporContact {
     });
 
 
+    // EMBARGOS
+
+    static postDetalleEstadosEmb = async (req: Request, res: Response) => {
+        try {
+         
+        let fechaInicial=req.body.fechaInicial
+        let fechaFinal=req.body.fechaFinal
+        let documento=req.body.documento
+
+        // let fechaInicial= '2024-09-19 01:05:00'
+        // let fechaFinal= '2024-09-19 21:05:00'
+        // let documento= '1005997235'
+
+
+            const response = await poolprod.query(`SELECT ee.login_agente AS usuario,lg.fecha_ini ,lg.fecha_fin,date_trunc('second',lg.fecha_fin-lg.fecha_ini) AS diferencia, lg.id_extension,lg.estado,e.descripcion AS descripcion
+                FROM ask_log_estados lg,ask_estado_extension ee,ask_estado e
+                WHERE lg.fecha_ini BETWEEN ($1) AND ($2)  AND lg.id_extension=ee.id_extension
+                AND lg.estado=e.id_estado
+                AND ee.nro_documento=($3)
+                ORDER BY lg.fecha_ini`, [fechaInicial, fechaFinal, documento]);
+
+            if (res !== undefined) {
+                return res.json(response.rows);
+
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     //BD CONTACT
+
+
+
+    static postSeguimientoAgentes = async (req: Request, res: Response) => {
+        try {
+            //parametro de header
+            //alt +96 `
+            let fechaini = req.body.fechaini
+            let fechafin = req.body.fechafin
+            let empresa = req.body.empresa
+            const response = await poolprod.query(`SELECT * from generar_estados(($1), ($2), ($3))`,[fechaini, fechafin, empresa]);
+            if (res !== undefined) {
+                return res.json(response.rows);
+            }
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
     static postGrabacionesPila = async (req: Request, res: Response) => {
         try {
@@ -46,6 +98,8 @@ class ReporContact {
             const response = await poolcont.query(`select fecha_grabacion, uniqueid, concat('/p_wrk2',ruta_grabacion,nombre_grabacion) as ruta_grabacion from grabaciones_pila gp  
             where tipo_de_llamada ='Entrante'
             order by 1 desc limit 100 `);
+
+            
             //order by 1 limit 100 `, [fechaini, fechafin, empresa]);
 
             if (res !== undefined) {
@@ -696,25 +750,6 @@ ORDER by promedio desc ))
     };
 
 
-
-    //DB GESTOR
-
-
-
-    // static getReportesprueba = async (req: Request, res:Response ) =>{
-    //     try {
-    //         //const response = await pool.query(`SELECT * FROM reportes WHERE estado=TRUE AND empresas like '%ASISTIDA%'`);
-    //         const response = await pool.query(`SELECT * FROM reportes WHERE id IN ('19','25','10','9','30','31','50','54','12')`);
-    //     if (res !== undefined) {
-    //         return res.json(response.rows);
-    //         pool.close();
-    //       }
-
-    //     } 
-    //     catch (error) {
-    //         console.log(error); 
-    //     } 
-    //  }
 
 
 }

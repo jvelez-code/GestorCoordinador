@@ -8,7 +8,6 @@ var certificate = fs.readFileSync('src/SSL_wc.enlace-apb.com.cer', 'utf8');
 
 
 
-const { ejemploEncriptacion } = require('./config/configBd');
 import app from './app';
 import { DataSourceGestor, DataSourceContact }  from  './db';
 
@@ -37,8 +36,6 @@ import { DataSourceGestor, DataSourceContact }  from  './db';
                 console.log("PuertosHttps", process.env.PORTS)
 
             });
-
-            ejemploEncriptacion();
 
      } catch (error) {
          console.log(error);
