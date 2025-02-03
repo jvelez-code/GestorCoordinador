@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 
 // Configuración
 const algorithm = 'aes-256-ecb'; // Algoritmo de cifrado (modo ECB)
-const keyBase64 = '/9t8Tt/Tiaf2tp3ylqy9NuPnjizF03kDCDePayQ5xFo='; // Reemplaza con tu clave en Base64
+const keyBase64 = 'SKVQtne2oqDusA7Drn0lg/0YAwj5tX+/g31P4yat8h8=';
 
 // Decodifica la clave de Base64
 const key = Buffer.from(keyBase64, 'base64');
@@ -22,7 +22,6 @@ export function encrypt(text: string): string {
 
 // Función para descifrar datos
 export function decrypt(encryptedText: string): string {
-  console.log('hola');
   const encryptedTextBuffer = Buffer.from(encryptedText, 'base64');
   const decipher = crypto.createDecipheriv(algorithm, key, null); // 'null' para el IV en ECB
   let decrypted = decipher.update(encryptedTextBuffer);

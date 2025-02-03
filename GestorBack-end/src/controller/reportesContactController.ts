@@ -36,24 +36,19 @@ class ReporContact {
 
     // EMBARGOS
 
-    static postDetalleEstadosEmb = async (req: Request, res: Response) => {
+    static detalleEstadosEmb = async (req: Request, res: Response) => {
         try {
          
-        let fechaInicial=req.body.fechaInicial
-        let fechaFinal=req.body.fechaFinal
-        let documento=req.body.documento
+        let fechaini=req.body.fechaInicial
+        let fechafin=req.body.fechaFinal
 
-        // let fechaInicial= '2024-09-19 01:05:00'
-        // let fechaFinal= '2024-09-19 21:05:00'
-        // let documento= '1005997235'
-
-
-            const response = await poolprod.query(`SELECT ee.login_agente AS usuario,lg.fecha_ini ,lg.fecha_fin,date_trunc('second',lg.fecha_fin-lg.fecha_ini) AS diferencia, lg.id_extension,lg.estado,e.descripcion AS descripcion
+            const response = await poolprod.query(`SELECT ee.login_agente AS usuario,lg.fecha_ini, lg.fecha_fin,
+                to_char(date_trunc('second', lg.fecha_fin - lg.fecha_ini), 'HH24:MI:SS') AS diferencia, lg.id_extension, ee.login_agente,
+                lg.estado,e.descripcion AS descripcion
                 FROM ask_log_estados lg,ask_estado_extension ee,ask_estado e
                 WHERE lg.fecha_ini BETWEEN ($1) AND ($2)  AND lg.id_extension=ee.id_extension
                 AND lg.estado=e.id_estado
-                AND ee.nro_documento=($3)
-                ORDER BY lg.fecha_ini`, [fechaInicial, fechaFinal, documento]);
+                ORDER BY lg.id_extension, lg.fecha_ini`, [fechaini, fechafin]);
 
             if (res !== undefined) {
                 return res.json(response.rows);
@@ -617,11 +612,11 @@ ORDER by promedio desc ))
                 return formatted_date;
             }
             let fechaFinal = formatDate(date);
-            const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion ,
+            const response = await poolcont.query(`SELECT id_extension, login_agente, descripcion, color,
         numero_origen,fechahora_inicio_Estado ,  SUBSTRING((now()-fechahora_inicio_Estado)::TEXT,0,9) as total
         FROM ask_estado_extension aee ,ask_estado ae
         WHERE aee.estado=ae.id_estado and cast(fechahora_inicio_Estado as date)>=($1)
-        AND empresa=($2) ORDER BY ae.id_estado,5 `, [fechaFinal, empresa]);
+        AND empresa=($2) ORDER BY ae.id_estado,6 `, [fechaFinal, empresa]);
             if (res !== undefined) {
                 return res.json(response.rows);
    }

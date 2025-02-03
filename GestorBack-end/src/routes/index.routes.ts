@@ -1,10 +1,7 @@
 import { Router } from "express";
 
 import  usuario from "./usuario.routes";
-import  authUsuario from "./auth_usuario.routes";
 import  askEstadoExtension from "./askEstadoExtension.routes ";
-import  auth from "./auth"
-
 import reporContact from "./reportesContact.routes";
 import reporGestor  from "./reportesGestor.routes";
 import askEstados   from "./askEstado.routes ";
@@ -15,14 +12,11 @@ const secret = process.env.SECRET
 
 
 const router = Router();
-
-router.use('/auth', auth)
-router.use('/authUsuario', authUsuario);
-router.use('/askEstadoExtension', askEstadoExtension);
-router.use('/usuario', usuario);
-router.use('/reporContact', reporContact);
-router.use('/reporGestor', reporGestor );
-router.use('/askEstado', askEstados );
+router.use('/apinode/askEstadoExtension', askEstadoExtension);
+router.use('/apinode/usuario', usuario);
+router.use('/apinode/reporContact', reporContact);
+router.use('/apinode/reporGestor', reporGestor );
+router.use('/apinode/askEstado', askEstados );
 
 router.use('/token',(req, res)=>{
     const {id:sub, name} = {id: "jaime", name: "velez"}

@@ -1,10 +1,8 @@
 import { Router } from "express";
 import ReporContact  from "../controller/reportesContactController";
-import AuthController from "../controller/authController";
 const router =  Router();
 
 router.post('/monitoreo',ReporContact.potsMonitoreo );
-router.get('/a', AuthController.logins );
 router.get('/', ReporContact.logins );
 
 //reportes Contact /reporContact'
@@ -30,7 +28,7 @@ router.post('/llamadasFueradeHorarioEventual', ReporContact.postLlamadasFueradeH
 router.post('/llamadasCalificadasGDE', ReporContact.postLlamadasCalificadasGDE);
 
 //reportes EMBARGOS
-router.post('/detalleEstadosEmb', ReporContact.postDetalleEstadosEmb);
+router.post('/detalleEstadosEmb', ReporContact.detalleEstadosEmb);
 
 export default router;
  

@@ -5,7 +5,7 @@ const router =  Router();
 
 
 
-router.get('/reportes', [validarJwt], ReporGestor.getReportes );
+router.get('/reportes',ReporGestor.getReportes );
 router.get('/reportes/:id', ReporGestor.getReportesid );
 router.get('/empresas', ReporGestor.getEmpresas );
 router.post('/reportess', ReporGestor.postReportesNuevo );

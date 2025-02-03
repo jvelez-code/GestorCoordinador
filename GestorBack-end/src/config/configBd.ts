@@ -8,9 +8,12 @@ import { encrypt, decrypt } from './aes';
 // console.log('Texto cifrado:', encrypted);
 
 // Descifrar el texto
-//const decrypted = decrypt('ySLP8tyF/6PElLqgY0OapYzgmbPmk1CEaRwdlRng7PU=');
-const decrypted = 'Velez2024*';
+const decrypted = decrypt('n4W11oLXQSEDvgus1UdNlw==');
 console.log('Texto descifrado configDB:', decrypted);
+const gestor= process.env.GESTOR
+const contac= process.env.CONTACT
+const server= process.env.SERVER
+const usuario= process.env.USUARIO
 
 // // Mostrar clave utilizada
 // console.log('Clave (Base64):', 'your_base64_encoded_key');
@@ -23,50 +26,62 @@ console.log('Texto descifrado configDB:', decrypted);
 
 // Base de datos Asterisk
 let config_bd = {
-    user: 'jaime.velez',
+    user: usuario,
     password: decrypted,
-    host: '10.1.1.25',
-    database: 'contact_center_apz12092024',
+    host: server,
+    database: contac,
     port: 5432,
-    toStr: function() {
-        return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-    }
+    max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+    // toStr: function() {
+    //     return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+    // }
 }
 
 // Base de datos Asterisk replica
 let config_bd_r = {
-    user: 'jaime.velez',
+    user: usuario,
     password: decrypted,
-    host: '10.1.1.25',
-    database: 'contact_center_apz12092024',
+    host: server,
+    database: contac,
     port: 5432,
-    toStr: function() {
-        return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-    }
+    max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+    // toStr: function() {
+    //     return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+    // }
 }
 
 // Base de datos Gestor
 let config_bd_gc = { 
-    user: 'jaime.velez',
+    user: usuario,
     password: decrypted,
-    host: '10.1.1.25',
-    database: 'gestorclientes_apz12092024',
+    host: server,
+    database: gestor,
     port: 5432,
-    toStr: function() {
-        return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-    }
+    max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+    // toStr: function() {
+    //     return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+    // }
 }
 
 // Base de datos Gestor replica
 let config_bd_gc_r = {
-    user: 'jaime.velez',
-    host: '10.1.1.25',
+    user: usuario,
+    host: server,
     password: decrypted,
-    database: 'gestorclientes_apz12092024',
+    database: gestor,
     port: 5432,
-    toStr: function() {
-        return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-    }
+    max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+    // toStr: function() {
+    //     return `postgresql://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+    // }
 }
 
 

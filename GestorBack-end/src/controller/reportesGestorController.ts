@@ -17,6 +17,7 @@ const { Pool } = require('pg');
 
 /// conexiones a las bases de datos
 const pool = new Pool(c.config_bd_gc_r);
+console.log(pool,'sdasd|')
 //const pool = new Pool(configes);
 
 const moment = require('moment-timezone');
@@ -59,7 +60,7 @@ class reporGestor {
          
         let fechaInicial=req.body.fechaInicial
         let fechaFinal=req.body.fechaFinal
-        let empresa=req.body.empresa
+        let empresa=req.body.idEmpresa
 
 
             /*console.log(fechaInicial);
@@ -79,7 +80,7 @@ class reporGestor {
                 and g.id_estado_gestion =eg.id_estado_gestion 
                 and dg.id_estado_gestion =egs.id_estado_gestion 
                 and g.fecha_gestion between  ($1)  and ($2)
-                and c.grupo_rol = ($3)
+                and c.id_empresa = ($3)
                 group by g.fecha_gestion::date, u.id_usuario, u.usuario,concat(u.primer_nombre, ' ',u.segundo_nombre, ' ',u.primer_apellido, ' ',u.segundo_apellido ),
                 u.nro_documento) as n `, [fechaInicial, fechaFinal, empresa]);
 
@@ -102,7 +103,7 @@ class reporGestor {
 
             let fechaInicial = req.body.fechaInicial
             let fechaFinal = req.body.fechaFinal
-            let empresa = req.body.empresa
+            let empresa = req.body.idEmpresa
 
             const response = await pool.query(`WITH gestiones AS ( 
             SELECT g.id_estado_gestion,eg.nombre as tipificacion,
@@ -112,7 +113,7 @@ class reporGestor {
             AND dg.id_estado_gestion =egs.id_estado_gestion
             AND c.id_tipo_campana=tc.id_tipo_campana
             AND g.fecha_gestion BETWEEN ($1) AND ($2)
-            AND c.grupo_rol=($3)
+            AND c.id_empresa=($3)
             GROUP  BY  g.id_estado_gestion,eg.nombre,egs.nombre
             ORDER BY g.id_estado_gestion,eg.nombre,egs.nombre ),
             totalGestiones as (
@@ -120,7 +121,7 @@ class reporGestor {
             from gestion g ,campana c
             WHERE g.id_campana =c.id_campana 
             AND g.fecha_gestion BETWEEN  ($1) AND ($2)
-            AND c.grupo_rol=($3)
+            AND c.id_empresa=($3)
             GROUP BY g.id_estado_gestion
             ORDER BY g.id_estado_gestion)            
             SELECT g.tipificacion,t.suma_total,g.subtipificacion,g.cantidad,
@@ -144,18 +145,39 @@ class reporGestor {
     static postMonitoreoLlamadas = async (req: Request, res: Response) => {
         try {
 
+
             let fechaini = req.body.fechaini
             let fechafin = req.body.fechafin
 
             console.log(fechaini);
             console.log(fechafin);
-            const response = await pool.query(`SELECT m.fecha_monitoreo as fecha , monitoreo_calidad as calidad , u.usuario as usuario,pseudonimo as empresa, monitoreo_cliente as cliente,
-        plandeaccion as plan,canal_comunicacion as canal,monitoreo_observacion as observacion,calificacion_total as calificacion
-        FROM monitoreo_grabaciones m,usuario u,monitoteo_plandeaccion mp, empresa e
-        WHERE  m.monitoreo_usuario=u.id_usuario::text AND m.plan_accion=mp.id_plan::text AND u.empresa=e.id_empresa
-        AND m.fecha_monitoreo BETWEEN   ($1) AND ($2)
-        ORDER BY m.fecha_monitoreo`, [fechaini, fechafin]);
-            //,[fechaini , fechafin]
+            const response = await pool.query(`SELECT 
+                    to_char(mg.fecha_monitoreo, 'YYYY-MM-DD HH24:MI:SS') AS fecha,
+                    u.usuario AS calidad, 
+                    us.usuario AS usuario, 
+                    e.pseudonimo AS empresa, 
+                    c.nro_documento AS cliente, 
+                    mp.plandeaccion AS plan, 
+                    canal_comunicacion AS canal, 
+                    monitoreo_observacion AS observacion, 
+                    calificacion_total AS calificacion
+                FROM 
+                    monitoreo_grabaciones mg, 
+                    usuario u, 
+                    usuario us, 
+                    empresa e, 
+                    cliente c, 
+                    monitoreo_plandeaccion mp
+                WHERE 
+                    mg.monitoreo_calidad = u.id_usuario 
+                    AND mg.monitoreo_usuario = us.id_usuario 
+                    AND us.empresa = e.id_empresa 
+                    AND mg.monitoreo_cliente = c.id_cliente 
+                    AND mg.plan_accion = mp.id_plan  
+                    AND mg.fecha_monitoreo BETWEEN ($1) AND ($2)
+                ORDER BY 
+                    fecha;`, [fechaini, fechafin]);
+
 
             if (res !== undefined) {
                 return res.json(response.rows);
@@ -178,46 +200,40 @@ class reporGestor {
 
             let fechaini = req.body.fechaini
             let fechafin = req.body.fechafin
-            let empresa = req.body.empresa
-            let campana = req.body.campana
+            let empresa = req.body.idEmpresa
 
-
-            console.log(fechaini);
-            console.log(fechafin);
-            console.log(empresa);
-            console.log(campana);
             const response = await pool.query(`SELECT
-    CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
-    clte.tipo_documento as tipoDocAportante,
-    clte.nro_documento as numDocAporta,
-    clte.razon_social as razonSocial,
-    tc.nombre as tipoGestion,
-    cont.nombre as nombreContacto,
-    cont.telefono_celular as telefono1,
-    cont.numero_contacto as telefono2,
-    cont.telefono_directo as telefono3,
-    dg.num_real_marcado as numeroRealMarcado,
-    ag.usuario as usuario,
-    emp.descripcion as empresa,
-    egpdg.nombre as padreTipificacion,
-    egdg.nombre as tipicacion,
-    TO_CHAR((dg.fecha_gestion AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
-    c.id_campana as numeroCampana,
-    replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
-    cont.nro_empleado as empleados
-    FROM gestion g
-    INNER JOIN estado_gestion eg ON g.id_estado_gestion=eg.id_estado_gestion
-    INNER JOIN campana c ON g.id_campana=c.id_campana
-    INNER JOIN tipo_campana tc ON c.id_tipo_campana=tc.id_tipo_campana
-    LEFT JOIN detalle_gestion dg ON g.id_gestion=dg.id_gestion
-    LEFT JOIN estado_gestion egdg ON dg.id_estado_gestion=egdg.id_estado_gestion
-    LEFT JOIN estado_gestion egpdg ON egdg.id_estado_gestion_padre=egpdg.id_estado_gestion
-    INNER JOIN cliente clte ON g.id_cliente=clte.id_cliente
-    LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
-    LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
-    LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
-    WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND c.grupo_rol=($3) 
-    ORDER BY dg.fecha_gestion`, [fechaini, fechafin, empresa]);
+                    CAST(c.id_campana as varchar) || '_' || c.nombre as nombreCampana,
+                    clte.tipo_documento as tipoDocAportante,
+                    clte.nro_documento as numDocAporta,
+                    clte.razon_social as razonSocial,
+                    tc.nombre as tipoGestion,
+                    cont.nombre as nombreContacto,
+                    cont.telefono_celular as telefono1,
+                    cont.numero_contacto as telefono2,
+                    cont.telefono_directo as telefono3,
+                    dg.num_real_marcado as numeroRealMarcado,
+                    concat(ag.primer_nombre,'  ',ag.segundo_nombre,'  ', ag.primer_apellido) as usuario,
+                    emp.descripcion as empresa,
+                    egpdg.nombre as padreTipificacion,
+                    egdg.nombre as tipicacion,
+                    TO_CHAR((dg.fecha_gestion AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota' + INTERVAL '5 hours'), 'YYYY-MM-DD HH24:MI:SS') as fechaGestion,
+                    c.id_campana as numeroCampana,
+                    replace(replace(replace(replace(replace(replace(dg.observacion,chr(10), ' '),chr(11),' '),chr(13),' '),chr(27),' '),chr(32),' '),chr(39),' ') as observacion,
+                    cont.nro_empleado as empleados
+                    FROM gestion g
+                    INNER JOIN estado_gestion eg ON g.id_estado_gestion=eg.id_estado_gestion
+                    INNER JOIN campana c ON g.id_campana=c.id_campana
+                    INNER JOIN tipo_campana tc ON c.id_tipo_campana=tc.id_tipo_campana
+                    LEFT JOIN detalle_gestion dg ON g.id_gestion=dg.id_gestion
+                    LEFT JOIN estado_gestion egdg ON dg.id_estado_gestion=egdg.id_estado_gestion
+                    LEFT JOIN estado_gestion egpdg ON egdg.id_estado_gestion_padre=egpdg.id_estado_gestion
+                    INNER JOIN cliente clte ON g.id_cliente=clte.id_cliente
+                    LEFT OUTER JOIN contacto cont ON g.id_gestion = cont.id_gestion AND clte.id_cliente = cont.id_cliente
+                    LEFT JOIN usuario ag ON dg.id_agente=ag.id_usuario
+                    LEFT JOIN empresa emp ON ag.empresa=emp.id_empresa
+                    WHERE  dg.fecha_hora_sis BETWEEN ($1) AND ($2) AND c.id_empresa=($3) 
+                    ORDER BY dg.fecha_gestion`, [fechaini, fechafin, empresa]);
 
             if (res !== undefined) {
                 return res.json(response.rows);
@@ -536,7 +552,10 @@ class reporGestor {
             console.log(fechaini);
             console.log(fechafin);
             const response = await pool.query(`SELECT USU.usuario, FID.cod_caja, CLI.tipo_documento, CLI.nro_documento, CLI.razon_social, FID.sucursal, FID.registros_nuevos,
-            FID.registros_recuperados, FID.fecha_pago, FID.numero_planilla, FID.observacion, FID.migracion, FID.fecha_gestion
+            FID.registros_recuperados, 
+            to_char(FID.fecha_pago, 'YYYY-MM-DD') as fecha_pago,
+            FID.numero_planilla, FID.observacion, FID.migracion,
+            to_char(FID.fecha_gestion, 'YYYY-MM-DD HH24:MI:SS') as fecha_gestion
             FROM fidelizacion_comercial FID
             INNER JOIN cliente CLI on (FID.id_cliente = CLI.id_cliente)
             INNER JOIN usuario USU on (FID.id_agente = USU.id_usuario)
@@ -556,8 +575,7 @@ class reporGestor {
         try {
 
             let nombre = req.body.nombre
-
-            console.log(nombre, 'llega ');
+            
             const response = await pool.query(`SELECT  m.* 
                 FROM menu_rol mr 
                 INNER join usuario_rol ur on ur.id_rol = mr.id_rol 
@@ -633,7 +651,7 @@ class reporGestor {
             //'12','19','48','49','11',
             //'36','38','40','56','45','33','51')     
             const response = await pool.query(`SELECT * FROM reportes WHERE estado is true
-        AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `, [empresa]);
+            AND empresas LIKE '%'||$1||'%' ORDER BY  nombre_reporte `, [empresa]);
             //,[fechaini , fechafin]
 
             if (res !== undefined) {
