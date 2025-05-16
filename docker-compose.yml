@@ -1,28 +1,97 @@
-version: '3.8'
 services:
-  Cnodereportes:
+  # Contenedor de backend Node.js (Reportes)
+  nodebackend:
     build:
-      context: ./GestorBack-end
-    container_name: Cnodereportes
+      context: ./reportesnode  # Asegúrate de que este directorio exista y sea accesible
+      dockerfile: ../reportesnode/Dockerfile
+    container_name: reportesnode
     ports:
       - "3000:3000"
     networks:
       - app-network
     environment:
       - NODE_ENV=development
-    image: inodegestor
+    image: ireportesnode
 
-  Cangularreportes:
+  # Contenedor de backend Java 
+  javabackend:
     build:
-      context: ./GestorFront-end
-    container_name: Cangularreportes
+      context: ./javaBackEnd
+    container_name: javabackend
     ports:
-      - "80:80"
+      - "9898:9898"  # Exponer el puerto 9898 para acceder a java
+    image: igestorusuarios
+    environment:
+      - SPRING_APPLICATION_JSON={"server.connection-timeout":1200000}
+      - spring.servlet.multipart.max-file-size=1000MB
+      - spring.servlet.multipart.max-request-size=1000MB
+      - GESTOR_DB_URL=${GESTOR_DB_URL}      
+      - CONTACT_DB_URL=${CONTACT_DB_URL}
+      - USERNAME=${USERNAME}
+      - URL_RECUPERAR_CORREO=${URL_RECUPERAR_CORREO}
     networks:
       - app-network
-    image: iangulargestor
+ 
+  # Contenedor para servir el frontend Angular usando NGINX
+  angularfrontend:
+    build:
+      context: ./angularFrontEnd
+    container_name: angularfrontend
+    ports:
+      - "80:80"  # Exponer el puerto 80 para acceder a Angular
+    image: angularfrontend
+    networks:
+      - app-network
+    depends_on:
+      - javabackend  
+      
+      
+  # Contenedor para mongoDb   
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodbComercial
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - /srv/docker/mongo_data:/data/db
+    restart: always  # Garantiza que el contenedor se reinicie si algo falla
+   
+       # Contenedor de backend Node.js (Reportes)
+  correosgestor:
+    build:
+      context: ./correosgestor
+    container_name: correosgestor
+    ports:
+      - "3005:3005"
+    networks:
+      - app-network
+    image: icorreosgestor 
+
+  # Contenedor NGINX como API Gateway
+  ApiGateway:
+    build:	
+      context: ./nginx
+    image: nginx:alpine  # Usamos la imagen oficial de NGINX
+    container_name: api-gateway
+    ports:
+      - "443:443"  # Exponer el API Gateway en el puerto 443 porque tiene ceritificados - 80 son certificado
+    networks:
+      - app-network
+    depends_on:
+      - angularfrontend  # Asegura que el frontend Angular esté listo
+      - nodebackend    # Asegura que el backend de Node.js esté listo
+      - javabackend   # Asegura que el backend Java esté listo
+    restart: always  # Garantiza que el contenedor se reinicie si algo falla
+    
+volumes:
+  mongodb_data:
+    driver: local
 
 networks:
   app-network:
     driver: bridge
-

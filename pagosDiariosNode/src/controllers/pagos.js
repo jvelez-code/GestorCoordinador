@@ -1,10 +1,11 @@
 
 const Cliente = require('../entitys/clientes');
-const Pagos = require('../entitys/pagos');
+const Pagos = require('../entitys/pagosDiarios');
 const authToken = require('../controllers/authToken');
 const dataPagos = require('../controllers/dataPagos')
 
 
+//Consulta la api de Pila por fechas e inserta en la base de datos de mongo
 const dataPost = async (req, res) =>{
     try {
         const token = await authToken.obtenerToken();
@@ -24,13 +25,9 @@ const dataPost = async (req, res) =>{
 }
 
 
-
-const pagosGet =  async (req, res) => {
-    
+//Api prueb para consultar por nombre
+const pagosGet =  async (req, res) => {    
 try {
-
-  //  const pagos =  await Pagos.find();
-  //  res.json(pagos);
     const clientes = await Cliente.find({ nombre: "dana" });
 
     if (clientes.length === 0) {

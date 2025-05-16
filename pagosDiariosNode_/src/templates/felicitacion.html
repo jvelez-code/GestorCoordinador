@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Felicitaciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            color: #333333;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Felicidades, {{ nombre }}!</h1>
+        <p>Estamos muy orgullosos de ti por lograr esta meta.</p>
+        <p>{{ mensaje }}</p>
+        <p>Tu esfuerzo y dedicación han sido reconocidos. ¡Sigue así!</p>
+        <div class="footer">
+            <p>Atentamente,<br>El equipo de Calidad PILA</p>
+        </div>
+    </div>
+</body>
+</html>

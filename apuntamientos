@@ -1,0 +1,315 @@
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::: CONFIGURACION PILA ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+========================================================================================================
+0. JAVA
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/.env
+
+GESTOR_DB_KEY="OTTCUMpQlogG0AAw6Lf4boif/oiWfhC5V6p9a2qW2Ko="
+GESTOR_DB_URL=jdbc:postgresql://10.10.11.19/gestorclientes
+DB_PASSWORD="3CDqM2fjmx19je/CxJ7U0BEa+MxZ1/4IVLo3NtOf8C4="
+DB_USERNAME=wembley
+CONTACT_DB_URL=jdbc:postgresql://10.10.11.19/contact_center
+URL_RECUPERAR_CORREO=https://gestorcoordinador.enlace-apb.com
+
+========================================================================================================
+1. NGINX
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/nginx/nginx.conf
+
+ # Configurar los certificados SSL
+        ssl_certificate /etc/nginx/certs/SSL_wc.enlace-apb.com.cer;
+        ssl_certificate_key /etc/nginx/certs/web_enlace.key;
+
+========================================================================================================
+2. ANGULAR
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/angularFrontEnd/src/environments/environment.prod.ts
+
+
+
+export const environment = {
+  //sudo kill -9 $(sudo lsof -t -i:4200)
+  production: false,
+  HOST: 'https://gestorcoordinador.enlace-apb.com/apijavabackend',
+  HOSTNODE: 'https://gestorcoordinador.enlace-apb.com/apireporte',
+  CORREO: 'https://gestorcoordinador.enlace-apb.com',
+  HOSTCORREO: 'https://gestorcoordinador.enlace-apb.com/apicorreo',
+  TOKEN_AUTH_USERNAME: 'mitomediapp',
+  TOKEN_AUTH_PASSWORD: 'mito89codex',
+  KEY_CAPTCHA :'6LdIPp4pAAAAAB1qvifF_wjbfrcfckk-a5Dp3LO3',
+  STATUS_CAPTCHA :true,
+  TOKEN_NAME: 'access_token',
+  REINTENTOS: 2
+};
+
+========================================================================================================
+3. NODE
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/reportesnode/.env
+
+PORT=3000
+ALLOWED_ORIGINS=http://127.0.0.1:4200,https://127.0.0.1:9443,https://10.1.1.62,https://gestorcoordinador.enlace-apb.com,http://gestorcoordinador.enlace-apb.com:4200,10.10.11.208,179.50.25.52,10.1.1.62,10.1.1.62:3000,https://10.1.1.62:3000,https://gestorcoordinador.enlace-apb.com,gestorcoordinador.enlace-apb.com,https://gestorcoordinador.jaimetorres.net,gestorcoordinador.jaimetorres.net
+PORTS = 8484
+SECRET = MaYzkSjmkzPC57L
+GESTOR = gestorclientes
+CONTACT = contact_center
+SERVER  = 10.10.11.19
+USUARIO = wembley
+
+========================================================================================================
+4.PAGOS DIARIOS PILA
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/reportesnode/src/config/configMongo.js
+Ruta: /opt/gestorUsuarioNginx/pagosDiariosnode/src/config/configDB.js
+
+const url = 'mongodb://root:rootpassword@10.10.11.208:27017/pagosDiarios?authSource=admin';
+
+--------------------------------------------------------------------------------------------------------
+4.1 CAMBIA LA HORA Y EL DIA ES OPCIONAL
+--------------------------------------------------------------------------------------------------------
+
+Ruta: /opt/gestorUsuarioNginx/pagosDiariosnode/src/models/server.js
+
+--------------------------------------------------------------------------------------------------------
+4.2 MANUAL PM2
+--------------------------------------------------------------------------------------------------------
+
+-- Ver version de pm2: 					pm2 --version
+
+-- Listar aplicaciones: 				pm2 list
+
+-- Iniciar una aplicación con alias: 			pm2 start app.js --name "diarioPago"
+
+-- Iniciar automáticamente después de un reinicio: 	pm2 startup
+
+-- Guardar el estado de los procesos: 			pm2 save
+
+-- Iniciar aplicacion: 					pm2 start diarioPago
+
+-- Ver el log de la aplicacion: 			pm2 log diarioPago
+	
+-- Eliminar log: 					pm2 flush
+	
+-- Detener aplicacion: 					pm2 stop diarioPago
+
+-- Eliminar una aplicación: 				pm2 delete diarioPago 
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::: CONFIGURACION IMPUESTOS ::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+========================================================================================================
+0. JAVA
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/.env
+
+GESTOR_DB_KEY="OTTCUMpQlogG0AAw6Lf4boif/oiWfhC5V6p9a2qW2Ko="
+GESTOR_DB_URL=jdbc:postgresql://10.1.1.8/gestorclientes_imp
+DB_PASSWORD="3CDqM2fjmx19je/CxJ7U0BEa+MxZ1/4IVLo3NtOf8C4="
+DB_USERNAME=wembley
+CONTACT_DB_URL=jdbc:postgresql://10.1.1.8/contact_center_imp
+URL_RECUPERAR_CORREO=https://drakoimpuestos.b2bjtccia.com
+
+========================================================================================================
+1. NGINX
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/nginx/nginx.conf
+
+
+ # Configurar los certificados SSL
+        ssl_certificate /etc/nginx/certs/b2bjtccia.com.cer;
+        ssl_certificate_key /etc/nginx/certs/web_b2bjtccia.key;
+
+
+========================================================================================================
+2. ANGULAR
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/angularFrontEnd/src/environments/environment.prod.ts
+
+
+export const environment = {
+  //sudo kill -9 $(sudo lsof -t -i:4200)
+  production: false,
+  HOST: 'https://drakoimpuestos.b2bjtccia.com/apijavabackend',
+  HOSTNODE: 'https://drakoimpuestos.b2bjtccia.com/apireporte',
+  CORREO: 'https://drakoimpuestos.b2bjtccia.com',
+  HOSTCORREO: 'https://drakoimpuestos.b2bjtccia.com/apicorreo',
+  TOKEN_AUTH_USERNAME: 'mitomediapp',
+  TOKEN_AUTH_PASSWORD: 'mito89codex',
+  KEY_CAPTCHA :'6LdIPp4pAAAAAB1qvifF_wjbfrcfckk-a5Dp3LO3',
+  STATUS_CAPTCHA :true,
+  TOKEN_NAME: 'access_token',
+  REINTENTOS: 2
+};
+
+
+
+========================================================================================================
+3. NODE
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/reportesnode/.env
+
+PORT=3000
+ALLOWED_ORIGINS=http://127.0.0.1:4200,https://127.0.0.1:9443,https://10.1.1.62,https://gestorcoordinador.enlace-apb.com,http://gestorcoordinador.enlace-apb.com:4200,10.10.11.208,179.50.25.52,10.1.1.62,10.1.1.62:3000,https://10.1.1.62:3000,https://gestorcoordinador.enlace-apb.com,gestorcoordinador.enlace-apb.com,https://gestorcoordinador.jaimetorres.net,gestorcoordinador.jaimetorres.net,https://drakoimpuestos.b2bjtccia.com,drakoimpuestos.b2bjtccia.com
+PORTS = 8484
+SECRET = MaYzkSjmkzPC57L
+GESTOR = gestorclientes_imp
+CONTACT = contact_center_imp
+SERVER  = 10.1.1.8
+USUARIO = wembley
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::: CONFIGURACION APIZCO ::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+========================================================================================================
+0. JAVA
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/.env
+
+GESTOR_DB_URL=jdbc:postgresql://10.1.1.8/gestorclientes_apz
+CONTACT_DB_URL=jdbc:postgresql://10.1.1.8/contact_center_apz
+URL_RECUPERAR_CORREO=https://drakoapizco.apizco.com
+
+
+========================================================================================================
+1. NGINX
+========================================================================================================
+
+Ruta: nano .en	/opt/gestorUsuarioNginx/nginx/nginx.conf
+
+ # Configurar los certificados SSL
+        ssl_certificate /etc/nginx/certs/apizco_com.crt;
+        ssl_certificate_key /etc/nginx/certs/apizco.key;
+
+
+========================================================================================================
+2. ANGULAR
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/angularFrontEnd/src/environments/environment.prod.ts
+
+export const environment = {
+  //sudo kill -9 $(sudo lsof -t -i:4200)
+  production: false,
+  HOST: 'https://drakoapizco.apizco.com/apijavabackend',
+  HOSTNODE: 'https://drakoapizco.apizco.com/apireporte',
+  CORREO: 'https://drakoapizco.apizco.com',
+  HOSTCORREO: 'https://drakoapizco.apizco.com/apicorreo',
+  TOKEN_AUTH_USERNAME: 'mitomediapp',
+  TOKEN_AUTH_PASSWORD: 'mito89codex',
+  KEY_CAPTCHA :'6LdIPp4pAAAAAB1qvifF_wjbfrcfckk-a5Dp3LO3',
+  STATUS_CAPTCHA :true,
+  TOKEN_NAME: 'access_token',
+  REINTENTOS: 2
+};
+
+
+========================================================================================================
+3. NODE
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/reportesnode/.env
+
+PORT=3000
+ALLOWED_ORIGINS=http://127.0.0.1:4200,https://127.0.0.1:9443,https://10.1.1.62,https://drakoapizco.apizco.com,http://drakoapizco.apizco.com:4200,10.10.11.208,179.50.25.52,10.1.1.62,10.1.1.62:3000,https://10.1.1.62:3000,https://drakoapizco.apizco.com,drakoapizco.apizco.com,https://gestorcoordinador.jaimetorres.net,gestorcoordinador.jaimetorres.net,https://drakoapizco.apizco.com,drakoapizco.apizco.com
+PORTS = 8484
+SECRET = MaYzkSjmkzPC57L
+GESTOR = gestorclientes_apz
+CONTACT = contact_center_apz
+SERVER  = 10.1.1.8
+USUARIO = wembley
+
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::: CONFIGURACION PAGOS_GDE :::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+========================================================================================================
+0. JAVA
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/.env
+
+GESTOR_DB_KEY="OTTCUMpQlogG0AAw6Lf4boif/oiWfhC5V6p9a2qW2Ko="
+GESTOR_DB_URL=jdbc:postgresql://10.1.1.8/gestorclientes_pagosgde
+DB_PASSWORD="3CDqM2fjmx19je/CxJ7U0BEa+MxZ1/4IVLo3NtOf8C4="
+DB_USERNAME=wembley
+CONTACT_DB_URL=jdbc:postgresql://10.1.1.8/asterisk_pagosgde
+URL_RECUPERAR_CORREO=https://drakopowwi.helpvoz.com
+
+========================================================================================================
+1. NGINX
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/nginx/nginx.conf
+
+ # Configurar los certificados SSL
+        ssl_certificate /etc/nginx/certs/helpvoz.com.cer;
+        ssl_certificate_key /etc/nginx/certs/helpvoz.key;
+
+========================================================================================================
+2. ANGULAR
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/angularFrontEnd/src/environments/environment.prod.ts
+
+
+
+export const environment = {
+  //sudo kill -9 $(sudo lsof -t -i:4200)
+  production: false,
+  HOST: 'https://drakopowwi.helpvoz.com/apijavabackend',
+  HOSTNODE: 'https://drakopowwi.helpvoz.com/apireporte',
+  CORREO: 'https://drakopowwi.helpvoz.com',
+  HOSTCORREO: 'https://drakopowwi.helpvoz.com/apicorreo',
+  TOKEN_AUTH_USERNAME: 'mitomediapp',
+  TOKEN_AUTH_PASSWORD: 'mito89codex',
+  KEY_CAPTCHA :'6LdIPp4pAAAAAB1qvifF_wjbfrcfckk-a5Dp3LO3',
+  STATUS_CAPTCHA :true,
+  TOKEN_NAME: 'access_token',
+  REINTENTOS: 2
+};
+
+========================================================================================================
+3. NODE
+========================================================================================================
+
+Ruta: /opt/gestorUsuarioNginx/reportesnode/.env
+
+PORT=3000
+ALLOWED_ORIGINS=http://127.0.0.1:4200,https://127.0.0.1:9443,https://10.1.1.62,https://drakopowwi.helpvoz.com,https://gestorcoordinador.enlace-apb.com,http://gestorcoordinador.enlace-apb.com:4200,10.10.11.208,179.50.25.52,10.1.1.62,10.1.1.62:3000,https://10.1.1.62:3000,https://gestorcoordinador.enlace-apb.com,gestorcoordinador.enlace-apb.com,https://drakopowwi.helpvoz.com/ gestorcoordinador.jaimetorres.net,gestorcoordinador.jaimetorres.net
+PORTS = 8484
+SECRET = MaYzkSjmkzPC57L
+GESTOR = gestorclientes_pagosgde
+CONTACT = asterisk_pagosgde
+SERVER  = 10.1.1.8
+USUARIO = wembley
+
+
+
+
+
+
+
+
+
+
+
+

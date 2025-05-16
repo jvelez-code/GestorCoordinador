@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Advertencia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #FF5733; /* Color rojo para advertencias */
+        }
+        p {
+            color: #333333; /* Color gris oscuro para el texto */
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888888;
+        }
+        .alert {
+            background-color: #FFEBEE; /* Fondo claro para resaltar la advertencia */
+            border-left: 5px solid #FF5733; /* Línea lateral roja */
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Atención, {{ nombre }}!</h1>
+        <p>Este es un recordatorio sobre un problema que necesitas resolver.</p>    
+        <p>{{ mensaje }}</p>
+        <p>Te pedimos que tomes las medidas necesarias a la brevedad posible.</p>
+        <div class="footer">
+            <p>Atentamente,<br>El equipo de HelpVoz</p>
+        </div>
+    </div>
+</body>
+</html>
